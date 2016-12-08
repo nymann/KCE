@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using Microsoft.Win32;
 
@@ -8,21 +9,39 @@ namespace KCE.BoardRepresentation
     {
         #region globals
 
+        private bool K = true; // Can white castle kingside?
+        private bool Q = true; // Can white castle queenside?
+        private bool k = true; // Can black castle kingside?
+        private bool q = true; // Can black castle queenside?
+
+        #region boards
+
+        private string[] _algebraicBoard =
+        {
+            "A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8",
+            "A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7",
+            "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6",
+            "A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5",
+            "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4",
+            "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
+            "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
+            "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"
+        };
+
         private int[] _board =
         {
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-            99, 10,  8,  9, 11, 12,  9,  8, 10, 99,
-            99,  7,  7,  7,  7,  7,  7,  7,  7, 99,
+            99, 10, 8, 9, 11, 12, 9, 8, 10, 99,
+            99, 7, 7, 7, 7, 7, 7, 7, 7, 99,
             99, 00, 00, 00, 00, 00, 00, 00, 00, 99,
             99, 00, 00, 00, 00, 00, 00, 00, 00, 99,
             99, 00, 00, 00, 00, 00, 00, 00, 00, 99,
             99, 00, 00, 00, 00, 00, 00, 00, 00, 99,
-            99,  1,  1,  1,  1,  1,  1,  1,  1, 99,
-            99,  4, 2 , 3 ,  5,  6,  3,  2,  4, 99,
+            99, 1, 1, 1, 1, 1, 1, 1, 1, 99,
+            99, 4, 2, 3, 5, 6, 3, 2, 4, 99,
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-
         };
 
         private int[] _board64 =
@@ -39,10 +58,16 @@ namespace KCE.BoardRepresentation
 
         #endregion
 
+        #endregion
+
+        //rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
+
+        public Board(string fen)
+        {
+        }
+
         public Board()
         {
-            AlgebraicNotationToIndex("e2e4");
-            PrintBoard();
         }
 
         private void PrintBoard()
@@ -135,18 +160,43 @@ namespace KCE.BoardRepresentation
             }
         }
 
-        private int[] AlgebraicNotationToIndex(string ply)
+        private int[] IndexFromLongAlgebraicNotation(string ply)
         {
             ply = ply.ToUpper();
-            int plyFrom = 100 - (ply[1] - '0')*10 + (ply[0] - 64);
-            int plyTo = 100 - (ply[3] - '0') * 10 + (ply[2] - 64);
-
-            Console.WriteLine("From {0}, to {1}.\n\n", plyFrom, plyTo);
-
-            //_board[plyTo] = _board[plyFrom];
-            //_board[plyFrom] = 0;
-
+            var plyFrom = 100 - (ply[1] - '0')*10 + (ply[0] - 64);
+            var plyTo = 100 - (ply[3] - '0')*10 + (ply[2] - 64);
             return new[] {plyFrom, plyTo};
         }
+
+        private string LongAlgebraicNotationFromIndex(int plyFrom, int plyTo)
+        {
+            return _algebraicBoard[plyFrom] + _algebraicBoard[plyTo];
+        }
+
+        /*private void SetupBoardFromFEN(string fen)
+        {
+            for (int i = 0; i < fen.Length; i++)
+            {
+                var c = fen[i];
+                if (c - '0' > 8 || c - '0' <= 0)
+                {
+                    for (int j = 0; j < c - '0'; j++)
+                    {
+                        _board[_board64[j]] = 0;
+                        i++;
+                    }
+                }
+                else if (c == 'p')
+                {
+                    _board[_board64[i]] = 7;
+                }
+                else if (c == '')
+                {
+                    
+                }
+
+                
+            }
+        }*/
     }
 }
