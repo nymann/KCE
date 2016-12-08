@@ -10,6 +10,8 @@ namespace KCE
     {
         static void Main(string[] args)
         {
+            new BoardRepresentation.Board();
+            Console.ReadKey();
         }
     }
 }
