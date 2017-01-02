@@ -44,10 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardRepresentation\BoardRepresentation.cs" />
+    <Compile Include="BoardRepresentation\MoveGeneration\Bishop.cs" />
     <Compile Include="BoardRepresentation\MoveGeneration\IMoveGeneration.cs" />
     <Compile Include="BoardRepresentation\MoveGeneration\King.cs" />
     <Compile Include="BoardRepresentation\Board.cs" />
     <Compile Include="BoardRepresentation\MoveGeneration\Knight.cs" />
+    <Compile Include="BoardRepresentation\MoveGeneration\Queen.cs" />
+    <Compile Include="BoardRepresentation\MoveGeneration\Rook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
