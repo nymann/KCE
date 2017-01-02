@@ -26,7 +26,7 @@ namespace KCE.BoardRepresentation.MoveGeneration
 
             if (_square / 10 == 8 && _board.BoardRepresentation[_square - 10] == 0 && _board.BoardRepresentation[_square - 20] == 0)
             {
-                validMoves.Add(_square - 20);
+                validMoves.Add(_square - 20); // if this move is chose enPas square should be set to _square - 20.
             }
 
             if (_board.BoardRepresentation[_square - 10] == 0)
@@ -34,12 +34,23 @@ namespace KCE.BoardRepresentation.MoveGeneration
                 validMoves.Add(_square - 10);
             }
 
+            // attacking moves.
             if (_board.BoardRepresentation[_square - 11] != 0 && _board.BoardRepresentation[_square - 11] < 6)
             {
                 validMoves.Add(_square - 11);
             }
 
             if (_board.BoardRepresentation[_square - 9] != 0 && _board.BoardRepresentation[_square - 9] < 6)
+            {
+                validMoves.Add(_square - 9);
+            }
+
+            if (_board.EnPasSquare == _square - 1)
+            {
+                validMoves.Add(_square - 11);
+            }
+
+            if (_board.EnPasSquare == _square + 1)
             {
                 validMoves.Add(_square - 9);
             }
@@ -53,7 +64,7 @@ namespace KCE.BoardRepresentation.MoveGeneration
 
             if (_square / 10 == 3 && _board.BoardRepresentation[_square + 10] == 0 && _board.BoardRepresentation[_square + 20] == 0)
             {
-                validMoves.Add(_square + 20);
+                validMoves.Add(_square + 20); // if this move is chose enPas square should be set to _square + 20.
             }
 
             if (_board.BoardRepresentation[_square + 10] == 0)
@@ -61,12 +72,24 @@ namespace KCE.BoardRepresentation.MoveGeneration
                 validMoves.Add(_square + 10);
             }
 
+
+            // attacking moves.
             if (_board.BoardRepresentation[_square + 11] > 6 && _board.BoardRepresentation[_square + 11] < 13)
             {
                 validMoves.Add(_square + 11);
             }
 
             if (_board.BoardRepresentation[_square + 9] > 6 && _board.BoardRepresentation[_square + 9] < 13)
+            {
+                validMoves.Add(_square + 9);
+            }
+
+            if (_board.EnPasSquare == _square - 1)
+            {
+                validMoves.Add(_square + 11);
+            }
+
+            if (_board.EnPasSquare == _square + 1)
             {
                 validMoves.Add(_square + 9);
             }
