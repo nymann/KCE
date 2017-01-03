@@ -69,12 +69,22 @@ namespace KCE.BoardRepresentation
             {
                 Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                 string enPasSquareAlgebraic = "";
+                string check = "";
 
+                if (board.SideToMove == Definitions.WhiteToMove && IsSquareAttacked(board.KingSquares[1]))
+                {
+                    check = "White is in check! ";
+                }
+
+                else if (board.SideToMove == Definitions.BlackToMove && IsSquareAttacked(board.KingSquares[0]))
+                {
+                    check = "Black is in check! ";
+                }
                 if (Definitions.IndexToAlgebraic.ContainsKey(board.EnPasSquare))
                 {
                     enPasSquareAlgebraic = Definitions.IndexToAlgebraic[board.EnPasSquare];
                 }
-                Console.WriteLine("Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", lastMove, enPasSquareAlgebraic, board.FiftyMoveRule);
+                Console.WriteLine("{3}Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", lastMove, enPasSquareAlgebraic, board.FiftyMoveRule, check);
                 if (board.SideToMove == Definitions.WhiteToMove)
                 {
                     PrintBoardWhitePerspective();
@@ -653,7 +663,7 @@ namespace KCE.BoardRepresentation
             return new Board(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS, BCCKS, BCCQS);
         }
 
-        public bool IsSquareAttacked(int square)
+        private bool IsSquareAttacked(int square)
         {
             Knight imaginaryKnight = new Knight(board, square);
 
