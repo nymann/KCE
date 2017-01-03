@@ -10,7 +10,7 @@ namespace KCE.BoardRepresentation
         private bool userColor;
         private string lastMove = "";
 
-        private int[] _kingSquares = {24, 94};
+        private int[] _kingSquares = {94, 24};
 
         private int[] _board =
         {
@@ -42,10 +42,10 @@ namespace KCE.BoardRepresentation
 
         public BoardRepresentation()
         {
-            board = new Board(_board, true, _kingSquares, Definitions.NoEnPassantSquare, 0);
+            board = new Board(_board, true, _kingSquares, Definitions.NoEnPassantSquare, 0, true, true, true, true);
             
             Console.WriteLine("Type 'w' if you want to be white, or 'b' if you want to be black.");
-            String userColorString = Console.ReadLine();
+            var userColorString = Console.ReadLine();
             switch (userColorString)
             {
                 case "w":
@@ -91,67 +91,68 @@ namespace KCE.BoardRepresentation
                 Console.Write(" | ");
                 switch (_board[square])
                 {
-                    case 0:
+                    case Definitions.EmptySquare:
                         // Empty Square
                         Console.Write(' ');
                         break;
-                    case 1:
+
+                    case Definitions.WhitePawn:
                         // White Pawn
-                        Console.Write('\u2659');
-                        break;
-
-                    case 2:
-                        // White Knight
-                        Console.Write('\u2658');
-                        break;
-
-                    case 3:
-                        // White Bishop
-                        Console.Write('\u2657');
-                        break;
-
-                    case 4:
-                        // White Rook
-                        Console.Write('\u2656');
-                        break;
-
-                    case 5:
-                        // White Queen
-                        Console.Write('\u2655');
-                        break;
-
-                    case 6:
-                        // White King
-                        Console.Write('\u2654');
-                        break;
-
-                    case 7:
-                        // Black Pawn
                         Console.Write('\u265f');
                         break;
-                    case 8:
-                        // Black Knight
+                    case Definitions.WhiteKnight:
+                        // White Knight
                         Console.Write('\u265e');
                         break;
 
-                    case 9:
-                        // Black Bishop
+                    case Definitions.WhiteBishop:
+                        // White Bishop
                         Console.Write('\u265d');
                         break;
 
-                    case 10:
-                        // Black Rook
+                    case Definitions.WhiteRook:
+                        // White Rook
                         Console.Write('\u265c');
                         break;
 
-                    case 11:
-                        // Black Queen
+                    case Definitions.WhiteQueen:
+                        // White Queen
                         Console.Write('\u265b');
                         break;
 
-                    case 12:
-                        // Black King
+                    case Definitions.WhiteKing:
+                        // White King
                         Console.Write('\u265a');
+                        break;
+
+                    case Definitions.BlackPawn:
+                        // Black Pawn
+                        Console.Write('\u2659');
+                        break;
+
+                    case Definitions.BlackKnight:
+                        // Black Knight
+                        Console.Write('\u2658');
+                        break;
+
+                    case Definitions.BlackBishop:
+                        // Black Bishop
+                        Console.Write('\u2657');
+                        break;
+
+                    case Definitions.BlackRook:
+                        // Black Rook
+                        Console.Write('\u2656');
+                        break;
+
+                    case Definitions.BlackQueen:
+                        // Black Queen
+                        Console.Write('\u2655');
+                        break;
+
+                    case Definitions.BlackKing:
+                        // Black King
+                        Console.Write('\u2654');
                         break;
 
                     default:
@@ -168,20 +169,20 @@ namespace KCE.BoardRepresentation
 
         private bool UserMove(string longAlgebraicNotation)
         {
-            string fromSquareString = longAlgebraicNotation.Substring(0, 2);
+            var fromSquareString = longAlgebraicNotation.Substring(0, 2);
             if (!Definitions.AlgebraicToIndex.ContainsKey(fromSquareString))
             {
                 return false;
             }
 
-            int fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
+            var fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
 
-            string toSquareString = longAlgebraicNotation.Substring(2, 2);
+            var toSquareString = longAlgebraicNotation.Substring(2, 2);
             if (!Definitions.AlgebraicToIndex.ContainsKey(toSquareString))
             {
                 return false;
             }
-            int toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
+            var toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
 
             if (board.BoardRepresentation[fromSquareInt] == Definitions.EmptySquare ||
                 board.SideToMove == Definitions.BlackToMove && board.BoardRepresentation[fromSquareInt] < 6 ||
@@ -231,16 +232,78 @@ namespace KCE.BoardRepresentation
 
         private void MakeMove(string longAlgebraicNotation)
         {
-            string fromSquareString = longAlgebraicNotation.Substring(0, 2);
-            int fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
+            var fromSquareString = longAlgebraicNotation.Substring(0, 2);
+            var fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
 
-            string toSquareString = longAlgebraicNotation.Substring(2, 2);
-            int toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
+            var toSquareString = longAlgebraicNotation.Substring(2, 2);
+            var toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
 
             // TODO: Update king square, castling, etc.
+            if (board.BoardRepresentation[fromSquareInt] == Definitions.WhiteKing)
+            {
+                board.KingSquares[1] = toSquareInt;
+                board.WhiteCanCastleQueenSide = false;
+                board.WhiteCanCastleKingSide = false;
+
+                if (longAlgebraicNotation.Equals("e1g1"))
+                {
+                    // just move the rook. H1 to F1.
+                    MoveRookCastling(21, 23);
+                }
+
+                else if (longAlgebraicNotation.Equals("e1c1"))
+                {
+                    // just move the rook. A1 to D1.
+                    MoveRookCastling(28, 25);
+                }
+            }
+            else if (board.BoardRepresentation[fromSquareInt] == Definitions.BlackKing)
+            {
+                board.KingSquares[0] = toSquareInt;
+                board.BlackCanCastleKingSide = false;
+                board.BlackCanCaslteQueenSide = false;
+
+                if (longAlgebraicNotation.Equals("e8g8"))
+                {
+                    // just move the rook. H8 to F8.
+                    MoveRookCastling(91, 93);
+                }
+
+                else if (longAlgebraicNotation.Equals("e8c8"))
+                {
+                    // just move the rook. A8 to D8
+                    MoveRookCastling(98, 95);
+                }
+            }
+
+            else if (fromSquareInt == 21) // Is rook on h1 moving? Then disable castling.
+            {
+                board.WhiteCanCastleKingSide = false;
+            }
+
+            else if (fromSquareInt == 28) // Is rook on a1 moving? Then disable castling.
+            {
+                board.WhiteCanCastleQueenSide = false;
+            }
+
+            else if (fromSquareInt == 91) // Is rook on h8 moving? Then disable castling.
+            {
+                board.BlackCanCastleKingSide = false;
+            }
+
+            else if (fromSquareInt == 98) // Is rook on a8 moving? Then disable castling.
+            {
+                board.BlackCanCaslteQueenSide = false;
+            }
 
             board.BoardRepresentation[toSquareInt] = board.BoardRepresentation[fromSquareInt];
             board.BoardRepresentation[fromSquareInt] = Definitions.EmptySquare;
+        }
+
+        private void MoveRookCastling(int fromSquare, int toSquare)
+        {
+            board.BoardRepresentation[toSquare] = board.BoardRepresentation[fromSquare];
+            board.BoardRepresentation[fromSquare] = Definitions.EmptySquare;
         }
     }
 }
