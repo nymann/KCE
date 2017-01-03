@@ -14,7 +14,7 @@ namespace KCE.BoardRepresentation
 
         private int[] _kingSquares = {94, 24};
 
-        private int[] _board =
+        /*private int[] _board =
         {
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
@@ -28,7 +28,7 @@ namespace KCE.BoardRepresentation
             99, 10, 8, 9, 12, 11, 9, 8, 10, 99,
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
             99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-        };
+        };*/
 
         private readonly int[] _board64 =
         {
@@ -42,10 +42,12 @@ namespace KCE.BoardRepresentation
             91, 92, 93, 94, 95, 96, 97, 98
         };
 
-        public BoardRepresentation()
+        public BoardRepresentation(string fen)
         {
-            board = new Board(_board, true, _kingSquares, Definitions.NoEnPassantSquare, 0, true, true, true, true);
-            
+            //board = new Board(_board, true, _kingSquares, Definitions.NoEnPassantSquare, 0, true, true, true, true);
+
+            board = BoardsetupFromFen(fen);
+
             Console.WriteLine("Type 'w' if you want to be white, or 'b' if you want to be black.");
             var userColorString = Console.ReadLine();
             switch (userColorString)
@@ -66,8 +68,21 @@ namespace KCE.BoardRepresentation
             while (!gameIsOver)
             {
                 Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                Console.WriteLine("Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", lastMove, board.EnPasSquare, board.FiftyMoveRule);
-                PrintBoard();
+                string enPasSquareAlgebraic = "";
+
+                if (Definitions.IndexToAlgebraic.ContainsKey(board.EnPasSquare))
+                {
+                    enPasSquareAlgebraic = Definitions.IndexToAlgebraic[board.EnPasSquare];
+                }
+                Console.WriteLine("Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", lastMove, enPasSquareAlgebraic, board.FiftyMoveRule);
+                if (board.SideToMove == Definitions.WhiteToMove)
+                {
+                    PrintBoardWhitePerspective();
+                }
+                else
+                {
+                    PrintBoardBlackPerspective();
+                }
                 Console.WriteLine(board.SideToMove ? "\nWhite to move:" : "\nBlack to move:");
 
                 string userMove = Console.ReadLine();
@@ -84,7 +99,7 @@ namespace KCE.BoardRepresentation
 
         }
 
-        private void PrintBoard()
+        private void PrintBoardBlackPerspective()
         {
             var counter = 1;
             Console.OutputEncoding = Encoding.Unicode;
@@ -93,7 +108,7 @@ namespace KCE.BoardRepresentation
             foreach (var square in _board64)
             {
                 Console.Write(" | ");
-                switch (_board[square])
+                switch (board.BoardRepresentation[square])
                 {
                     case Definitions.EmptySquare:
                         // Empty Square
@@ -171,6 +186,94 @@ namespace KCE.BoardRepresentation
             }
         }
 
+        private void PrintBoardWhitePerspective()
+        {
+            var counter = 8;
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.WriteLine("   a   b   c   d   e   f   g   h");
+            Console.WriteLine(" +---+---+---+---+---+---+---+---+");
+            for (int i = 63; i >= 0; i-- )
+            {
+                Console.Write(" | ");
+                switch (board.BoardRepresentation[_board64[i]])
+                {
+                    case Definitions.EmptySquare:
+                        // Empty Square
+                        Console.Write(' ');
+                        break;
+
+                    case Definitions.WhitePawn:
+                        // White Pawn
+                        Console.Write('\u265f');
+                        break;
+                    case Definitions.WhiteKnight:
+                        // White Knight
+                        Console.Write('\u265e');
+                        break;
+
+                    case Definitions.WhiteBishop:
+                        // White Bishop
+                        Console.Write('\u265d');
+                        break;
+
+                    case Definitions.WhiteRook:
+                        // White Rook
+                        Console.Write('\u265c');
+                        break;
+
+                    case Definitions.WhiteQueen:
+                        // White Queen
+                        Console.Write('\u265b');
+                        break;
+
+                    case Definitions.WhiteKing:
+                        // White King
+                        Console.Write('\u265a');
+                        break;
+
+                    case Definitions.BlackPawn:
+                        // Black Pawn
+                        Console.Write('\u2659');
+                        break;
+
+                    case Definitions.BlackKnight:
+                        // Black Knight
+                        Console.Write('\u2658');
+                        break;
+
+                    case Definitions.BlackBishop:
+                        // Black Bishop
+                        Console.Write('\u2657');
+                        break;
+
+                    case Definitions.BlackRook:
+                        // Black Rook
+                        Console.Write('\u2656');
+                        break;
+
+                    case Definitions.BlackQueen:
+                        // Black Queen
+                        Console.Write('\u2655');
+                        break;
+
+                    case Definitions.BlackKing:
+                        // Black King
+                        Console.Write('\u2654');
+                        break;
+
+                    default:
+                        Console.WriteLine("THIS SHOULDN'T HAPPEN.");
+                        break;
+                }
+
+                if (_board64[i] % 10 != 1) continue;
+                Console.WriteLine(" | {0}", counter);
+                Console.WriteLine(" +---+---+---+---+---+---+---+---+");
+                counter--;
+            }
+
+        }
+
         private bool UserMove(string longAlgebraicNotation)
         {
             var fromSquareString = longAlgebraicNotation.Substring(0, 2);
@@ -196,7 +299,7 @@ namespace KCE.BoardRepresentation
                 return false;
             }
 
-            switch (_board[fromSquareInt])
+            switch (board.BoardRepresentation[fromSquareInt])
             {
                 case Definitions.WhitePawn:
                 case Definitions.BlackPawn:
@@ -324,7 +427,7 @@ namespace KCE.BoardRepresentation
             }
 
             board.FiftyMoveRule += 1;
-            if (board.FiftyMoveRule == 50)
+            if (board.FiftyMoveRule == 100) // 100 halfmoves = 50 full moves.
             {
                 gameIsOver = true;
                 gameOverMessage = "Game drawn due to 50 moves rule.";
@@ -343,6 +446,211 @@ namespace KCE.BoardRepresentation
         {
             board.BoardRepresentation[toSquare] = board.BoardRepresentation[fromSquare];
             board.BoardRepresentation[fromSquare] = Definitions.EmptySquare;
+        }
+
+        private Board BoardsetupFromFen(string fen)
+        {
+            int[] boardRepresentation =
+            {
+                99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
+                99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+                99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+            };
+            bool sideToMove;
+            bool WCCKS = false;
+            bool WCCQS = false;
+            bool BCCKS = false;
+            bool BCCQS = false;
+            int enPasSquare;
+            int fiftyMoveRule;
+            int fullMoves;
+            int[] kingSquares = {99, 99};
+
+            int index = 63;
+            string[] pieces = fen.Split(' ');
+
+            #region pieceSetup
+
+            foreach (char c in pieces[0])
+            {
+                if (c > 'a' && c < 'z')
+                {
+                    switch (c)
+                    {
+                        case 'p':
+                            boardRepresentation[_board64[index]] = Definitions.BlackPawn;
+                            break;
+
+                        case 'r':
+                            boardRepresentation[_board64[index]] = Definitions.BlackRook;
+                            break;
+
+                        case 'n':
+                            boardRepresentation[_board64[index]] = Definitions.BlackKnight;
+                            break;
+
+                        case 'b':
+                            boardRepresentation[_board64[index]] = Definitions.BlackBishop;
+                            break;
+
+                        case 'q':
+                            boardRepresentation[_board64[index]] = Definitions.BlackQueen;
+                            break;
+
+                        case 'k':
+                            boardRepresentation[_board64[index]] = Definitions.BlackKing;
+                            kingSquares[0] = _board64[index];
+                            break;
+
+                        default:
+                            Console.WriteLine("This can't happen.");
+                            break;
+                    }
+
+                    index--;
+                }
+
+                else if (c > 'A' && c < 'Z')
+                {
+                    // piece is white
+                    switch (c)
+                    {
+                        case 'P':
+                            boardRepresentation[_board64[index]] = Definitions.WhitePawn;
+                            break;
+
+                        case 'R':
+                            boardRepresentation[_board64[index]] = Definitions.WhiteRook;
+                            break;
+
+                        case 'N':
+                            boardRepresentation[_board64[index]] = Definitions.WhiteKnight;
+                            break;
+
+                        case 'B':
+                            boardRepresentation[_board64[index]] = Definitions.WhiteBishop;
+                            break;
+
+                        case 'Q':
+                            boardRepresentation[_board64[index]] = Definitions.WhiteQueen;
+                            break;
+
+                        case 'K':
+                            boardRepresentation[_board64[index]] = Definitions.WhiteKing;
+                            kingSquares[1] = _board64[index];
+                            break;
+
+                        default:
+                            Console.WriteLine("This can't happen.");
+                            break;
+                    }
+
+                    index--;
+                }
+
+                else if (c > '0' && c < '9')
+                {
+                    // the next 'c' squares are Empty.
+                    int n = Convert.ToInt16(c) - '0';
+                    index -= n;
+                }
+            }
+
+            #endregion
+
+            #region side to move
+
+            if (pieces[1] == "w")
+            {
+                sideToMove = Definitions.WhiteToMove;
+            }
+
+            else if (pieces[1] == "b")
+            {
+                sideToMove = Definitions.BlackToMove;
+            }
+
+            else
+            {
+                sideToMove = Definitions.WhiteToMove;
+                Console.WriteLine("Couldn't detect starting site in FEN String. Value was '{0}'.", pieces[1]);
+            }
+
+            #endregion
+
+            #region castling rights
+
+            foreach (char c in pieces[2])
+            {
+                switch (c)
+                {
+                    case 'K':
+                        // White can castle kingside
+                        WCCKS = true;
+                        break;
+
+                    case 'Q':
+                        // White can castle queenside
+                        WCCQS = true;
+                        break;
+
+                    case 'k':
+                        // Black can castle kingside
+                        BCCKS = true;
+                        break;
+
+                    case 'q':
+                        // Black can caslte queenside
+                        BCCQS = true;
+                        break;
+
+                    default:
+                        // '-' no side can castle.
+                        break;
+                }
+            }
+
+            #endregion
+
+            #region en passant square
+            if (pieces[3].Equals("-"))
+            {
+                enPasSquare = Definitions.NoEnPassantSquare;
+            }
+            else if (Definitions.AlgebraicToIndex.ContainsKey(pieces[3]))
+            {
+                enPasSquare = Definitions.AlgebraicToIndex[pieces[3]];
+            }
+            else
+            {
+                enPasSquare = Definitions.NoEnPassantSquare;
+                Console.WriteLine("Failed to determine EnPassant square, value was: '{0}'.", pieces[3]);
+            }
+
+            #endregion
+
+            #region fifty move rule
+
+            fiftyMoveRule = Convert.ToInt16(pieces[4]);
+
+            #endregion
+
+            #region full moves
+
+            fullMoves = Convert.ToInt16(pieces[5]);
+
+            #endregion
+
+            return new Board(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS, BCCKS, BCCQS);
         }
     }
 }
