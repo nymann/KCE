@@ -6,17 +6,19 @@ namespace KCE.BoardRepresentation.MoveGeneration
     public class King : IMoveGeneration
     {
         private readonly Board _board;
+        private readonly int _square;
 
-        public King(Board board)
+        public King(Board board, int square)
         {
             _board = board;
+            _square = square;
         }
 
         public List<int> MoveGeneration()
         {
             return _board.SideToMove
-                ? WhiteMoveGeneration(_board.KingSquares[0])
-                : BlackMoveGeneration(_board.KingSquares[1]);
+                ? WhiteMoveGeneration(_square)
+                : BlackMoveGeneration(_square);
         }
 
         private List<int> BlackMoveGeneration(int square)

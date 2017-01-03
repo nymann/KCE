@@ -52,6 +52,7 @@
     <Compile Include="BoardRepresentation\MoveGeneration\Pawn.cs" />
     <Compile Include="BoardRepresentation\MoveGeneration\Queen.cs" />
     <Compile Include="BoardRepresentation\MoveGeneration\Rook.cs" />
+    <Compile Include="BoardRepresentation\Definitions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

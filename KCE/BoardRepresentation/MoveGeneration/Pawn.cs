@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace KCE.BoardRepresentation.MoveGeneration
 {
@@ -15,6 +16,14 @@ namespace KCE.BoardRepresentation.MoveGeneration
 
         public List<int> MoveGeneration()
         {
+            if (_board.SideToMove == false)
+            {
+                Console.WriteLine("Black to move!");
+            }
+            else
+            {
+                Console.WriteLine("White to move!");
+            }
             return _board.SideToMove
                 ? WhiteMoveGeneration()
                 : BlackMoveGeneration();

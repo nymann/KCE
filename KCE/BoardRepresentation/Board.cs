@@ -3,10 +3,11 @@
     public class Board
     {
         public int[] BoardRepresentation { get; }
-        public bool SideToMove { get; }
+        public bool SideToMove { get; set; }
+
         public int[] KingSquares { get; }
 
-        public int EnPasSquare { get; }
+        public int EnPasSquare { get;}
 
         public int FiftyMoveRule { get; }
 
@@ -18,9 +19,5 @@
             EnPasSquare = enPasSquare;
             FiftyMoveRule = fiftyMoveRule;
         }
-
-
-
-
     }
 }
