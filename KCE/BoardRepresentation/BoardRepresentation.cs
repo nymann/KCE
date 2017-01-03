@@ -9,6 +9,8 @@ namespace KCE.BoardRepresentation
         private Board board;
         private bool userColor;
         private string lastMove = "";
+        private bool gameIsOver = false;
+        private string gameOverMessage = "";
 
         private int[] _kingSquares = {94, 24};
 
@@ -61,10 +63,10 @@ namespace KCE.BoardRepresentation
                     userColor = Definitions.White;
                     break;
             }
-            while (true)
+            while (!gameIsOver)
             {
                 Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                Console.WriteLine("Last move was: {0}\n", lastMove);
+                Console.WriteLine("Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", lastMove, board.EnPasSquare, board.FiftyMoveRule);
                 PrintBoard();
                 Console.WriteLine(board.SideToMove ? "\nWhite to move:" : "\nBlack to move:");
 
@@ -77,6 +79,8 @@ namespace KCE.BoardRepresentation
                     board.SideToMove = !board.SideToMove;
                 }
             }
+
+            Console.WriteLine(gameOverMessage);
 
         }
 
@@ -261,7 +265,7 @@ namespace KCE.BoardRepresentation
             {
                 board.KingSquares[0] = toSquareInt;
                 board.BlackCanCastleKingSide = false;
-                board.BlackCanCaslteQueenSide = false;
+                board.BlackCanCastleQueenSide = false;
 
                 if (longAlgebraicNotation.Equals("e8g8"))
                 {
@@ -293,7 +297,7 @@ namespace KCE.BoardRepresentation
 
             else if (fromSquareInt == 98) // Is rook on a8 moving? Then disable castling.
             {
-                board.BlackCanCaslteQueenSide = false;
+                board.BlackCanCastleQueenSide = false;
             }
 
             else if (toSquareInt == board.EnPasSquare && board.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn)
@@ -307,7 +311,7 @@ namespace KCE.BoardRepresentation
             }
 
             board.EnPasSquare = Definitions.NoEnPassantSquare;
-            
+
             // En passant.
             if (board.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn && (toSquareInt - fromSquareInt) == 20)
             {
@@ -317,6 +321,18 @@ namespace KCE.BoardRepresentation
             if (board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn && (fromSquareInt - toSquareInt) == 20)
             {
                 board.EnPasSquare = fromSquareInt - 10;
+            }
+
+            board.FiftyMoveRule += 1;
+            if (board.FiftyMoveRule == 50)
+            {
+                gameIsOver = true;
+                gameOverMessage = "Game drawn due to 50 moves rule.";
+            }
+            // Fifty move rule, was a piece captured or a pawn moved? If so, reset the fifty move counter to 0.
+            if (board.BoardRepresentation[fromSquareInt] == Definitions. WhitePawn || board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn || board.BoardRepresentation[toSquareInt] != Definitions.EmptySquare)
+            {
+                board.FiftyMoveRule = 0;
             }
 
             board.BoardRepresentation[toSquareInt] = board.BoardRepresentation[fromSquareInt];

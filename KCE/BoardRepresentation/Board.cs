@@ -8,13 +8,13 @@
         public bool WhiteCanCastleKingSide { get; set; }
         public bool WhiteCanCastleQueenSide { get; set; }
         public bool BlackCanCastleKingSide { get; set; }
-        public bool BlackCanCaslteQueenSide { get; set; }
+        public bool BlackCanCastleQueenSide { get; set; }
 
         public int[] KingSquares { get; set; }
 
         public int EnPasSquare { get; set; }
 
-        public int FiftyMoveRule { get; }
+        public int FiftyMoveRule { get; set; }
 
         public Board(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
         {
@@ -27,7 +27,7 @@
             WhiteCanCastleKingSide = WCCKS;
             WhiteCanCastleQueenSide = WCCQS;
             BlackCanCastleKingSide = BCCKS;
-            BlackCanCaslteQueenSide = BCCQS;
+            BlackCanCastleQueenSide = BCCQS;
         }
     }
 }
