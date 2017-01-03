@@ -296,6 +296,29 @@ namespace KCE.BoardRepresentation
                 board.BlackCanCaslteQueenSide = false;
             }
 
+            else if (toSquareInt == board.EnPasSquare && board.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn)
+            {
+                board.BoardRepresentation[toSquareInt - 10] = Definitions.EmptySquare;
+            }
+
+            else if (toSquareInt == board.EnPasSquare && board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn)
+            {
+                board.BoardRepresentation[toSquareInt + 10] = Definitions.EmptySquare;
+            }
+
+            board.EnPasSquare = Definitions.NoEnPassantSquare;
+            
+            // En passant.
+            if (board.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn && (toSquareInt - fromSquareInt) == 20)
+            {
+                board.EnPasSquare = toSquareInt - 10;
+            }
+
+            if (board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn && (fromSquareInt - toSquareInt) == 20)
+            {
+                board.EnPasSquare = fromSquareInt - 10;
+            }
+
             board.BoardRepresentation[toSquareInt] = board.BoardRepresentation[fromSquareInt];
             board.BoardRepresentation[fromSquareInt] = Definitions.EmptySquare;
         }

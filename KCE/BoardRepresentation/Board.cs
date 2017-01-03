@@ -12,7 +12,7 @@
 
         public int[] KingSquares { get; set; }
 
-        public int EnPasSquare { get;}
+        public int EnPasSquare { get; set; }
 
         public int FiftyMoveRule { get; }
 

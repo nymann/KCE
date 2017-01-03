@@ -23,6 +23,7 @@ namespace KCE.BoardRepresentation.MoveGeneration
             else
             {
                 Console.WriteLine("White to move!");
+                
             }
             return _board.SideToMove
                 ? WhiteMoveGeneration()
@@ -54,12 +55,12 @@ namespace KCE.BoardRepresentation.MoveGeneration
                 validMoves.Add(_square - 9);
             }
 
-            if (_board.EnPasSquare == _square - 1)
+            if (_board.EnPasSquare == _square - 11)
             {
                 validMoves.Add(_square - 11);
             }
 
-            if (_board.EnPasSquare == _square + 1)
+            if (_board.EnPasSquare == _square - 9)
             {
                 validMoves.Add(_square - 9);
             }
@@ -93,12 +94,12 @@ namespace KCE.BoardRepresentation.MoveGeneration
                 validMoves.Add(_square + 9);
             }
 
-            if (_board.EnPasSquare == _square - 1)
+            if (_board.EnPasSquare == _square + 11)
             {
                 validMoves.Add(_square + 11);
             }
 
-            if (_board.EnPasSquare == _square + 1)
+            if (_board.EnPasSquare == _square + 9)
             {
                 validMoves.Add(_square + 9);
             }
