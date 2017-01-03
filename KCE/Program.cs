@@ -10,7 +10,7 @@ namespace KCE
     {
         static void Main(string[] args)
         {
-            new BoardRepresentation.BoardRepresentation("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+            new BoardRepresentation.BoardRepresentation("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5P2/PPPPN1PP/RNBQK2R b KQkq - 2 4");
             Console.ReadKey();
         }
     }

@@ -652,5 +652,69 @@ namespace KCE.BoardRepresentation
 
             return new Board(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS, BCCKS, BCCQS);
         }
+
+        public bool IsSquareAttacked(int square)
+        {
+            Knight imaginaryKnight = new Knight(board, square);
+
+            var listOfKnightMoves = imaginaryKnight.MoveGeneration();
+            foreach (int possibleAttackedFromSquares in listOfKnightMoves)
+            {
+                if (board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteKnight ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackKnight)
+                {
+                    return true;
+                }
+            }
+
+            Bishop imaginaryBishop = new Bishop(board, square);
+            var listOfBishopMoves = imaginaryBishop.MoveGeneration();
+
+            foreach (int possibleAttackedFromSquares in listOfBishopMoves)
+            {
+                if (board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteQueen ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackQueen ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteBishop ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackBishop)
+                {
+                    return true;
+                }
+            }
+
+            if (board.SideToMove == Definitions.WhiteToMove)
+            {
+                // Check if black has pawns that can attack us.
+                if (board.BoardRepresentation[square + 11] == Definitions.BlackPawn ||
+                    board.BoardRepresentation[square + 9] == Definitions.BlackPawn)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                // Check if white has pawns that can attack us.
+                if (board.BoardRepresentation[square - 11] == Definitions.BlackPawn ||
+                    board.BoardRepresentation[square - 9] == Definitions.BlackPawn)
+                {
+                    return true;
+                }
+            }
+
+            Rook imaginaryRook = new Rook(square, board);
+            var listOfRookMoves = imaginaryRook.MoveGeneration();
+
+            foreach (int possibleAttackedFromSquares in listOfRookMoves)
+            {
+                if (board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteQueen ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackQueen ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteRook ||
+                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackRook)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
