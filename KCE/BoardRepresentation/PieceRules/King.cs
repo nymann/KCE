@@ -35,6 +35,17 @@ namespace KCE.BoardRepresentation.PieceRules
             _square = sideToMove == Definitions.White ? kingSquares[1] : kingSquares[0];
         }
 
+        public King(int[] board, int square, bool sideToMove)
+        {
+            _board = board;
+            _square = square;
+            _sideToMove = sideToMove;
+            _WCCKS = false;
+            _WCCQS = false;
+            _BCCKS = false;
+            _BCCQS = false;
+        }
+
         public List<int> MoveGeneration()
         {
             return _sideToMove
@@ -48,42 +59,42 @@ namespace KCE.BoardRepresentation.PieceRules
 
             var validMoves = new List<int>();
 
-            if (_board[square + 1] == 0 || _board[square + 1] < 6)
+            if (_board[square + 1] == Definitions.EmptySquare || _board[square + 1] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square + 1);
             }
 
-            if (_board[square - 1] == 0 || _board[square - 1] < 6)
+            if (_board[square - 1] == Definitions.EmptySquare || _board[square - 1] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square - 1);
             }
 
-            if (_board[square + 9] == 0 || _board[square + 9] < 6)
+            if (_board[square + 9] == Definitions.EmptySquare || _board[square + 9] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square + 9);
             }
 
-            if (_board[square - 9] == 0 || _board[square - 9] < 6)
+            if (_board[square - 9] == Definitions.EmptySquare || _board[square - 9] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square - 9);
             }
 
-            if (_board[square + 10] == 0 || _board[square + 10] < 6)
+            if (_board[square + 10] == Definitions.EmptySquare || _board[square + 10] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square + 10);
             }
 
-            if (_board[square - 10] == 0 || _board[square - 10] < 6)
+            if (_board[square - 10] == Definitions.EmptySquare || _board[square - 10] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square - 10);
             }
 
-            if (_board[square - 11] == 0 || _board[square - 11] < 6)
+            if (_board[square - 11] == Definitions.EmptySquare || _board[square - 11] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square - 11);
             }
 
-            if (_board[square + 11] == 0 || _board[square + 11] < 6)
+            if (_board[square + 11] == Definitions.EmptySquare || _board[square + 11] <= Definitions.WhiteKing)
             {
                 validMoves.Add(square + 11);
             }
@@ -117,50 +128,50 @@ namespace KCE.BoardRepresentation.PieceRules
 
             var validMoves = new List<int>();
 
-            if (_board[square + 1] == 0 ||
-                _board[square + 1] > 6 && _board[square + 1] < 13)
+            if (_board[square + 1] == Definitions.EmptySquare ||
+                _board[square + 1] > Definitions.WhiteKing && _board[square + 1] <= Definitions.BlackKing)
             {
                 validMoves.Add(square + 1);
             }
 
-            if (_board[square - 1] == 0 ||
-                _board[square - 1] > 6 && _board[square - 1] < 13)
+            if (_board[square - 1] == Definitions.EmptySquare ||
+                _board[square - 1] > Definitions.WhiteKing && _board[square - 1] <= Definitions.BlackKing)
             {
                 validMoves.Add(square - 1);
             }
 
-            if (_board[square + 9] == 0 ||
-                _board[square + 9] > 6 && _board[square + 9] < 93)
+            if (_board[square + 9] == Definitions.EmptySquare ||
+                _board[square + 9] > Definitions.WhiteKing && _board[square + 9] <= Definitions.BlackKing)
             {
                 validMoves.Add(square + 9);
             }
 
-            if (_board[square - 9] == 0 ||
-                _board[square - 9] > 6 && _board[square - 9] < 93)
+            if (_board[square - 9] == Definitions.EmptySquare ||
+                _board[square - 9] > Definitions.WhiteKing && _board[square - 9] <= Definitions.BlackKing)
             {
                 validMoves.Add(square - 9);
             }
 
-            if (_board[square - 10] == 0 ||
-                _board[square - 10] > 6 && _board[square - 10] < 13)
+            if (_board[square - 10] == Definitions.EmptySquare ||
+                _board[square - 10] > Definitions.WhiteKing && _board[square - 10] <= Definitions.BlackKing)
             {
                 validMoves.Add(square - 10);
             }
 
-            if (_board[square + 10] == 0 ||
-                _board[square + 10] > 6 && _board[square + 10] < 13)
+            if (_board[square + 10] == Definitions.EmptySquare ||
+                _board[square + 10] > Definitions.WhiteKing && _board[square + 10] <= Definitions.BlackKing)
             {
                 validMoves.Add(square + 10);
             }
 
-            if (_board[square + 11] == 0 ||
-                _board[square + 11] > 6 && _board[square + 11] < 13)
+            if (_board[square + 11] == Definitions.EmptySquare ||
+                _board[square + 11] > Definitions.WhiteKing && _board[square + 11] <= Definitions.BlackKing)
             {
                 validMoves.Add(square + 11);
             }
 
-            if (_board[square - 11] == 0 ||
-                _board[square - 11] > 6 && _board[square - 11] < 13)
+            if (_board[square - 11] == Definitions.EmptySquare ||
+                _board[square - 11] > Definitions.WhiteKing && _board[square - 11] <= Definitions.BlackKing)
             {
                 validMoves.Add(square - 11);
             }

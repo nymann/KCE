@@ -31,18 +31,26 @@ namespace KCE.BoardRepresentation.PieceRules
         {
             var validMoves = new List<int>();
 
-            if (_square / 10 == 8 && _board[_square - 10] == Definitions.EmptySquare && _board[_square - 20] == Definitions.EmptySquare)
+            if (PawnIsOnSeventhRank() && _board[_square - 10] == Definitions.EmptySquare &&
+                _board[_square - 20] == Definitions.EmptySquare)
             {
                 validMoves.Add(_square - 20);
             }
 
             if (_board[_square - 10] == Definitions.EmptySquare)
             {
-                helper.PrintBoardWhitePerspective(_board);
+                /*if (!PawnIsOnSecondRank())
+                {
+                    validMoves.Add(_square - 10);
+                }
+
+                // promotion
+                // set flag?*/
+
                 validMoves.Add(_square - 10);
             }
 
-            // attacking moves.
+            #region attacking moves.
             if (_board[_square - 11] != 0 && _board[_square - 11] < 7)
             {
                 validMoves.Add(_square - 11);
@@ -62,6 +70,7 @@ namespace KCE.BoardRepresentation.PieceRules
             {
                 validMoves.Add(_square - 9);
             }
+            #endregion
 
             return validMoves;
         }
@@ -70,18 +79,28 @@ namespace KCE.BoardRepresentation.PieceRules
         {
             var validMoves = new List<int>();
 
-            if (_square / 10 == 3 && _board[_square + 10] == 0 && _board[_square + 20] == 0)
+            if (PawnIsOnSecondRank() && _board[_square + 10] == Definitions.EmptySquare &&
+                _board[_square + 20] == Definitions.EmptySquare)
             {
                 validMoves.Add(_square + 20);
             }
 
             if (_board[_square + 10] == 0)
             {
+                /*if (!PawnIsOnSeventhRank())
+                {
+                    validMoves.Add(_square + 10);
+                }
+                else
+                {
+                    // promotion
+                }*/
+
                 validMoves.Add(_square + 10);
             }
 
 
-            // attacking moves.
+            #region attacking moves.
             if (_board[_square + 11] > 6 && _board[_square + 11] < 13)
             {
                 validMoves.Add(_square + 11);
@@ -101,8 +120,19 @@ namespace KCE.BoardRepresentation.PieceRules
             {
                 validMoves.Add(_square + 9);
             }
+            #endregion
 
             return validMoves;
+        }
+
+        private bool PawnIsOnSeventhRank()
+        {
+            return _square/10 == 8;
+        }
+
+        private bool PawnIsOnSecondRank()
+        {
+            return _square/10 == 3;
         }
     }
 }
