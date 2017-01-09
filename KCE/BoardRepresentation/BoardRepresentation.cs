@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using KCE.BoardRepresentation.PieceRules;
 
@@ -8,7 +9,6 @@ namespace KCE.BoardRepresentation
     public class BoardRepresentation
     {
         private BoardState boardState;
-        //private bool userColor;
         private bool gameIsOver = false;
         private string gameOverMessage = "";
 
@@ -44,240 +44,19 @@ namespace KCE.BoardRepresentation
         {
             Helper helper = new Helper();;
             boardState = helper.BoardsetupFromFen(fen);
-            PrintBoardWhitePerspective();
+            helper.PrintBoardWhitePerspective(boardState.BoardRepresentation);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             MoveGenerator moveGenerator = new MoveGenerator(boardState);
             List<Ply> legalMoves = moveGenerator.AllLegalMoves();
+            stopwatch.Stop();
             var counter = 1;
-            Console.WriteLine("\n{0} legal moves.\n", legalMoves.Count);
+            Console.WriteLine("\n{0} legal moves found in {1} ms.\n", legalMoves.Count, stopwatch.ElapsedMilliseconds);
             foreach (Ply legalMove in legalMoves)
             {
                 Console.WriteLine("{0}: {1}.", counter, legalMove.GetAlgebraicPly());
                 counter++;
             }
-
-            /*boardState = BoardsetupFromFen(fen);
-
-            while (!gameIsOver)
-            {
-                Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                string enPasSquareAlgebraic = "";
-                string check = "";
-
-                if (boardState.SideToMove == Definitions.WhiteToMove && IsWhiteKingInCheck())
-                {
-                    check = "White is in check! ";
-                }
-                else if (boardState.SideToMove == Definitions.BlackToMove && IsBlackKingInCheck())
-                {
-                    check = "Black is in check! ";
-                }
-
-                if (Definitions.IndexToAlgebraic.ContainsKey(boardState.EnPasSquare))
-                {
-                    enPasSquareAlgebraic = Definitions.IndexToAlgebraic[boardState.EnPasSquare];
-                }
-                Console.WriteLine("{3}Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", boardState.LastMove, enPasSquareAlgebraic, boardState.FiftyMoveRule, check);
-
-                if (boardState.SideToMove == Definitions.WhiteToMove)
-                {
-                    PrintBoardWhitePerspective();
-                }
-                else
-                {
-                    PrintBoardBlackPerspective();
-                }
-
-                MoveGenerator moveGenerator = new MoveGenerator(boardState);
-                Console.WriteLine("Number of moves: {0}", moveGenerator.AllLegalMoves().Count);
-                //Console.WriteLine(BoardState.SideToMove ? "\nWhite to move:" : "\nBlack to move:");
-
-                string userMove = Console.ReadLine();
-                userMove = userMove?.ToLower();
-                if (UserMove(userMove))
-                {
-                    MakeMove(userMove);
-                    boardState.LastMove = userMove;
-                    boardState.SideToMove = !boardState.SideToMove;
-                }
-            }
-
-            Console.WriteLine(gameOverMessage);*/
-
-        }
-
-        private void PrintBoardBlackPerspective()
-        {
-            var counter = 1;
-            Console.OutputEncoding = Encoding.Unicode;
-            Console.WriteLine("   h   g   f   e   d   c   b   a");
-            Console.WriteLine(" +---+---+---+---+---+---+---+---+");
-            foreach (var square in _board64)
-            {
-                Console.Write(" | ");
-                switch (boardState.BoardRepresentation[square])
-                {
-                    case Definitions.EmptySquare:
-                        // Empty Square
-                        Console.Write(' ');
-                        break;
-
-                    case Definitions.WhitePawn:
-                        // White Pawn
-                        Console.Write('\u265f');
-                        break;
-                    case Definitions.WhiteKnight:
-                        // White Knight
-                        Console.Write('\u265e');
-                        break;
-
-                    case Definitions.WhiteBishop:
-                        // White Bishop
-                        Console.Write('\u265d');
-                        break;
-
-                    case Definitions.WhiteRook:
-                        // White Rook
-                        Console.Write('\u265c');
-                        break;
-
-                    case Definitions.WhiteQueen:
-                        // White Queen
-                        Console.Write('\u265b');
-                        break;
-
-                    case Definitions.WhiteKing:
-                        // White King
-                        Console.Write('\u265a');
-                        break;
-
-                    case Definitions.BlackPawn:
-                        // Black Pawn
-                        Console.Write('\u2659');
-                        break;
-
-                    case Definitions.BlackKnight:
-                        // Black Knight
-                        Console.Write('\u2658');
-                        break;
-
-                    case Definitions.BlackBishop:
-                        // Black Bishop
-                        Console.Write('\u2657');
-                        break;
-
-                    case Definitions.BlackRook:
-                        // Black Rook
-                        Console.Write('\u2656');
-                        break;
-
-                    case Definitions.BlackQueen:
-                        // Black Queen
-                        Console.Write('\u2655');
-                        break;
-
-                    case Definitions.BlackKing:
-                        // Black King
-                        Console.Write('\u2654');
-                        break;
-
-                    default:
-                        Console.WriteLine("THIS SHOULDN'T HAPPEN.");
-                        break;
-                }
-
-                if (square%10 != 8) continue;
-                Console.WriteLine(" | {0}", counter);
-                Console.WriteLine(" +---+---+---+---+---+---+---+---+");
-                counter++;
-            }
-        }
-
-        private void PrintBoardWhitePerspective()
-        {
-            var counter = 8;
-            Console.OutputEncoding = Encoding.Unicode;
-            Console.WriteLine("   a   b   c   d   e   f   g   h");
-            Console.WriteLine(" +---+---+---+---+---+---+---+---+");
-            for (int i = 63; i >= 0; i-- )
-            {
-                Console.Write(" | ");
-                switch (boardState.BoardRepresentation[_board64[i]])
-                {
-                    case Definitions.EmptySquare:
-                        // Empty Square
-                        Console.Write(' ');
-                        break;
-
-                    case Definitions.WhitePawn:
-                        // White Pawn
-                        Console.Write('\u265f');
-                        break;
-                    case Definitions.WhiteKnight:
-                        // White Knight
-                        Console.Write('\u265e');
-                        break;
-
-                    case Definitions.WhiteBishop:
-                        // White Bishop
-                        Console.Write('\u265d');
-                        break;
-
-                    case Definitions.WhiteRook:
-                        // White Rook
-                        Console.Write('\u265c');
-                        break;
-
-                    case Definitions.WhiteQueen:
-                        // White Queen
-                        Console.Write('\u265b');
-                        break;
-
-                    case Definitions.WhiteKing:
-                        // White King
-                        Console.Write('\u265a');
-                        break;
-
-                    case Definitions.BlackPawn:
-                        // Black Pawn
-                        Console.Write('\u2659');
-                        break;
-
-                    case Definitions.BlackKnight:
-                        // Black Knight
-                        Console.Write('\u2658');
-                        break;
-
-                    case Definitions.BlackBishop:
-                        // Black Bishop
-                        Console.Write('\u2657');
-                        break;
-
-                    case Definitions.BlackRook:
-                        // Black Rook
-                        Console.Write('\u2656');
-                        break;
-
-                    case Definitions.BlackQueen:
-                        // Black Queen
-                        Console.Write('\u2655');
-                        break;
-
-                    case Definitions.BlackKing:
-                        // Black King
-                        Console.Write('\u2654');
-                        break;
-
-                    default:
-                        Console.WriteLine("THIS SHOULDN'T HAPPEN.");
-                        break;
-                }
-
-                if (_board64[i] % 10 != 1) continue;
-                Console.WriteLine(" | {0}", counter);
-                Console.WriteLine(" +---+---+---+---+---+---+---+---+");
-                counter--;
-            }
-
         }
 
         /*private bool UserMove(string longAlgebraicNotation)

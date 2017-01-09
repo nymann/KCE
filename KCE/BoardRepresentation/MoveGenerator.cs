@@ -372,5 +372,26 @@ namespace KCE.BoardRepresentation
 
             return legalMoves;
         }
+
+        // A simple perft function in C looks as follows:
+        /*typedef unsigned long long u64;
+
+        u64 Perft(int depth)
+        {
+            MOVE move_list[256];
+            int n_moves, i;
+            u64 nodes = 0;
+
+            if (depth == 0) return 1;
+
+            n_moves = GenerateLegalMoves(move_list);
+            for (i = 0; i < n_moves; i++)
+            {
+                MakeMove(move_list[i]);
+                nodes += Perft(depth - 1);
+                UndoMove(move_list[i]);
+            }
+            return nodes;
+        }*/
     }
 }

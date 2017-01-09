@@ -308,6 +308,93 @@ namespace KCE.BoardRepresentation.PieceRules
 
         }
 
+        private void PrintBoardBlackPerspective(int[] board)
+        {
+            var counter = 1;
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.WriteLine("   h   g   f   e   d   c   b   a");
+            Console.WriteLine(" +---+---+---+---+---+---+---+---+");
+            foreach (var square in _board64)
+            {
+                Console.Write(" | ");
+                switch (board[square])
+                {
+                    case Definitions.EmptySquare:
+                        // Empty Square
+                        Console.Write(' ');
+                        break;
+
+                    case Definitions.WhitePawn:
+                        // White Pawn
+                        Console.Write('\u265f');
+                        break;
+                    case Definitions.WhiteKnight:
+                        // White Knight
+                        Console.Write('\u265e');
+                        break;
+
+                    case Definitions.WhiteBishop:
+                        // White Bishop
+                        Console.Write('\u265d');
+                        break;
+
+                    case Definitions.WhiteRook:
+                        // White Rook
+                        Console.Write('\u265c');
+                        break;
+
+                    case Definitions.WhiteQueen:
+                        // White Queen
+                        Console.Write('\u265b');
+                        break;
+
+                    case Definitions.WhiteKing:
+                        // White King
+                        Console.Write('\u265a');
+                        break;
+
+                    case Definitions.BlackPawn:
+                        // Black Pawn
+                        Console.Write('\u2659');
+                        break;
+
+                    case Definitions.BlackKnight:
+                        // Black Knight
+                        Console.Write('\u2658');
+                        break;
+
+                    case Definitions.BlackBishop:
+                        // Black Bishop
+                        Console.Write('\u2657');
+                        break;
+
+                    case Definitions.BlackRook:
+                        // Black Rook
+                        Console.Write('\u2656');
+                        break;
+
+                    case Definitions.BlackQueen:
+                        // Black Queen
+                        Console.Write('\u2655');
+                        break;
+
+                    case Definitions.BlackKing:
+                        // Black King
+                        Console.Write('\u2654');
+                        break;
+
+                    default:
+                        Console.WriteLine("THIS SHOULDN'T HAPPEN.");
+                        break;
+                }
+
+                if (square % 10 != 8) continue;
+                Console.WriteLine(" | {0}", counter);
+                Console.WriteLine(" +---+---+---+---+---+---+---+---+");
+                counter++;
+            }
+        }
+
         public BoardState BoardsetupFromFen(string fen)
         {
             int[] boardRepresentation =
