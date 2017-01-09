@@ -9,46 +9,16 @@ namespace KCE.BoardRepresentation
     public class BoardRepresentation
     {
         private BoardState boardState;
-        private bool gameIsOver = false;
-        private string gameOverMessage = "";
-
-        /*private int[] _board =
-        {
-            99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-            99, 4, 2, 3, 6, 5, 3, 2, 4, 99,
-            99, 1, 1, 1, 1, 1, 1, 1, 1, 99,
-            99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
-            99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
-            99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
-            99, 0, 0, 0, 0, 0, 0, 0, 0, 99,
-            99, 7, 7, 7, 7, 7, 7, 7, 7, 99,
-            99, 10, 8, 9, 12, 11, 9, 8, 10, 99,
-            99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
-        };*/
-
-        private readonly int[] _board64 =
-        {
-            21, 22, 23, 24, 25, 26, 27, 28,
-            31, 32, 33, 34, 35, 36, 37, 38,
-            41, 42, 43, 44, 45, 46, 47, 48,
-            51, 52, 53, 54, 55, 56, 57, 58,
-            61, 62, 63, 64, 65, 66, 67, 68,
-            71, 72, 73, 74, 75, 76, 77, 78,
-            81, 82, 83, 84, 85, 86, 87, 88,
-            91, 92, 93, 94, 95, 96, 97, 98
-        };
-
         public BoardRepresentation(string fen)
         {
-            Helper helper = new Helper();;
+            Helper helper = new Helper();
+            ;
             boardState = helper.BoardsetupFromFen(fen);
             helper.PrintBoardWhitePerspective(boardState.BoardRepresentation);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             MoveGenerator moveGenerator = new MoveGenerator(boardState);
-            List<Ply> legalMoves = moveGenerator.AllLegalMoves();
+            /*List<Ply> legalMoves = moveGenerator.AllLegalMoves();
             stopwatch.Stop();
             var counter = 1;
             Console.WriteLine("\n{0} legal moves found in {1} ms.\n", legalMoves.Count, stopwatch.ElapsedMilliseconds);
@@ -56,181 +26,13 @@ namespace KCE.BoardRepresentation
             {
                 Console.WriteLine("{0}: {1}.", counter, legalMove.GetAlgebraicPly());
                 counter++;
-            }
+            }*/
+            int depth = 5;
+            UInt64 calcNodes = moveGenerator.Perft(depth);
+            stopwatch.Stop();
+            Console.WriteLine("Depth: {0}, total legal moves {1}, calculated in {2} ms.", depth, calcNodes,
+                stopwatch.ElapsedMilliseconds);
+
         }
-
-        /*private bool UserMove(string longAlgebraicNotation)
-        {
-            var fromSquareString = longAlgebraicNotation.Substring(0, 2);
-            if (!Definitions.AlgebraicToIndex.ContainsKey(fromSquareString))
-            {
-                return false;
-            }
-
-            var fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
-
-            var toSquareString = longAlgebraicNotation.Substring(2, 2);
-            if (!Definitions.AlgebraicToIndex.ContainsKey(toSquareString))
-            {
-                return false;
-            }
-            var toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
-
-            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.EmptySquare ||
-                boardState.SideToMove == Definitions.BlackToMove && boardState.BoardRepresentation[fromSquareInt] < 6 ||
-                boardState.SideToMove == Definitions.WhiteToMove && boardState.BoardRepresentation[fromSquareInt] > 6 && boardState.BoardRepresentation[fromSquareInt] < 13)
-            {
-                Console.WriteLine("Reached. Side to move was {0}", boardState.SideToMove);
-                return false;
-            }
-
-            switch (boardState.BoardRepresentation[fromSquareInt])
-            {
-                case Definitions.WhitePawn:
-                case Definitions.BlackPawn:
-                    Pawn pawn = new Pawn(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove, boardState.EnPasSquare);
-                    return pawn.MoveGeneration().Contains(toSquareInt);
-
-                case Definitions.WhiteBishop:
-                case Definitions.BlackBishop:
-                    Bishop bishop = new Bishop(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
-                    return bishop.MoveGeneration().Contains(toSquareInt);
-
-                case Definitions.WhiteKnight:
-                case Definitions.BlackKnight:
-                    Knight knight = new Knight(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
-                    return knight.MoveGeneration().Contains(toSquareInt);
-
-                case Definitions.WhiteRook:
-                case Definitions.BlackRook:
-                    Rook rook = new Rook(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
-                    return rook.MoveGeneration().Contains(toSquareInt);
-
-                case Definitions.WhiteQueen:
-                case Definitions.BlackQueen:
-                    Queen queen = new Queen(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
-                    return queen.MoveGeneration().Contains(toSquareInt);
-
-                case Definitions.WhiteKing:
-                case Definitions.BlackKing:
-                    King king = new King(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
-                    return king.MoveGeneration().Contains(toSquareInt);
-
-                default:
-                    return false;
-            }
-
-        }*/
-
-        /*private void MakeMove(string longAlgebraicNotation)
-        {
-            var fromSquareString = longAlgebraicNotation.Substring(0, 2);
-            var fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
-
-            var toSquareString = longAlgebraicNotation.Substring(2, 2);
-            var toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
-
-            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.WhiteKing)
-            {
-                boardState.KingSquares[1] = toSquareInt;
-                boardState.WhiteCanCastleQueenSide = false;
-                boardState.WhiteCanCastleKingSide = false;
-
-                if (longAlgebraicNotation.Equals("e1g1"))
-                {
-                    // just move the rook. H1 to F1.
-                    MoveRookCastling(21, 23);
-                }
-
-                else if (longAlgebraicNotation.Equals("e1c1"))
-                {
-                    // just move the rook. A1 to D1.
-                    MoveRookCastling(28, 25);
-                }
-            }
-            else if (boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackKing)
-            {
-                boardState.KingSquares[0] = toSquareInt;
-                boardState.BlackCanCastleKingSide = false;
-                boardState.BlackCanCastleQueenSide = false;
-
-                if (longAlgebraicNotation.Equals("e8g8"))
-                {
-                    // just move the rook. H8 to F8.
-                    MoveRookCastling(91, 93);
-                }
-
-                else if (longAlgebraicNotation.Equals("e8c8"))
-                {
-                    // just move the rook. A8 to D8
-                    MoveRookCastling(98, 95);
-                }
-            }
-
-            else if (fromSquareInt == 21) // Is rook on h1 moving? Then disable castling.
-            {
-                boardState.WhiteCanCastleKingSide = false;
-            }
-
-            else if (fromSquareInt == 28) // Is rook on a1 moving? Then disable castling.
-            {
-                boardState.WhiteCanCastleQueenSide = false;
-            }
-
-            else if (fromSquareInt == 91) // Is rook on h8 moving? Then disable castling.
-            {
-                boardState.BlackCanCastleKingSide = false;
-            }
-
-            else if (fromSquareInt == 98) // Is rook on a8 moving? Then disable castling.
-            {
-                boardState.BlackCanCastleQueenSide = false;
-            }
-
-            else if (toSquareInt == boardState.EnPasSquare && boardState.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn)
-            {
-                boardState.BoardRepresentation[toSquareInt - 10] = Definitions.EmptySquare;
-            }
-
-            else if (toSquareInt == boardState.EnPasSquare && boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn)
-            {
-                boardState.BoardRepresentation[toSquareInt + 10] = Definitions.EmptySquare;
-            }
-
-            boardState.EnPasSquare = Definitions.NoEnPassantSquare;
-
-            // En passant.
-            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn && (toSquareInt - fromSquareInt) == 20)
-            {
-                boardState.EnPasSquare = toSquareInt - 10;
-            }
-
-            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn && (fromSquareInt - toSquareInt) == 20)
-            {
-                boardState.EnPasSquare = fromSquareInt - 10;
-            }
-
-            boardState.FiftyMoveRule += 1;
-            if (boardState.FiftyMoveRule == 100) // 100 halfmoves = 50 full moves.
-            {
-                gameIsOver = true;
-                gameOverMessage = "Game drawn due to 50 moves rule.";
-            }
-            // Fifty move rule, was a piece captured or a pawn moved? If so, reset the fifty move counter to 0.
-            if (boardState.BoardRepresentation[fromSquareInt] == Definitions. WhitePawn || boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn || boardState.BoardRepresentation[toSquareInt] != Definitions.EmptySquare)
-            {
-                boardState.FiftyMoveRule = 0;
-            }
-
-            boardState.BoardRepresentation[toSquareInt] = boardState.BoardRepresentation[fromSquareInt];
-            boardState.BoardRepresentation[fromSquareInt] = Definitions.EmptySquare;
-        }*/
-
-        /*private void MoveRookCastling(int fromSquare, int toSquare)
-        {
-            boardState.BoardRepresentation[toSquare] = boardState.BoardRepresentation[fromSquare];
-            boardState
-            fromSquare] = Definitions.EmptySquare;
-        }*/
     }
 }

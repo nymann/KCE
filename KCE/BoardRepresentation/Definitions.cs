@@ -42,12 +42,15 @@ namespace KCE.BoardRepresentation
         public const int BlackRook = 10;
         public const int BlackQueen = 11;
         public const int BlackKing = 12;
-
         public const bool Black = false;
         public const bool White = true;
         public const bool BlackToMove = false;
         public const bool WhiteToMove = true;
         public const int NoEnPassantSquare = -1;
+        public const int BCCKS = 0;
+        public const int BCCQS = 1;
+        public const int WCCKS = 2;
+        public const int WCCQS = 3;
 
     }
 }

@@ -2,7 +2,7 @@
 {
     public class BoardState
     {
-        public int[] BoardRepresentation { get; }
+        public int[] BoardRepresentation { get; set; }
         public bool SideToMove { get; set; }
         public bool WhiteCanCastleKingSide { get; set; }
         public bool WhiteCanCastleQueenSide { get; set; }

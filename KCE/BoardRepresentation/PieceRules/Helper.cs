@@ -104,7 +104,7 @@ namespace KCE.BoardRepresentation.PieceRules
             return false;
         }
 
-        public Ply MakePly(int[] hisBoard, int fromSquare, int toSquare, int hisEnPas)
+        public Ply MakePly(int[] hisBoard, int fromSquare, int toSquare, int hisEnPas, bool BCCKS, bool BCCQS, bool WCCKS, bool WCCQS, bool sideToMove)
         {
             int enPas = Definitions.NoEnPassantSquare;
             int[] board = (int[]) hisBoard.Clone(); // 7 hour bug.
@@ -125,7 +125,12 @@ namespace KCE.BoardRepresentation.PieceRules
                 enPas = fromSquare - 10;
             }
 
-            return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly);
+            bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, WCCKS, WCCQS, BCCKS, BCCQS, sideToMove);
+
+            return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
+                WCCKS, WCCQS, BCCKS, BCCQS,
+                castle[Definitions.WCCKS], castle[Definitions.WCCQS],
+                castle[Definitions.BCCKS], castle[Definitions.BCCQS]);
         }
 
         public bool DoubleCheckedFEN(int[] board, bool sideToMove, int[] kingSquare)
@@ -608,6 +613,61 @@ namespace KCE.BoardRepresentation.PieceRules
         public bool IsPieceOnSeventhRank(int square)
         {
             return square/10 == 8;
+        }
+
+        public bool[] UpdateCastlePermissions(int squareFrom, int squareTo, bool wccks, bool wccqs, bool bccks, bool bccqs, bool sideToMove)
+        {
+            bool WCCKS = false;
+            bool WCCQS = false;
+            bool BCCKS = false;
+            bool BCCQS = false;
+
+            if (sideToMove == Definitions.White)
+            {
+                if (wccks && squareFrom != 24 && squareFrom != 21)
+                {
+                    WCCKS = true;
+                }
+
+                if (wccqs && squareFrom != 24 && squareFrom != 28)
+                {
+                    WCCQS = true;
+                }
+
+                if (bccks && squareTo != 91)
+                {
+                    BCCKS = true;
+                }
+
+                if (bccqs && squareTo != 98)
+                {
+                    BCCQS = true;
+                }
+
+                return new[] {BCCKS, BCCQS, WCCKS, WCCQS};
+            }
+
+            if (bccks && squareFrom != 94 && squareFrom != 91)
+            {
+                BCCKS = true;
+            }
+
+            if (bccqs && squareFrom != 94 && squareFrom != 98)
+            {
+                BCCQS = true;
+            }
+
+            if (wccks && squareTo != 21)
+            {
+                WCCKS = true;
+            }
+
+            if (wccqs && squareTo != 28)
+            {
+                WCCQS = true;
+            }
+
+            return new[] { BCCKS, BCCQS, WCCKS, WCCQS };
         }
     }
 }

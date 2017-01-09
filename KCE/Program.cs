@@ -10,8 +10,19 @@ namespace KCE
     {
         static void Main(string[] args)
         {
-            new BoardRepresentation.BoardRepresentation("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
-            //new BoardRepresentation.BoardRepresentation("n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1");
+            // http://www.rocechess.ch/perft.html
+
+            // Startposition
+            new BoardRepresentation.BoardRepresentation(
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+            // Good testposition
+            /*new BoardRepresentation.BoardRepresentation(
+                "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");*/
+
+            // Discover promotion bugs
+            /*new BoardRepresentation.BoardRepresentation(
+                "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1");*/
             Console.ReadKey();
         }
     }
