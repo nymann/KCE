@@ -28,8 +28,6 @@ namespace KCE.BoardRepresentation
 
         public List<Ply> AllLegalMoves()
         {
-            string algebraicToSquare = "";
-            string algebraicFromSquare = "";
             List<Ply> legalMoves = new List<Ply>();
 
             #region black to move and not in check
@@ -37,7 +35,6 @@ namespace KCE.BoardRepresentation
             {
                 foreach (int square in _board64)
                 {
-                    algebraicFromSquare = Definitions.IndexToAlgebraic[square];
                     // Loop through the BoardState, find blackpieces, and generate moves for them.
                     switch (_boardState.BoardRepresentation[square])
                     {
@@ -51,8 +48,6 @@ namespace KCE.BoardRepresentation
                                 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _boardState.KingSquares[0]))
                                 {
-                                    algebraicToSquare = Definitions.IndexToAlgebraic[psuedoLegalMove];
-                                    //Console.WriteLine("Adding {0}{1} as a legal move!", algebraicFromSquare, algebraicToSquare);
                                     legalMoves.Add(ply);
                                 }
                             }
@@ -240,49 +235,32 @@ namespace KCE.BoardRepresentation
 
             #region side to move is in double check
             // if it's blacks or whites turn and he is in double check.
-            else if (DoubleChecked())
+            else if (helper.DoubleCheckedFEN(_boardState.BoardRepresentation, _boardState.SideToMove,
+                _boardState.KingSquares))
             {
-                // Only king moves should be considered.
+                King king = new King(_boardState.BoardRepresentation, _boardState.KingSquares,_boardState.SideToMove,
+                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
+                    _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide);
+                var psuedolegalMoves = king.MoveGeneration();
+                
+                var square = 0;
                 if (_boardState.SideToMove == Definitions.White)
                 {
-                    King king = new King(_boardState.BoardRepresentation, _boardState.KingSquares[1], Definitions.White,
-                        _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, 
-                        _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide);
-                    var psuedoLegalMoves = king.MoveGeneration();
-                   
-                    // Look through all the psuedoLegalMoves, and add all of the legal moves to the final list.
-                    foreach (int psuedoLegalToSquare in psuedoLegalMoves)
-                    {
-                        if (!IsSquareAttacked(psuedoLegalToSquare))
-                        {
-                            legalMoves.Add(helper.MakePly(_boardState.BoardRepresentation, _boardState.KingSquares[1], psuedoLegalToSquare, _boardState.EnPasSquare));
-                        }
-    
-                    }
-                    
+                    square = 1;
                 }
 
-                else if (_boardState.SideToMove == Definitions.Black)
+                foreach (var psuedoLegalMove in psuedolegalMoves)
                 {
-                    King king = new King(_boardState.BoardRepresentation, _boardState.KingSquares[0], Definitions.Black,
-                        _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                        _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide);
-                    var psuedoLegalMoves = king.MoveGeneration();
+                    Ply ply = helper.MakePly(_boardState.BoardRepresentation, _boardState.KingSquares[square], psuedoLegalMove,
+                                    _boardState.EnPasSquare);
 
-                    // Look through all the psuedoLegalMoves, and add all of the legal moves to the final list.
-                    foreach (int psuedoLegalToSquare in psuedoLegalMoves)
+                    if (!helper.IsSquareAttacked(_boardState.SideToMove, ply.GetBoard(), psuedoLegalMove))
                     {
-                        if (!IsSquareAttacked(psuedoLegalToSquare))
-                        {
-                            legalMoves.Add(helper.MakePly(_boardState.BoardRepresentation, _boardState.KingSquares[0], psuedoLegalToSquare, _boardState.EnPasSquare));
-                        }
-
+                        legalMoves.Add(ply);
                     }
                 }
-
-                return AllLegalMoves();
-
             }
+            
             #endregion
 
             #region side to move is in check
@@ -359,57 +337,5 @@ namespace KCE.BoardRepresentation
             return false;
         }
 
-        private bool DoubleChecked()
-        {
-            // If we are in check by the start in a fen string, then we are doomed.
-            string lastMoveToSquare = _boardState.LastMove.Substring(2, 2);
-
-            if (Definitions.AlgebraicToIndex.ContainsKey(lastMoveToSquare))
-            {
-                int lastMove = Definitions.AlgebraicToIndex[lastMoveToSquare];
-                if (_boardState.BoardRepresentation[lastMove] == Definitions.WhiteKnight ||
-                    _boardState.BoardRepresentation[lastMove] == Definitions.WhitePawn ||
-                    _boardState.BoardRepresentation[lastMove] == Definitions.BlackKnight ||
-                    _boardState.BoardRepresentation[lastMove] == Definitions.BlackPawn)
-                {
-                    if (_boardState.SideToMove == Definitions.WhiteToMove)
-                    {
-                        Knight whiteKnight = new Knight(_boardState.BoardRepresentation, _boardState.KingSquares[1], Definitions.WhiteToMove);
-                        var whiteKnightMoves = whiteKnight.MoveGeneration();
-                        if (whiteKnightMoves.Contains(lastMove))
-                        {
-                            return true;
-                        }
-
-                        Pawn whitePawn = new Pawn(_boardState.BoardRepresentation, _boardState.KingSquares[1], Definitions.WhiteToMove, _boardState.EnPasSquare);
-                        var whitePawnMoves = whitePawn.MoveGeneration();
-                        if (whitePawnMoves.Contains(lastMove))
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                    Knight blackKnight = new Knight(_boardState.BoardRepresentation, _boardState.KingSquares[0], Definitions.BlackToMove);
-                    var blackKnightMoves = blackKnight.MoveGeneration();
-                    if (blackKnightMoves.Contains(lastMove))
-                    {
-                        return true;
-                    }
-
-                    Pawn blackPawn = new Pawn(_boardState.BoardRepresentation, _boardState.KingSquares[0], Definitions.BlackToMove, _boardState.EnPasSquare);
-                    var blackPawnMoves = blackPawn.MoveGeneration();
-                    if (blackPawnMoves.Contains(lastMove))
-                    {
-                        return true;
-                    }
-
-                    return false;
-                }
-            }
-
-            return false;
-        }
     }
 }

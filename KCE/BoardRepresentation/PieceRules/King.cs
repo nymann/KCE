@@ -23,6 +23,18 @@ namespace KCE.BoardRepresentation.PieceRules
             _BCCQS = bccqs;
         }
 
+        public King(int[] board, int[] kingSquares, bool sideToMove, bool wccks, bool wccqs, bool bccks, bool bccqs)
+        {
+            _board = board;
+            _sideToMove = sideToMove;
+            _WCCKS = wccks;
+            _WCCQS = wccqs;
+            _BCCKS = bccks;
+            _BCCQS = bccqs;
+
+            _square = sideToMove == Definitions.White ? kingSquares[1] : kingSquares[0];
+        }
+
         public List<int> MoveGeneration()
         {
             return _sideToMove

@@ -116,58 +116,97 @@ namespace KCE.BoardRepresentation.PieceRules
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly);
         }
 
-        /*private bool DoubleChecked()
+        public bool DoubleCheckedFEN(int[] board, bool sideToMove, int[] kingSquare)
         {
-            // If we are in check by the start in a fen string, then we are doomed.
-            string lastMoveToSquare = _boardState.LastMove.Substring(2, 2);
+            bool possibleDoubleCheck = false;
 
-            if (Definitions.AlgebraicToIndex.ContainsKey(lastMoveToSquare))
+            #region white side
+            if (sideToMove == Definitions.White)
             {
-                int lastMove = Definitions.AlgebraicToIndex[lastMoveToSquare];
-                if (_boardState.BoardRepresentation[lastMove] == Definitions.WhiteKnight ||
-                    _boardState.BoardRepresentation[lastMove] == Definitions.WhitePawn ||
-                    _boardState.BoardRepresentation[lastMove] == Definitions.BlackKnight ||
-                    _boardState.BoardRepresentation[lastMove] == Definitions.BlackPawn)
+                Knight whiteKnight = new Knight(board, kingSquare[1], Definitions.White);
+                var listOfWhiteMoves = whiteKnight.MoveGeneration();
+                
+                foreach (var square in listOfWhiteMoves)
                 {
-                    if (_boardState.SideToMove == Definitions.WhiteToMove)
+                    if (board[square] == Definitions.BlackKnight)
                     {
-                        Knight whiteKnight = new Knight(_boardState, _boardState.KingSquares[1]);
-                        var whiteKnightMoves = whiteKnight.MoveGeneration();
-                        if (whiteKnightMoves.Contains(lastMove))
-                        {
-                            return true;
-                        }
-
-                        Pawn whitePawn = new Pawn(_boardState.KingSquares[1], _boardState);
-                        var whitePawnMoves = whitePawn.MoveGeneration();
-                        if (whitePawnMoves.Contains(lastMove))
-                        {
-                            return true;
-                        }
-
-                        return false;
+                        possibleDoubleCheck = true;
+                        break;
                     }
+                }
 
-                    Knight blackKnight = new Knight(_boardState, _boardState.KingSquares[0]);
-                    var blackKnightMoves = blackKnight.MoveGeneration();
-                    if (blackKnightMoves.Contains(lastMove))
-                    {
-                        return true;
-                    }
-
-                    Pawn blackPawn = new Pawn(_boardState.KingSquares[0], _boardState);
-                    var blackPawnMoves = blackPawn.MoveGeneration();
-                    if (blackPawnMoves.Contains(lastMove))
-                    {
-                        return true;
-                    }
-
+                if (!possibleDoubleCheck)
+                {
                     return false;
                 }
+
+                Bishop whiteBishop = new Bishop(board, kingSquare[1], Definitions.White);
+                listOfWhiteMoves = whiteBishop.MoveGeneration();
+                foreach (var square in listOfWhiteMoves)
+                {
+                    if (board[square] == Definitions.BlackBishop)
+                    {
+                        return true;
+                    }
+                }
+                
+
+                Rook whiteRook = new Rook(board, kingSquare[1], Definitions.White);
+                listOfWhiteMoves = whiteRook.MoveGeneration();
+                foreach (var square in listOfWhiteMoves)
+                {
+                    if (board[square] == Definitions.BlackRook)
+                    {
+                        return true;
+                    }
+                }
             }
+            #endregion
+
+            #region black side
+            else
+            { 
+                Knight blackKnight = new Knight(board, kingSquare[0], Definitions.Black);
+                var listOfBlackMoves = blackKnight.MoveGeneration();
+
+                foreach (var square in listOfBlackMoves)
+                {
+                    if (board[square] == Definitions.WhiteKnight)
+                    {
+                        possibleDoubleCheck = true;
+                        break;
+                    }
+                }
+
+                if (!possibleDoubleCheck)
+                {
+                    return false;
+                }
+
+                Bishop blackBishop = new Bishop(board, kingSquare[0], Definitions.Black);
+                listOfBlackMoves = blackBishop.MoveGeneration();
+                foreach (var square in listOfBlackMoves)
+                {
+                    if (board[square] == Definitions.WhiteBishop)
+                    {
+                        return true;
+                    }
+                }
+
+                Rook blackRook = new Rook(board, kingSquare[0], Definitions.Black);
+                listOfBlackMoves = blackRook.MoveGeneration();
+                foreach (var square in listOfBlackMoves)
+                {
+                    if (board[square] == Definitions.WhiteRook)
+                    {
+                        return true;
+                    }
+                }
+            }
+            #endregion
 
             return false;
-        }*/
+        }
 
         public void PrintBoardWhitePerspective(int[] board)
         {
