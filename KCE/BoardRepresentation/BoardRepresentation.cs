@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using KCE.BoardRepresentation.PieceRules;
@@ -12,7 +13,6 @@ namespace KCE.BoardRepresentation
         public BoardRepresentation(string fen)
         {
             Helper helper = new Helper();
-            ;
             boardState = helper.BoardsetupFromFen(fen);
             helper.PrintBoardWhitePerspective(boardState.BoardRepresentation);
             Stopwatch stopwatch = new Stopwatch();
@@ -27,11 +27,13 @@ namespace KCE.BoardRepresentation
                 Console.WriteLine("{0}: {1}.", counter, legalMove.GetAlgebraicPly());
                 counter++;
             }*/
-            int depth = 5;
+            int depth = 3;
             UInt64 calcNodes = moveGenerator.Perft(depth);
             stopwatch.Stop();
-            Console.WriteLine("Depth: {0}, total legal moves {1}, calculated in {2} ms.", depth, calcNodes,
-                stopwatch.ElapsedMilliseconds);
+            long elapsedTime = stopwatch.ElapsedMilliseconds;
+            double nodesSec = (double) calcNodes/(elapsedTime*0.0001);
+            Console.WriteLine("Depth: {0}, Nodes: {1}, Time: {2} ms, Nodes/Sec: {3}", depth, calcNodes,
+                stopwatch.ElapsedMilliseconds, Math.Round(nodesSec));
 
         }
     }
