@@ -131,7 +131,7 @@ namespace KCE.BoardRepresentation
                                         int[] boardknight = (int[])boardQueen.Clone();
                                         boardknight[psuedoLegalMove] = Definitions.BlackKnight;
                                         Ply knight = new Ply(boardknight, _boardState.BoardRepresentation, _boardState.EnPasSquare, Definitions.NoEnPassantSquare,
-                                            Definitions.IndexToAlgebraic[square] + Definitions.IndexToAlgebraic[psuedoLegalMove] + "k",
+                                            Definitions.IndexToAlgebraic[square] + Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
@@ -433,17 +433,16 @@ namespace KCE.BoardRepresentation
         public UInt64 Perft(int depth)
         {
             UInt64 nodes = 0;
-            int n_moves;
 
-            if (depth == 0)
+            if (depth == 1)
             {
-                return 1;
+                return (ulong) AllLegalMoves().Count;
             }
 
-            List<Ply> legalMoves = AllLegalMoves();
-            n_moves = legalMoves.Count;
+            var legalMoves = AllLegalMoves();
+            var nMoves = legalMoves.Count;
 
-            for (int i = 0; i < n_moves; i++)
+            for (var i = 0; i < nMoves; i++)
             {
                 MakeMove(legalMoves[i]);
                 nodes += Perft(depth - 1);
@@ -453,9 +452,37 @@ namespace KCE.BoardRepresentation
             return nodes;
         }
 
-        public void Divide(int depth)
+        public UInt64 Divide(int depth)
         {
+            UInt64 nodes = 0;
+            UInt64 totalNodes = 0;
+           
+            var legalMoves = AllLegalMoves();
+            var nMoves = legalMoves.Count;
+
             
+
+            foreach (var legalMove in legalMoves)
+            {
+                MakeMove(legalMove);
+                ulong childNotes;
+
+                if (depth == 1)
+                {
+                    childNotes = (ulong) nMoves;
+                }
+                else
+                {
+                    childNotes = Perft(depth - 1);
+                }
+                totalNodes += childNotes;
+                UndoMove(legalMove);
+                Console.WriteLine("{0}: {1}", legalMove.GetAlgebraicPly(), childNotes);
+            }
+
+            Console.WriteLine("\nTotal moves: {0}, Total nodes: {1}", nMoves, totalNodes);
+
+            return totalNodes;
         }
 
         void MakeMove(Ply makePly)

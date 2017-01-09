@@ -28,7 +28,7 @@ namespace KCE.BoardRepresentation
                 counter++;
             }*/
             int depth = 3;
-            UInt64 calcNodes = moveGenerator.Perft(depth);
+            UInt64 calcNodes = moveGenerator.Divide(depth);
             stopwatch.Stop();
             long elapsedTime = stopwatch.ElapsedMilliseconds;
             double nodesSec = (double) calcNodes/(elapsedTime*0.0001);
