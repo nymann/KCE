@@ -1,18 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
-using KCE.BoardRepresentation.MoveGeneration;
+using KCE.BoardRepresentation.PieceRules;
 
 namespace KCE.BoardRepresentation
 {
     public class BoardRepresentation
     {
-        private Board board;
-        private bool userColor;
-        private string lastMove = "";
+        private BoardState boardState;
+        //private bool userColor;
         private bool gameIsOver = false;
         private string gameOverMessage = "";
-
-        private int[] _kingSquares = {94, 24};
 
         /*private int[] _board =
         {
@@ -44,48 +42,41 @@ namespace KCE.BoardRepresentation
 
         public BoardRepresentation(string fen)
         {
-            //board = new Board(_board, true, _kingSquares, Definitions.NoEnPassantSquare, 0, true, true, true, true);
-
-            board = BoardsetupFromFen(fen);
-
-            Console.WriteLine("Type 'w' if you want to be white, or 'b' if you want to be black.");
-            var userColorString = Console.ReadLine();
-            switch (userColorString)
+            boardState = BoardsetupFromFen(fen);
+            PrintBoardWhitePerspective();
+            MoveGenerator moveGenerator = new MoveGenerator(boardState);
+            List<Ply> legalMoves = moveGenerator.AllLegalMoves();
+            var counter = 1;
+            foreach (Ply legalMove in legalMoves)
             {
-                case "w":
-                    userColor = Definitions.White;
-                    break;
-
-                case "b":
-                    userColor = Definitions.Black;
-                    break;
-
-                default:
-                    Console.WriteLine("I didn't understand that, so I assigned you the white pieces!");
-                    userColor = Definitions.White;
-                    break;
+                Console.WriteLine("{0}: {1}.", counter, legalMove.GetAlgebraicPly());
+                counter++;
             }
+
+            /*boardState = BoardsetupFromFen(fen);
+
             while (!gameIsOver)
             {
                 Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                 string enPasSquareAlgebraic = "";
                 string check = "";
 
-                if (board.SideToMove == Definitions.WhiteToMove && IsSquareAttacked(board.KingSquares[1]))
+                if (boardState.SideToMove == Definitions.WhiteToMove && IsWhiteKingInCheck())
                 {
                     check = "White is in check! ";
                 }
-
-                else if (board.SideToMove == Definitions.BlackToMove && IsSquareAttacked(board.KingSquares[0]))
+                else if (boardState.SideToMove == Definitions.BlackToMove && IsBlackKingInCheck())
                 {
                     check = "Black is in check! ";
                 }
-                if (Definitions.IndexToAlgebraic.ContainsKey(board.EnPasSquare))
+
+                if (Definitions.IndexToAlgebraic.ContainsKey(boardState.EnPasSquare))
                 {
-                    enPasSquareAlgebraic = Definitions.IndexToAlgebraic[board.EnPasSquare];
+                    enPasSquareAlgebraic = Definitions.IndexToAlgebraic[boardState.EnPasSquare];
                 }
-                Console.WriteLine("{3}Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", lastMove, enPasSquareAlgebraic, board.FiftyMoveRule, check);
-                if (board.SideToMove == Definitions.WhiteToMove)
+                Console.WriteLine("{3}Last move was: {0}, EnPassantSquare: {1}, FiftyMoveCounter: {2}.\n", boardState.LastMove, enPasSquareAlgebraic, boardState.FiftyMoveRule, check);
+
+                if (boardState.SideToMove == Definitions.WhiteToMove)
                 {
                     PrintBoardWhitePerspective();
                 }
@@ -93,19 +84,22 @@ namespace KCE.BoardRepresentation
                 {
                     PrintBoardBlackPerspective();
                 }
-                Console.WriteLine(board.SideToMove ? "\nWhite to move:" : "\nBlack to move:");
+
+                MoveGenerator moveGenerator = new MoveGenerator(boardState);
+                Console.WriteLine("Number of moves: {0}", moveGenerator.AllLegalMoves().Count);
+                //Console.WriteLine(BoardState.SideToMove ? "\nWhite to move:" : "\nBlack to move:");
 
                 string userMove = Console.ReadLine();
                 userMove = userMove?.ToLower();
                 if (UserMove(userMove))
                 {
                     MakeMove(userMove);
-                    lastMove = userMove;
-                    board.SideToMove = !board.SideToMove;
+                    boardState.LastMove = userMove;
+                    boardState.SideToMove = !boardState.SideToMove;
                 }
             }
 
-            Console.WriteLine(gameOverMessage);
+            Console.WriteLine(gameOverMessage);*/
 
         }
 
@@ -118,7 +112,7 @@ namespace KCE.BoardRepresentation
             foreach (var square in _board64)
             {
                 Console.Write(" | ");
-                switch (board.BoardRepresentation[square])
+                switch (boardState.BoardRepresentation[square])
                 {
                     case Definitions.EmptySquare:
                         // Empty Square
@@ -205,7 +199,7 @@ namespace KCE.BoardRepresentation
             for (int i = 63; i >= 0; i-- )
             {
                 Console.Write(" | ");
-                switch (board.BoardRepresentation[_board64[i]])
+                switch (boardState.BoardRepresentation[_board64[i]])
                 {
                     case Definitions.EmptySquare:
                         // Empty Square
@@ -284,7 +278,7 @@ namespace KCE.BoardRepresentation
 
         }
 
-        private bool UserMove(string longAlgebraicNotation)
+        /*private bool UserMove(string longAlgebraicNotation)
         {
             var fromSquareString = longAlgebraicNotation.Substring(0, 2);
             if (!Definitions.AlgebraicToIndex.ContainsKey(fromSquareString))
@@ -301,53 +295,53 @@ namespace KCE.BoardRepresentation
             }
             var toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
 
-            if (board.BoardRepresentation[fromSquareInt] == Definitions.EmptySquare ||
-                board.SideToMove == Definitions.BlackToMove && board.BoardRepresentation[fromSquareInt] < 6 ||
-                board.SideToMove == Definitions.WhiteToMove && board.BoardRepresentation[fromSquareInt] > 6 && board.BoardRepresentation[fromSquareInt] < 13)
+            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.EmptySquare ||
+                boardState.SideToMove == Definitions.BlackToMove && boardState.BoardRepresentation[fromSquareInt] < 6 ||
+                boardState.SideToMove == Definitions.WhiteToMove && boardState.BoardRepresentation[fromSquareInt] > 6 && boardState.BoardRepresentation[fromSquareInt] < 13)
             {
-                Console.WriteLine("Reached. Side to move was {0}", board.SideToMove);
+                Console.WriteLine("Reached. Side to move was {0}", boardState.SideToMove);
                 return false;
             }
 
-            switch (board.BoardRepresentation[fromSquareInt])
+            switch (boardState.BoardRepresentation[fromSquareInt])
             {
                 case Definitions.WhitePawn:
                 case Definitions.BlackPawn:
-                    Pawn pawn = new Pawn(fromSquareInt, board);
+                    Pawn pawn = new Pawn(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove, boardState.EnPasSquare);
                     return pawn.MoveGeneration().Contains(toSquareInt);
 
                 case Definitions.WhiteBishop:
                 case Definitions.BlackBishop:
-                    Bishop bishop = new Bishop(board, fromSquareInt);
+                    Bishop bishop = new Bishop(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
                     return bishop.MoveGeneration().Contains(toSquareInt);
 
                 case Definitions.WhiteKnight:
                 case Definitions.BlackKnight:
-                    Knight knight = new Knight(board, fromSquareInt);
+                    Knight knight = new Knight(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
                     return knight.MoveGeneration().Contains(toSquareInt);
 
                 case Definitions.WhiteRook:
                 case Definitions.BlackRook:
-                    Rook rook = new Rook(fromSquareInt, board);
+                    Rook rook = new Rook(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
                     return rook.MoveGeneration().Contains(toSquareInt);
 
                 case Definitions.WhiteQueen:
                 case Definitions.BlackQueen:
-                    Queen queen = new Queen(fromSquareInt, board);
+                    Queen queen = new Queen(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
                     return queen.MoveGeneration().Contains(toSquareInt);
 
                 case Definitions.WhiteKing:
                 case Definitions.BlackKing:
-                    King king = new King(board, fromSquareInt);
+                    King king = new King(boardState.BoardRepresentation, fromSquareInt, boardState.SideToMove);
                     return king.MoveGeneration().Contains(toSquareInt);
 
                 default:
                     return false;
             }
 
-        }
+        }*/
 
-        private void MakeMove(string longAlgebraicNotation)
+        /*private void MakeMove(string longAlgebraicNotation)
         {
             var fromSquareString = longAlgebraicNotation.Substring(0, 2);
             var fromSquareInt = Definitions.AlgebraicToIndex[fromSquareString];
@@ -355,12 +349,11 @@ namespace KCE.BoardRepresentation
             var toSquareString = longAlgebraicNotation.Substring(2, 2);
             var toSquareInt = Definitions.AlgebraicToIndex[toSquareString];
 
-            // TODO: Update king square, castling, etc.
-            if (board.BoardRepresentation[fromSquareInt] == Definitions.WhiteKing)
+            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.WhiteKing)
             {
-                board.KingSquares[1] = toSquareInt;
-                board.WhiteCanCastleQueenSide = false;
-                board.WhiteCanCastleKingSide = false;
+                boardState.KingSquares[1] = toSquareInt;
+                boardState.WhiteCanCastleQueenSide = false;
+                boardState.WhiteCanCastleKingSide = false;
 
                 if (longAlgebraicNotation.Equals("e1g1"))
                 {
@@ -374,11 +367,11 @@ namespace KCE.BoardRepresentation
                     MoveRookCastling(28, 25);
                 }
             }
-            else if (board.BoardRepresentation[fromSquareInt] == Definitions.BlackKing)
+            else if (boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackKing)
             {
-                board.KingSquares[0] = toSquareInt;
-                board.BlackCanCastleKingSide = false;
-                board.BlackCanCastleQueenSide = false;
+                boardState.KingSquares[0] = toSquareInt;
+                boardState.BlackCanCastleKingSide = false;
+                boardState.BlackCanCastleQueenSide = false;
 
                 if (longAlgebraicNotation.Equals("e8g8"))
                 {
@@ -395,70 +388,71 @@ namespace KCE.BoardRepresentation
 
             else if (fromSquareInt == 21) // Is rook on h1 moving? Then disable castling.
             {
-                board.WhiteCanCastleKingSide = false;
+                boardState.WhiteCanCastleKingSide = false;
             }
 
             else if (fromSquareInt == 28) // Is rook on a1 moving? Then disable castling.
             {
-                board.WhiteCanCastleQueenSide = false;
+                boardState.WhiteCanCastleQueenSide = false;
             }
 
             else if (fromSquareInt == 91) // Is rook on h8 moving? Then disable castling.
             {
-                board.BlackCanCastleKingSide = false;
+                boardState.BlackCanCastleKingSide = false;
             }
 
             else if (fromSquareInt == 98) // Is rook on a8 moving? Then disable castling.
             {
-                board.BlackCanCastleQueenSide = false;
+                boardState.BlackCanCastleQueenSide = false;
             }
 
-            else if (toSquareInt == board.EnPasSquare && board.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn)
+            else if (toSquareInt == boardState.EnPasSquare && boardState.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn)
             {
-                board.BoardRepresentation[toSquareInt - 10] = Definitions.EmptySquare;
+                boardState.BoardRepresentation[toSquareInt - 10] = Definitions.EmptySquare;
             }
 
-            else if (toSquareInt == board.EnPasSquare && board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn)
+            else if (toSquareInt == boardState.EnPasSquare && boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn)
             {
-                board.BoardRepresentation[toSquareInt + 10] = Definitions.EmptySquare;
+                boardState.BoardRepresentation[toSquareInt + 10] = Definitions.EmptySquare;
             }
 
-            board.EnPasSquare = Definitions.NoEnPassantSquare;
+            boardState.EnPasSquare = Definitions.NoEnPassantSquare;
 
             // En passant.
-            if (board.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn && (toSquareInt - fromSquareInt) == 20)
+            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.WhitePawn && (toSquareInt - fromSquareInt) == 20)
             {
-                board.EnPasSquare = toSquareInt - 10;
+                boardState.EnPasSquare = toSquareInt - 10;
             }
 
-            if (board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn && (fromSquareInt - toSquareInt) == 20)
+            if (boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn && (fromSquareInt - toSquareInt) == 20)
             {
-                board.EnPasSquare = fromSquareInt - 10;
+                boardState.EnPasSquare = fromSquareInt - 10;
             }
 
-            board.FiftyMoveRule += 1;
-            if (board.FiftyMoveRule == 100) // 100 halfmoves = 50 full moves.
+            boardState.FiftyMoveRule += 1;
+            if (boardState.FiftyMoveRule == 100) // 100 halfmoves = 50 full moves.
             {
                 gameIsOver = true;
                 gameOverMessage = "Game drawn due to 50 moves rule.";
             }
             // Fifty move rule, was a piece captured or a pawn moved? If so, reset the fifty move counter to 0.
-            if (board.BoardRepresentation[fromSquareInt] == Definitions. WhitePawn || board.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn || board.BoardRepresentation[toSquareInt] != Definitions.EmptySquare)
+            if (boardState.BoardRepresentation[fromSquareInt] == Definitions. WhitePawn || boardState.BoardRepresentation[fromSquareInt] == Definitions.BlackPawn || boardState.BoardRepresentation[toSquareInt] != Definitions.EmptySquare)
             {
-                board.FiftyMoveRule = 0;
+                boardState.FiftyMoveRule = 0;
             }
 
-            board.BoardRepresentation[toSquareInt] = board.BoardRepresentation[fromSquareInt];
-            board.BoardRepresentation[fromSquareInt] = Definitions.EmptySquare;
-        }
+            boardState.BoardRepresentation[toSquareInt] = boardState.BoardRepresentation[fromSquareInt];
+            boardState.BoardRepresentation[fromSquareInt] = Definitions.EmptySquare;
+        }*/
 
-        private void MoveRookCastling(int fromSquare, int toSquare)
+        /*private void MoveRookCastling(int fromSquare, int toSquare)
         {
-            board.BoardRepresentation[toSquare] = board.BoardRepresentation[fromSquare];
-            board.BoardRepresentation[fromSquare] = Definitions.EmptySquare;
-        }
+            boardState.BoardRepresentation[toSquare] = boardState.BoardRepresentation[fromSquare];
+            boardState
+            fromSquare] = Definitions.EmptySquare;
+        }*/
 
-        private Board BoardsetupFromFen(string fen)
+        private BoardState BoardsetupFromFen(string fen)
         {
             int[] boardRepresentation =
             {
@@ -487,6 +481,11 @@ namespace KCE.BoardRepresentation
 
             int index = 63;
             string[] pieces = fen.Split(' ');
+
+            foreach (var piece in pieces)
+            {
+                Console.WriteLine(piece);
+            }
 
             #region pieceSetup
 
@@ -660,67 +659,55 @@ namespace KCE.BoardRepresentation
 
             #endregion
 
-            return new Board(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS, BCCKS, BCCQS);
+            return new BoardState(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS, BCCKS, BCCQS);
         }
 
-        private bool IsSquareAttacked(int square)
+        private bool DoubleChecked()
         {
-            Knight imaginaryKnight = new Knight(board, square);
+            string lastMoveToSquare = boardState.LastMove.Substring(2, 2);
 
-            var listOfKnightMoves = imaginaryKnight.MoveGeneration();
-            foreach (int possibleAttackedFromSquares in listOfKnightMoves)
+            if (Definitions.AlgebraicToIndex.ContainsKey(lastMoveToSquare))
             {
-                if (board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteKnight ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackKnight)
+                int lastMove = Definitions.AlgebraicToIndex[lastMoveToSquare];
+                if (boardState.BoardRepresentation[lastMove] == Definitions.WhiteKnight ||
+                    boardState.BoardRepresentation[lastMove] == Definitions.WhitePawn ||
+                    boardState.BoardRepresentation[lastMove] == Definitions.BlackKnight ||
+                    boardState.BoardRepresentation[lastMove] == Definitions.BlackPawn)
                 {
-                    return true;
-                }
-            }
+                    if (boardState.SideToMove == Definitions.WhiteToMove)
+                    {
+                        Knight whiteKnight = new Knight(boardState.BoardRepresentation, boardState.KingSquares[1], Definitions.White);
+                        var whiteKnightMoves = whiteKnight.MoveGeneration();
+                        if (whiteKnightMoves.Contains(lastMove))
+                        {
+                            return true;
+                        }
 
-            Bishop imaginaryBishop = new Bishop(board, square);
-            var listOfBishopMoves = imaginaryBishop.MoveGeneration();
+                        Pawn whitePawn = new Pawn(boardState.BoardRepresentation, boardState.KingSquares[1], Definitions.White, boardState.EnPasSquare);
+                        var whitePawnMoves = whitePawn.MoveGeneration();
+                        if (whitePawnMoves.Contains(lastMove))
+                        {
+                            return true;
+                        }
 
-            foreach (int possibleAttackedFromSquares in listOfBishopMoves)
-            {
-                if (board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteQueen ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackQueen ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteBishop ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackBishop)
-                {
-                    return true;
-                }
-            }
+                        return false;
+                    }
 
-            if (board.SideToMove == Definitions.WhiteToMove)
-            {
-                // Check if black has pawns that can attack us.
-                if (board.BoardRepresentation[square + 11] == Definitions.BlackPawn ||
-                    board.BoardRepresentation[square + 9] == Definitions.BlackPawn)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                // Check if white has pawns that can attack us.
-                if (board.BoardRepresentation[square - 11] == Definitions.BlackPawn ||
-                    board.BoardRepresentation[square - 9] == Definitions.BlackPawn)
-                {
-                    return true;
-                }
-            }
+                    Knight blackKnight = new Knight(boardState.BoardRepresentation, boardState.KingSquares[0], Definitions.Black);
+                    var blackKnightMoves = blackKnight.MoveGeneration();
+                    if (blackKnightMoves.Contains(lastMove))
+                    {
+                        return true;
+                    }
 
-            Rook imaginaryRook = new Rook(square, board);
-            var listOfRookMoves = imaginaryRook.MoveGeneration();
+                    Pawn blackPawn = new Pawn(boardState.BoardRepresentation, boardState.KingSquares[0], Definitions.Black, boardState.EnPasSquare);
+                    var blackPawnMoves = blackPawn.MoveGeneration();
+                    if (blackPawnMoves.Contains(lastMove))
+                    {
+                        return true;
+                    }
 
-            foreach (int possibleAttackedFromSquares in listOfRookMoves)
-            {
-                if (board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteQueen ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackQueen ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.WhiteRook ||
-                    board.BoardRepresentation[possibleAttackedFromSquares] == Definitions.BlackRook)
-                {
-                    return true;
+                    return false;
                 }
             }
 

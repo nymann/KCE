@@ -44,15 +44,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardRepresentation\BoardRepresentation.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\Bishop.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\IMoveGeneration.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\King.cs" />
-    <Compile Include="BoardRepresentation\Board.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\Knight.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\Pawn.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\Queen.cs" />
-    <Compile Include="BoardRepresentation\MoveGeneration\Rook.cs" />
+    <Compile Include="BoardRepresentation\MoveGenerator.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\Bishop.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\Helper.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\IMoveGeneration.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\King.cs" />
+    <Compile Include="BoardRepresentation\BoardState.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\Knight.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\Pawn.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\Queen.cs" />
+    <Compile Include="BoardRepresentation\PieceRules\Rook.cs" />
     <Compile Include="BoardRepresentation\Definitions.cs" />
+    <Compile Include="BoardRepresentation\Ply.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

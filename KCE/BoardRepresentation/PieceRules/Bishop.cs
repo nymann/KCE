@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 
-namespace KCE.BoardRepresentation.MoveGeneration
+namespace KCE.BoardRepresentation.PieceRules
 {
     public class Bishop : IMoveGeneration
     {
-        private readonly Board _board;
+        private readonly int[] _board;
         private readonly int _square;
+        private readonly bool _sideToMove;
 
-        public Bishop(Board board, int square)
+        public Bishop(int[] board, int square, bool sideToMove)
         {
             _board = board;
             _square = square;
+            _sideToMove = sideToMove;
         }
 
         public List<int> MoveGeneration()
         {
-            return _board.SideToMove
+            return _sideToMove
                 ? WhiteMoveGeneration()
                 : BlackMoveGeneration();
         }
@@ -26,52 +28,52 @@ namespace KCE.BoardRepresentation.MoveGeneration
 
             var i = 1;
 
-            while (_board.BoardRepresentation[_square - 9 * i] == 0)
+            while (_board[_square - 9 * i] == 0)
             {
                 validMoves.Add(_square - 9 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square - 9 * i] > 6 && _board.BoardRepresentation[_square - 9 * i] < 13)
+            if (_board[_square - 9 * i] > 6 && _board[_square - 9 * i] < 13)
             {
                 validMoves.Add(_square - 9 * i);
             }
 
             i = 1;
 
-            while (_board.BoardRepresentation[_square + 9 * i] == 0)
+            while (_board[_square + 9 * i] == 0)
             {
                 validMoves.Add(_square + 9 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square + 9 * i] > 6 && _board.BoardRepresentation[_square + 9 * i] < 13)
+            if (_board[_square + 9 * i] > 6 && _board[_square + 9 * i] < 13)
             {
                 validMoves.Add(_square + 9 * i);
             }
 
             i = 1;
 
-            while (_board.BoardRepresentation[_square - 11 * i] == 0)
+            while (_board[_square - 11 * i] == 0)
             {
                 validMoves.Add(_square - 11 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square - 11 * i] > 6 && _board.BoardRepresentation[_square - 11 * i] < 13)
+            if (_board[_square - 11 * i] > 6 && _board[_square - 11 * i] < 13)
             {
                 validMoves.Add(_square - 11 * i);
             }
 
             i = 1;
 
-            while (_board.BoardRepresentation[_square + 11 * i] == 0)
+            while (_board[_square + 11 * i] == 0)
             {
                 validMoves.Add(_square + 11 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square + 11 * i] > 6 && _board.BoardRepresentation[_square + 11 * i] < 13)
+            if (_board[_square + 11 * i] > 6 && _board[_square + 11 * i] < 13)
             {
                 validMoves.Add(_square + 11 * i);
             }
@@ -85,52 +87,52 @@ namespace KCE.BoardRepresentation.MoveGeneration
 
             var i = 1;
 
-            while (_board.BoardRepresentation[_square - 9 * i] == 0)
+            while (_board[_square - 9 * i] == 0)
             {
                 validMoves.Add(_square - 9 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square - 9 * i] < 6)
+            if (_board[_square - 9 * i] < 6)
             {
                 validMoves.Add(_square - 9 * i);
             }
 
             i = 1;
 
-            while (_board.BoardRepresentation[_square + 9 * i] == 0)
+            while (_board[_square + 9 * i] == 0)
             {
                 validMoves.Add(_square + 9 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square + 9 * i] < 6)
+            if (_board[_square + 9 * i] < 6)
             {
                 validMoves.Add(_square + 9 * i);
             }
 
             i = 1;
 
-            while (_board.BoardRepresentation[_square - 11 * i] == 0)
+            while (_board[_square - 11 * i] == 0)
             {
                 validMoves.Add(_square - 11 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square - 11 * i] < 6)
+            if (_board[_square - 11 * i] < 6)
             {
                 validMoves.Add(_square - 11 * i);
             }
 
             i = 1;
 
-            while (_board.BoardRepresentation[_square + 11 * i] == 0)
+            while (_board[_square + 11 * i] == 0)
             {
                 validMoves.Add(_square + 11 * i);
                 i++;
             }
 
-            if (_board.BoardRepresentation[_square + 11 * i] < 6)
+            if (_board[_square + 11 * i] < 6)
             {
                 validMoves.Add(_square + 11 * i);
             }

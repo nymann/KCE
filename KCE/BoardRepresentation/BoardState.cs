@@ -1,22 +1,19 @@
 ﻿namespace KCE.BoardRepresentation
 {
-    public class Board
+    public class BoardState
     {
         public int[] BoardRepresentation { get; }
         public bool SideToMove { get; set; }
-
         public bool WhiteCanCastleKingSide { get; set; }
         public bool WhiteCanCastleQueenSide { get; set; }
         public bool BlackCanCastleKingSide { get; set; }
         public bool BlackCanCastleQueenSide { get; set; }
-
+        public string LastMove { get; set; }
         public int[] KingSquares { get; set; }
-
         public int EnPasSquare { get; set; }
-
         public int FiftyMoveRule { get; set; }
 
-        public Board(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
+        public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
         {
             BoardRepresentation = boardRepresentation;
             SideToMove = sideToMove;
@@ -28,6 +25,11 @@
             WhiteCanCastleQueenSide = WCCQS;
             BlackCanCastleKingSide = BCCKS;
             BlackCanCastleQueenSide = BCCQS;
+        }
+
+        public BoardState()
+        {
+            
         }
     }
 }

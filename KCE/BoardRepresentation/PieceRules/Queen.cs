@@ -1,24 +1,26 @@
 ﻿using System.Collections.Generic;
 
-namespace KCE.BoardRepresentation.MoveGeneration
+namespace KCE.BoardRepresentation.PieceRules
 {
     public class Queen
     {
-        private readonly Board _board;
+        private readonly int[] _board;
         private readonly int _square;
+        private readonly bool _sideToMove;
 
-        public Queen(int square, Board board)
+        public Queen(int[] board, int square, bool sideToMove)
         {
             _square = square;
             _board = board;
+            _sideToMove = sideToMove;
         }
 
         public List<int> MoveGeneration()
         {
             var validMoves = new List<int>();
 
-            var bishop = new Bishop(_board, _square);
-            var rook = new Rook(_square, _board);
+            var bishop = new Bishop(_board, _square, _sideToMove);
+            var rook = new Rook(_board, _square, _sideToMove);
 
             var bishopMoves = bishop.MoveGeneration();
             var rookMoves = rook.MoveGeneration();
