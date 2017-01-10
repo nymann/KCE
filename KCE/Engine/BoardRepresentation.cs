@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using KCE.BoardRepresentation.PieceRules;
+using KCE.Engine;
 
 namespace KCE.BoardRepresentation
 {

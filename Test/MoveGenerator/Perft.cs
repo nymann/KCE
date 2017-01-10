@@ -10,7 +10,7 @@ namespace Test.MoveGenerator
     public class Perft
     {
         private BoardState _boardState;
-        public const int MaxDepth = 4;
+        public const int MaxDepth = 3;
 
         [TestMethod]
         public void PerftStartPositionTest()
@@ -57,7 +57,7 @@ namespace Test.MoveGenerator
 
         private ulong SetupPerftTest(string FEN, int depth)
         {
-            KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
+            KCE.Engine.Helper helper = new KCE.Engine.Helper();
             _boardState = helper.BoardsetupFromFen(FEN);
             KCE.BoardRepresentation.MoveGenerator moveGenerator = new KCE.BoardRepresentation.MoveGenerator(_boardState);
             return moveGenerator.Perft(depth);

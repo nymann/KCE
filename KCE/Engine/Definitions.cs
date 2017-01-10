@@ -52,5 +52,10 @@ namespace KCE.BoardRepresentation
         public const int WCCKS = 2;
         public const int WCCQS = 3;
 
+        public const int INFINITE = 30000;
+        public const int MATE = 29000;
+
+        public const int MAXDEPTH = 8;
+
     }
 }

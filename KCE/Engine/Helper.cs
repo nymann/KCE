@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using KCE.BoardRepresentation;
+using KCE.BoardRepresentation.PieceRules;
 
-namespace KCE.BoardRepresentation.PieceRules
+namespace KCE.Engine
 {
     public class Helper
     {
@@ -747,6 +746,19 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             return new[] {BCCKS, BCCQS, WCCKS, WCCQS};
+        }
+
+        public bool IsKingInCheck(bool sideToMove, int[] board, int[] kingSquares)
+        {
+            if (sideToMove == Definitions.White)
+            {
+                return IsSquareAttacked(Definitions.White, board, kingSquares[1]);
+            }
+
+            else
+            {
+                return IsSquareAttacked(Definitions.Black, board, kingSquares[0]);
+            }
         }
     }
 }

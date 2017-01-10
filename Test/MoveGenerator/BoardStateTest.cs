@@ -10,7 +10,7 @@ namespace Test.MoveGenerator
         [TestMethod]
         public void CastlePermissionsSetupTest()
         {
-            KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
+            KCE.Engine.Helper helper = new KCE.Engine.Helper();
 
             BoardState bs = helper.BoardsetupFromFen("r3k3/1K6/8/8/8/8/8/8 w q - 0 1");
             
@@ -23,7 +23,7 @@ namespace Test.MoveGenerator
         [TestMethod]
         public void KingSquareMakeUnmakeTest()
         {
-            KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
+            KCE.Engine.Helper helper = new KCE.Engine.Helper();
             BoardState bs = helper.BoardsetupFromFen("k7/8/K7/P7/8/8/8/8 w - - 0 1");
             var ply = helper.MakePly(bs.BoardRepresentation, Definitions.AlgebraicToIndex["a6"], Definitions.AlgebraicToIndex["b6"],
                Definitions.NoEnPassantSquare,
@@ -43,7 +43,7 @@ namespace Test.MoveGenerator
         [TestMethod]
         public void KingSquare3PlysMakeTest()
         {
-            KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
+            KCE.Engine.Helper helper = new KCE.Engine.Helper();
             BoardState bs = helper.BoardsetupFromFen("k7/8/K7/P7/8/8/8/8 w - - 0 1");
             helper.PrintBoardWhitePerspective(bs.BoardRepresentation);
             Console.WriteLine("\n");

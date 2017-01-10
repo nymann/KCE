@@ -12,6 +12,8 @@
         public int[] KingSquares { get; set; }
         public int EnPasSquare { get; set; }
         public int FiftyMoveRule { get; set; }
+        public int Nodes { get; set; } = 0;
+        public Ply BestPly { get; set; }
 
         public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
         {

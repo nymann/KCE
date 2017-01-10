@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using KCE.Engine;
 
 namespace KCE.BoardRepresentation.PieceRules
 {
