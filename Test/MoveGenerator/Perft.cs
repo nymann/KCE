@@ -40,8 +40,10 @@ namespace Test.MoveGenerator
         {
             for (int depth = 1; depth <= depthMax; depth++)
             {
-                Console.WriteLine("{0}, nodes at D{1}: {2}.", FEN, depth, SetupPerftTest(FEN,depth));
-                Assert.AreEqual(expectedValues[depth - 1], SetupPerftTest(FEN, depth));
+                var actual = SetupPerftTest(FEN, depth);
+                var expected = expectedValues[depth - 1];
+                Console.WriteLine("{0}, D{1}, expected: {2}, actual: {3}.", FEN, depth, expected, actual);
+                Assert.AreEqual(expected, actual);
             }
         }
 

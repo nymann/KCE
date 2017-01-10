@@ -37,9 +37,10 @@ namespace KCE.BoardRepresentation
             if (helper.DoubleCheckedFEN(_boardState.BoardRepresentation, _boardState.SideToMove,
                 _boardState.KingSquares))
             {
+                // Player is in check disable all castling.
                 King king = new King(_boardState.BoardRepresentation, _boardState.KingSquares, _boardState.SideToMove,
-                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                    _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide);
+                    false, false,
+                    false, false);
                 var psuedolegalMoves = king.MoveGeneration();
 
                 var square = 0;
@@ -217,10 +218,24 @@ namespace KCE.BoardRepresentation
 
                         #region black king
                         case Definitions.BlackKing:
-                            King blackKing = new King(_boardState.BoardRepresentation, square, Definitions.Black,
+                            King blackKing;
+                            if (helper.IsSquareAttacked(Definitions.Black, _boardState.BoardRepresentation,
+                                _boardState.KingSquares[0]))
+                            {
+                                // you shouldn't be able to castle while in check, so don't generate castling psuedolegalmoves.
+                                blackKing = new King(_boardState.BoardRepresentation, square, Definitions.Black,
+                                false, false,
+                                false, false);
+                            }
+                            else
+                            {
+                                blackKing = new King(_boardState.BoardRepresentation, square, Definitions.Black,
                                 _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                 _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide);
+                                
+                            }
                             var psuedoLegalKingMoves = blackKing.MoveGeneration();
+
                             foreach (int psuedoLegalMove in psuedoLegalKingMoves)
                             {
                                 Ply ply;
@@ -431,9 +446,22 @@ namespace KCE.BoardRepresentation
 
                         #region white king
                         case Definitions.WhiteKing:
-                            King whiteKing = new King(_boardState.BoardRepresentation, square, Definitions.White,
+                            King whiteKing;
+                            if (helper.IsSquareAttacked(Definitions.White, _boardState.BoardRepresentation,
+                                _boardState.KingSquares[1]))
+                            {
+                                // you shouldn't be able to castle while in check, so don't generate castling psuedolegalmoves.
+                                whiteKing = new King(_boardState.BoardRepresentation, square, Definitions.White,
+                                false, false,
+                                false, false);
+                            }
+                            else
+                            {
+                                whiteKing = new King(_boardState.BoardRepresentation, square, Definitions.White,
                                 _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                 _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide);
+
+                            }
                             var psuedoLegalKingMoves = whiteKing.MoveGeneration();
                             foreach (int psuedoLegalMove in psuedoLegalKingMoves)
                             {
