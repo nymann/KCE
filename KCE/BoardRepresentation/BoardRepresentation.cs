@@ -27,7 +27,7 @@ namespace KCE.BoardRepresentation
                 Console.WriteLine("{0}: {1}.", counter, legalMove.GetAlgebraicPly());
                 counter++;
             }*/
-            int depth = 3;
+            int depth = 2;
             UInt64 calcNodes = moveGenerator.Divide(depth);
             stopwatch.Stop();
             long elapsedTime = stopwatch.ElapsedMilliseconds;
