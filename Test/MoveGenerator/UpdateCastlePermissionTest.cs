@@ -9,7 +9,7 @@ namespace Test.MoveGenerator
     {
 
         [TestMethod]
-        public void whiteCapturesRookOnA8()
+        public void WhiteCapturesRookOnA8()
         {
             KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
             bool[] actual = helper.UpdateCastlePermissions(Definitions.AlgebraicToIndex["b7"],
@@ -30,7 +30,7 @@ namespace Test.MoveGenerator
             BoardState bs = helper.BoardsetupFromFen("r3k3/1K6/8/8/8/8/8/8 w q - 0 1");
             var ply = helper.MakePly(bs.BoardRepresentation, Definitions.AlgebraicToIndex["b7"], Definitions.AlgebraicToIndex["a8"],
                 Definitions.NoEnPassantSquare,
-                false, true, false, false, Definitions.White, bs.KingSquares, -1);
+                false, true, false, false, Definitions.White);
 
             Assert.AreEqual(false, ply.GetBCCQS());
         }

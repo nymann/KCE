@@ -25,7 +25,7 @@ namespace KCE
                 "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1");*/
 
             // Current bug.
-            new BoardRepresentation.BoardRepresentation("k7/8/K7/8/8/8/8/8 b - - 0 1", 2);
+            new BoardRepresentation.BoardRepresentation("k7/8/K7/P7/8/8/8/8 w - - 0 1", 3);
             Console.ReadKey();
         }
     }

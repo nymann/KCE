@@ -110,9 +110,7 @@ namespace KCE.BoardRepresentation.PieceRules
             int hisEnPas, 
             bool hisBCCKS, bool hisBCCQS, bool hisWCCKS, bool hisWCCQS, 
             bool sideToMove,
-            int[] hisKingSquares,
-            int performCastling = -1, 
-            int kingSquareMoveTo = 99)
+            int performCastling = -1)
         {
             int enPas = Definitions.NoEnPassantSquare;
             int[] board = (int[]) hisBoard.Clone(); // 7 hour bug.
@@ -170,7 +168,7 @@ namespace KCE.BoardRepresentation.PieceRules
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
                 castle[Definitions.BCCKS], castle[Definitions.BCCQS],
-                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS, hisKingSquares ,kingSquareMoveTo);
+                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS);
         }
 
         public bool DoubleCheckedFen(int[] board, bool sideToMove, int[] kingSquare)

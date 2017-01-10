@@ -10,7 +10,7 @@ namespace Test.MoveGenerator
     public class Perft
     {
         private BoardState boardState;
-        public const int MaxDepth = 3;
+        public const int MaxDepth = 2;
 
         [TestMethod]
         public void PerftStartPositionTest()
@@ -34,6 +34,14 @@ namespace Test.MoveGenerator
             ulong[] discoverPromotionBugsExpectedNodes = {24, 496, 9483, 182838, 3605103, 71179139};
             string discoverPromotionBugsFen = "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1";
             PerftTestHelper(discoverPromotionBugsFen, discoverPromotionBugsExpectedNodes, MaxDepth);
+        }
+
+        [TestMethod]
+        public void KingPawnEndGame()
+        {
+            ulong[] expectedNodes = {2, 4, 24, 103, 703, 2945};
+            string fen = "k7/8/K7/P7/8/8/8/8 w - - 0 1";
+            PerftTestHelper(fen, expectedNodes, MaxDepth);
         }
 
         private void PerftTestHelper(string FEN, ulong[] expectedValues, int depthMax)
