@@ -10,7 +10,7 @@ namespace Test.MoveGenerator
     public class Perft
     {
         private BoardState boardState;
-        public const int MaxDepth = 2;
+        public const int MaxDepth = 3;
 
         [TestMethod]
         public void PerftStartPositionTest()
@@ -61,13 +61,13 @@ namespace Test.MoveGenerator
             var input = new ReadFileLineByLine().ReadFile("C://perftsuite.epd");
             foreach (var line in input)
             {
-                Tuple<string, ulong[]> data = GetPerftSuiteData(line);
-                PerftTestHelper(data.Item1, data.Item2, 2);
+                Tuple<string, ulong[]> data = GetSuiteData(line);
+                PerftTestHelper(data.Item1, data.Item2, MaxDepth);
             }
             Console.WriteLine("\n\n\n");
         }
 
-        Tuple<string, ulong[]> GetPerftSuiteData(string line)
+        Tuple<string, ulong[]> GetSuiteData(string line)
         {
             string[] lineArray = line.Split(';');
             string fen = lineArray[0].TrimEnd();

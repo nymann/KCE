@@ -34,7 +34,7 @@ namespace KCE.BoardRepresentation
 
             #region side to move is in double check
             // if it's blacks or whites turn and he is in double check.
-            if (helper.DoubleCheckedFEN(_boardState.BoardRepresentation, _boardState.SideToMove,
+            if (helper.DoubleCheckedFen(_boardState.BoardRepresentation, _boardState.SideToMove,
                 _boardState.KingSquares))
             {
                 // Player is in check disable all castling.
@@ -53,7 +53,7 @@ namespace KCE.BoardRepresentation
                 {
                     Ply ply = helper.MakePly(_boardState.BoardRepresentation, _boardState.KingSquares[square], psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares, psuedoLegalMove);
 
                     if (!helper.IsSquareAttacked(_boardState.SideToMove, ply.GetBoard(), psuedoLegalMove))
                     {
@@ -80,7 +80,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
                                 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _boardState.KingSquares[0]))
                                 {
@@ -106,7 +106,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]);
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares);
                                         legalMoves.Add(queen);
                                         
                                         int[] boardRook = (int[]) boardQueen.Clone();
@@ -116,7 +116,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]);
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares);
                                         legalMoves.Add(rook);
 
                                         int[] boardbishop = (int[])boardQueen.Clone();
@@ -126,7 +126,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]);
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares);
                                         legalMoves.Add(bishop);
 
                                         int[] boardknight = (int[])boardQueen.Clone();
@@ -136,7 +136,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]);
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares);
                                         legalMoves.Add(knight);
                                     }
                                 }
@@ -152,7 +152,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _boardState.KingSquares[0]))
                                 {
@@ -170,7 +170,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _boardState.KingSquares[0]))
                                 {
@@ -188,7 +188,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _boardState.KingSquares[0]))
                                 {
@@ -206,7 +206,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _boardState.KingSquares[0]))
                                 {
@@ -242,32 +242,28 @@ namespace KCE.BoardRepresentation
                                 if (_boardState.BlackCanCastleKingSide && psuedoLegalMove == 92)
                                 {
                                     ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
-                                        _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide,
-                                        _boardState.BlackCanCastleQueenSide,
+                                        _boardState.EnPasSquare, 
+                                        _boardState.BlackCanCastleKingSide,_boardState.BlackCanCastleQueenSide,
                                         _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                                        _boardState.SideToMove, 0);
+                                        _boardState.SideToMove, _boardState.KingSquares, 0, psuedoLegalMove);
                                 }
 
                                 else if (_boardState.BlackCanCastleQueenSide && psuedoLegalMove == 96)
                                 {
                                     ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
-                                        _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide,
-                                        _boardState.BlackCanCastleQueenSide,
+                                        _boardState.EnPasSquare, 
+                                        _boardState.BlackCanCastleKingSide,_boardState.BlackCanCastleQueenSide,
                                         _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                                        _boardState.SideToMove, 1);
-
-
+                                        _boardState.SideToMove, _boardState.KingSquares, 1, psuedoLegalMove);
                                 }
 
                                 else
                                 {
                                     ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
-                                        _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide,
-                                        _boardState.BlackCanCastleQueenSide,
+                                        _boardState.EnPasSquare, 
+                                        _boardState.BlackCanCastleKingSide,_boardState.BlackCanCastleQueenSide,
                                         _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                                        _boardState.SideToMove);
-
-                                    
+                                        _boardState.SideToMove, _boardState.KingSquares, psuedoLegalMove);
                                 }
 
                                 if (!helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), psuedoLegalMove))
@@ -305,7 +301,7 @@ namespace KCE.BoardRepresentation
                                     _boardState.SideToMove);
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (
                                     !helper.IsSquareAttacked(Definitions.White, ply.GetBoard(),
@@ -327,7 +323,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]);
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares);
                                         legalMoves.Add(queen);
 
                                         int[] boardRook = (int[]) boardQueen.Clone();
@@ -339,7 +335,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]); ;
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares); ;
                                         legalMoves.Add(rook);
 
                                         int[] boardbishop = (int[]) boardQueen.Clone();
@@ -351,7 +347,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]); ;
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares); ;
                                         legalMoves.Add(bishop);
 
                                         int[] boardknight = (int[]) boardQueen.Clone();
@@ -363,7 +359,7 @@ namespace KCE.BoardRepresentation
                                             _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
                                             _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
                                             castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]); ;
+                                            castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], _boardState.KingSquares); ;
                                         legalMoves.Add(knight);
                                     }
                                 }
@@ -379,7 +375,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _boardState.KingSquares[1]))
                                 {
@@ -397,7 +393,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _boardState.KingSquares[1]))
                                 {
@@ -416,7 +412,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _boardState.KingSquares[1]))
                                 {
@@ -434,7 +430,7 @@ namespace KCE.BoardRepresentation
                             {
                                 Ply ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                     _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide, _boardState.BlackCanCastleQueenSide,
-                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove);
+                                    _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide, _boardState.SideToMove, _boardState.KingSquares);
 
                                 if (!helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _boardState.KingSquares[1]))
                                 {
@@ -470,10 +466,10 @@ namespace KCE.BoardRepresentation
                                 {
                                     // perform white kingside castling
                                     ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
-                                        _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide,
-                                        _boardState.BlackCanCastleQueenSide,
-                                        _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                                        _boardState.SideToMove, 2);
+                                        _boardState.EnPasSquare, 
+                                        _boardState.BlackCanCastleKingSide,_boardState.BlackCanCastleQueenSide,
+                                        false, false,
+                                        _boardState.SideToMove, _boardState.KingSquares, 2, psuedoLegalMove);
 
                                 }
 
@@ -483,8 +479,8 @@ namespace KCE.BoardRepresentation
                                     ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                         _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide,
                                         _boardState.BlackCanCastleQueenSide,
-                                        _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                                        _boardState.SideToMove, 3);
+                                        false, false,
+                                        _boardState.SideToMove, _boardState.KingSquares, 3, psuedoLegalMove);
                                 }
 
                                 else
@@ -492,8 +488,8 @@ namespace KCE.BoardRepresentation
                                     ply = helper.MakePly(_boardState.BoardRepresentation, square, psuedoLegalMove,
                                         _boardState.EnPasSquare, _boardState.BlackCanCastleKingSide,
                                         _boardState.BlackCanCastleQueenSide,
-                                        _boardState.WhiteCanCastleKingSide, _boardState.WhiteCanCastleQueenSide,
-                                        _boardState.SideToMove);                                
+                                        false, false,
+                                        _boardState.SideToMove, _boardState.KingSquares, psuedoLegalMove);                                
                                 }
 
                                 if (!helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), psuedoLegalMove))
@@ -569,7 +565,7 @@ namespace KCE.BoardRepresentation
             return totalNodes;
         }
 
-        void MakeMove(Ply makePly)
+        public void MakeMove(Ply makePly)
         {
             _boardState.EnPasSquare = makePly.GetEnPas();
             _boardState.BoardRepresentation = (int[]) makePly.GetBoard().Clone();
@@ -579,9 +575,17 @@ namespace KCE.BoardRepresentation
             _boardState.WhiteCanCastleQueenSide = makePly.GetWCCQS();
             _boardState.BlackCanCastleKingSide = makePly.GetBCCKS();
             _boardState.BlackCanCastleQueenSide = makePly.GetBCCQS();
+            var temp = makePly.GetKingSquares();
+            if (temp[0] != 94)
+            {
+                _boardState.KingSquares[0] = temp[0];
+            } else if (temp[1] != 24)
+            {
+                _boardState.KingSquares[1] = temp[1];
+            }
         }
 
-        void UndoMove(Ply undoPly)
+        public void UndoMove(Ply undoPly)
         {
             _boardState.EnPasSquare = undoPly.GetHisEnPas();
             _boardState.BoardRepresentation = (int[]) undoPly.GetHisBoard().Clone();
@@ -590,6 +594,7 @@ namespace KCE.BoardRepresentation
             _boardState.WhiteCanCastleQueenSide = undoPly.GetHisWCCQS();
             _boardState.BlackCanCastleKingSide = undoPly.GetHisBCCKS();
             _boardState.BlackCanCastleQueenSide = undoPly.GetHisBCCQS();
+            _boardState.KingSquares = (int[]) undoPly.GetKingSquares().Clone();
         }
     }
 }

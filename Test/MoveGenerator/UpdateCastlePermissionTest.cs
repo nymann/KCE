@@ -30,7 +30,7 @@ namespace Test.MoveGenerator
             BoardState bs = helper.BoardsetupFromFen("r3k3/1K6/8/8/8/8/8/8 w q - 0 1");
             var ply = helper.MakePly(bs.BoardRepresentation, Definitions.AlgebraicToIndex["b7"], Definitions.AlgebraicToIndex["a8"],
                 Definitions.NoEnPassantSquare,
-                false, true, false, false, Definitions.White, -1);
+                false, true, false, false, Definitions.White, bs.KingSquares, -1);
 
             Assert.AreEqual(false, ply.GetBCCQS());
         }

@@ -18,6 +18,23 @@ namespace Test.MoveGenerator
             Assert.AreEqual(false, bs.WhiteCanCastleKingSide);
             Assert.AreEqual(false, bs.WhiteCanCastleQueenSide);
         }
-        
+
+        [TestMethod]
+        public void KingSquareUpdateTest()
+        {
+            KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
+            BoardState bs = helper.BoardsetupFromFen("k7/8/K7/8/8/8/8/8 b - - 0 1");
+            var ply = helper.MakePly(bs.BoardRepresentation, Definitions.AlgebraicToIndex["a8"], Definitions.AlgebraicToIndex["b8"],
+               Definitions.NoEnPassantSquare,
+               false, false, false, false, Definitions.White, bs.KingSquares, -1, Definitions.AlgebraicToIndex["b8"]);
+            KCE.BoardRepresentation.MoveGenerator moveGenerator = new KCE.BoardRepresentation.MoveGenerator(bs);
+            moveGenerator.MakeMove(ply);
+
+            int[] expected = {97, 78};
+            Assert.AreEqual(expected[0], bs.KingSquares[0]);
+            Assert.AreEqual(expected[1], bs.KingSquares[1]);
+
+        }
+
     }
 }

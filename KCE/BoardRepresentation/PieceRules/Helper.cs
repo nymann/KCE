@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace KCE.BoardRepresentation.PieceRules
@@ -104,7 +105,14 @@ namespace KCE.BoardRepresentation.PieceRules
             return false;
         }
 
-        public Ply MakePly(int[] hisBoard, int fromSquare, int toSquare, int hisEnPas, bool BCCKS, bool BCCQS, bool WCCKS, bool WCCQS, bool sideToMove, int performCastling = -1)
+        public Ply MakePly(int[] hisBoard, 
+            int fromSquare, int toSquare, 
+            int hisEnPas, 
+            bool hisBCCKS, bool hisBCCQS, bool hisWCCKS, bool hisWCCQS, 
+            bool sideToMove,
+            int[] hisKingSquares,
+            int performCastling = -1, 
+            int kingSquareMoveTo = 99)
         {
             int enPas = Definitions.NoEnPassantSquare;
             int[] board = (int[]) hisBoard.Clone(); // 7 hour bug.
@@ -157,15 +165,15 @@ namespace KCE.BoardRepresentation.PieceRules
                 enPas = fromSquare - 10;
             }
 
-            bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, WCCKS, WCCQS, BCCKS, BCCQS, sideToMove);
+            bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS, sideToMove);
 
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
                 castle[Definitions.BCCKS], castle[Definitions.BCCQS],
-                WCCKS, WCCQS, BCCKS, BCCQS);
+                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS, hisKingSquares ,kingSquareMoveTo);
         }
 
-        public bool DoubleCheckedFEN(int[] board, bool sideToMove, int[] kingSquare)
+        public bool DoubleCheckedFen(int[] board, bool sideToMove, int[] kingSquare)
         {
             bool possibleDoubleCheck = false;
 
