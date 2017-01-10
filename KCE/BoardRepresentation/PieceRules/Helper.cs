@@ -104,7 +104,7 @@ namespace KCE.BoardRepresentation.PieceRules
             return false;
         }
 
-        public Ply MakePly(int[] hisBoard, int fromSquare, int toSquare, int hisEnPas, bool BCCKS, bool BCCQS, bool WCCKS, bool WCCQS, bool sideToMove)
+        public Ply MakePly(int[] hisBoard, int fromSquare, int toSquare, int hisEnPas, bool BCCKS, bool BCCQS, bool WCCKS, bool WCCQS, bool sideToMove, int performCastling = -1)
         {
             int enPas = Definitions.NoEnPassantSquare;
             int[] board = (int[]) hisBoard.Clone(); // 7 hour bug.
@@ -113,6 +113,38 @@ namespace KCE.BoardRepresentation.PieceRules
             board[fromSquare] = Definitions.EmptySquare;
             board[toSquare] = pieceOnFromSquare;
             string algebraicPly = Definitions.IndexToAlgebraic[fromSquare] + Definitions.IndexToAlgebraic[toSquare];
+
+            // are we castling?
+            if (performCastling != -1)
+            {
+                if (performCastling == 0)
+                {
+                    // Black kingside castling
+                    board[91] = Definitions.EmptySquare;
+                    board[93] = Definitions.BlackRook;
+                }
+
+                else if (performCastling == 1)
+                {
+                    // Black queenside castling.
+                    board[98] = Definitions.EmptySquare;
+                    board[95] = Definitions.BlackRook;
+                }
+
+                else if (performCastling == 2)
+                {
+                    // White kingside castling
+                    board[21] = Definitions.EmptySquare;
+                    board[23] = Definitions.WhiteRook;
+                }
+
+                else if (performCastling == 3)
+                {
+                    // White queenside castling
+                    board[28] = Definitions.EmptySquare;
+                    board[25] = Definitions.WhiteRook;
+                }
+            }
 
             // En passant.
             if (hisBoard[fromSquare] == Definitions.WhitePawn && (toSquare - fromSquare) == 20)
