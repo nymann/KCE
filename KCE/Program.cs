@@ -24,10 +24,10 @@ namespace KCE
             /*new BoardRepresentation.BoardRepresentation(
                 "n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1");*/
 
-            // Depth 2 bug found, 4k3/8/8/8/8/8/8/4K2R w K - 0 1 ;D1 15 ;D2 66 ;D3 1197 ;D4 7059 ;D5 133987 ;D6 764643
-            // Expected value 66, actual 68.
+            // Depth 2 bug found, r3k3/1K6/8/8/8/8/8/8 w q - 0 1 ;D1 4 ;D2 49 ;D3 243 ;D4 3991 ;D5 20780 ;D6 367724
+            // Expected value 49, actual 50.
 
-            new BoardRepresentation.BoardRepresentation("4k3/8/8/8/8/8/8/4K2R w K - 0 1");
+            new BoardRepresentation.BoardRepresentation("r3k3/1K6/8/8/8/8/8/8 w q - 0 1");
             Console.ReadKey();
         }
     }

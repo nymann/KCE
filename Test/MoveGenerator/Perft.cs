@@ -9,6 +9,7 @@ namespace Test.MoveGenerator
     [TestClass]
     public class Perft
     {
+        private BoardState boardState;
         public const int MaxDepth = 2;
 
         [TestMethod]
@@ -39,6 +40,7 @@ namespace Test.MoveGenerator
         {
             for (int depth = 1; depth <= depthMax; depth++)
             {
+                Console.WriteLine("{0}, nodes at D{1}: {2}.", FEN, depth, SetupPerftTest(FEN,depth));
                 Assert.AreEqual(expectedValues[depth - 1], SetupPerftTest(FEN, depth));
             }
         }
@@ -46,7 +48,7 @@ namespace Test.MoveGenerator
         private ulong SetupPerftTest(string FEN, int depth)
         {
             KCE.BoardRepresentation.PieceRules.Helper helper = new KCE.BoardRepresentation.PieceRules.Helper();
-            BoardState boardState = helper.BoardsetupFromFen(FEN);
+            boardState = helper.BoardsetupFromFen(FEN);
             KCE.BoardRepresentation.MoveGenerator moveGenerator = new KCE.BoardRepresentation.MoveGenerator(boardState);
             return moveGenerator.Perft(depth);
         }

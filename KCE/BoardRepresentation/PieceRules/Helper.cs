@@ -160,9 +160,9 @@ namespace KCE.BoardRepresentation.PieceRules
             bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, WCCKS, WCCQS, BCCKS, BCCQS, sideToMove);
 
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
-                WCCKS, WCCQS, BCCKS, BCCQS,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
-                castle[Definitions.BCCKS], castle[Definitions.BCCQS]);
+                castle[Definitions.BCCKS], castle[Definitions.BCCQS],
+                WCCKS, WCCQS, BCCKS, BCCQS);
         }
 
         public bool DoubleCheckedFEN(int[] board, bool sideToMove, int[] kingSquare)
@@ -649,6 +649,7 @@ namespace KCE.BoardRepresentation.PieceRules
 
         public bool[] UpdateCastlePermissions(int squareFrom, int squareTo, bool wccks, bool wccqs, bool bccks, bool bccqs, bool sideToMove)
         {
+
             bool WCCKS = false;
             bool WCCQS = false;
             bool BCCKS = false;
