@@ -18,22 +18,12 @@ namespace KCE.BoardRepresentation
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             MoveGenerator moveGenerator = new MoveGenerator(boardState);
-            /*List<Ply> legalMoves = moveGenerator.AllLegalMoves();
-            stopwatch.Stop();
-            var counter = 1;
-            Console.WriteLine("\n{0} legal moves found in {1} ms.\n", legalMoves.Count, stopwatch.ElapsedMilliseconds);
-            foreach (Ply legalMove in legalMoves)
-            {
-                Console.WriteLine("{0}: {1}.", counter, legalMove.GetAlgebraicPly());
-                counter++;
-            }*/
             UInt64 calcNodes = moveGenerator.Divide(depth);
             stopwatch.Stop();
             long elapsedTime = stopwatch.ElapsedMilliseconds;
-            double nodesSec = (double) calcNodes/(elapsedTime*0.001);
+            double nodesSec = calcNodes/(elapsedTime*0.001);
             Console.WriteLine("Depth: {0}, Nodes: {1}, Time: {2} ms, Nodes/Sec: {3}", depth, calcNodes,
                 stopwatch.ElapsedMilliseconds, Math.Round(nodesSec));
-
         }
     }
 }
