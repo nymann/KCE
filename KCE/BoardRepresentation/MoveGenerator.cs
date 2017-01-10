@@ -32,22 +32,6 @@ namespace KCE.BoardRepresentation
         {
             List<Ply> legalMoves = new List<Ply>();
 
-            if (_boardState.SideToMove == Definitions.White && helper.IsSquareAttacked(_boardState.SideToMove, _boardState.BoardRepresentation, _boardState.KingSquares[1]))
-            {
-                Console.WriteLine("Check! Printing board:\n");
-                helper.PrintBoardWhitePerspective(_boardState.BoardRepresentation);
-                Console.WriteLine("White to move, Check to {0} on {1}", _boardState.BoardRepresentation[_boardState.KingSquares[1]], Definitions.IndexToAlgebraic[_boardState.KingSquares[1]]);
-            }
-
-            else if (_boardState.SideToMove == Definitions.Black &&
-                     helper.IsSquareAttacked(_boardState.SideToMove, _boardState.BoardRepresentation,
-                         _boardState.KingSquares[0]))
-            {
-                Console.WriteLine("Check! Printing board:\n");
-                helper.PrintBoardWhitePerspective(_boardState.BoardRepresentation);
-                Console.WriteLine("Black to move, Check to {0} on {1}", _boardState.BoardRepresentation[_boardState.KingSquares[0]], Definitions.IndexToAlgebraic[_boardState.KingSquares[1]]);
-            }
-
             #region side to move is in double check
             // if it's blacks or whites turn and he is in double check.
             if (helper.DoubleCheckedFen(_boardState.BoardRepresentation, _boardState.SideToMove,
@@ -533,11 +517,11 @@ namespace KCE.BoardRepresentation
 
             if (depth == 1)
             {
-                foreach (Ply legalMove in AllLegalMoves())
+                /*foreach (Ply legalMove in AllLegalMoves())
                 {
                     Console.WriteLine(legalMove.GetAlgebraicPly());
                     helper.PrintBoardWhitePerspective(legalMove.GetBoard());
-                }
+                }*/
                 return (ulong) AllLegalMoves().Count;
             }
 
@@ -547,7 +531,7 @@ namespace KCE.BoardRepresentation
             for (var i = 0; i < nMoves; i++)
             {
                 MakeMove(legalMoves[i]);
-                Console.WriteLine("\n{0}\n", legalMoves[i].GetAlgebraicPly());
+                //Console.WriteLine("\n{0}\n", legalMoves[i].GetAlgebraicPly());
                 nodes += Perft(depth - 1);
                 UndoMove(legalMoves[i]);
             }
@@ -565,16 +549,8 @@ namespace KCE.BoardRepresentation
             foreach (var legalMove in legalMoves)
             {
                 MakeMove(legalMove);
-                ulong childNotes;
 
-                if (depth == 1)
-                {
-                    childNotes = (ulong) nMoves;
-                }
-                else
-                {
-                    childNotes = Perft(depth - 1);
-                }
+                var childNotes = depth == 1 ? 1 : Perft(depth - 1);
                 totalNodes += childNotes;
                 UndoMove(legalMove);
                 Console.WriteLine("{0}: {1}", legalMove.GetAlgebraicPly(), childNotes);

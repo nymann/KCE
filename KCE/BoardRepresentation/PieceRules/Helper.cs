@@ -8,7 +8,6 @@ namespace KCE.BoardRepresentation.PieceRules
 {
     public class Helper
     {
-
         private readonly int[] _board64 =
         {
             21, 22, 23, 24, 25, 26, 27, 28,
@@ -23,7 +22,6 @@ namespace KCE.BoardRepresentation.PieceRules
 
         public Helper()
         {
-            
         }
 
         public bool IsPieceBound(int square, int piece, bool side, int[] board)
@@ -76,7 +74,7 @@ namespace KCE.BoardRepresentation.PieceRules
                     board[squareInQuestion + 9] == Definitions.BlackPawn)
                 {
                     return true;
-                }               
+                }
             }
             else
             {
@@ -105,19 +103,21 @@ namespace KCE.BoardRepresentation.PieceRules
             return false;
         }
 
-        public Ply MakePly(int[] hisBoard, 
-            int fromSquare, int toSquare, 
-            int hisEnPas, 
-            bool hisBCCKS, bool hisBCCQS, bool hisWCCKS, bool hisWCCQS, 
+        public Ply MakePly(int[] hisBoard,
+            int fromSquare, int toSquare,
+            int hisEnPas,
+            bool hisBCCKS, bool hisBCCQS, bool hisWCCKS, bool hisWCCQS,
             bool sideToMove,
             int performCastling = -1)
         {
             int enPas = Definitions.NoEnPassantSquare;
             int[] board = (int[]) hisBoard.Clone(); // 7 hour bug.
-            
+
             int pieceOnFromSquare = board[fromSquare];
             board[fromSquare] = Definitions.EmptySquare;
             board[toSquare] = pieceOnFromSquare;
+
+
             string algebraicPly = Definitions.IndexToAlgebraic[fromSquare] + Definitions.IndexToAlgebraic[toSquare];
 
             // are we castling?
@@ -152,7 +152,40 @@ namespace KCE.BoardRepresentation.PieceRules
                 }
             }
 
-            // En passant.
+            #region En Passsant
+
+            // Capture En Passant
+            if (sideToMove == Definitions.White && hisBoard[fromSquare] == Definitions.WhitePawn &&
+                hisEnPas == toSquare)
+            {
+                // example, toSquare = enpassquare = e6 (74), fromSquare = d5 (65), black pawn on e5 (64) 
+                if (fromSquare - toSquare == -9)
+                {
+                    board[fromSquare - 1] = Definitions.EmptySquare;
+                }
+
+                // example, toSquare = enpassquare = c6 (76), fromSquare = d5 (65), black pawn on c5 (66) 
+                else if (fromSquare - toSquare == -11)
+                {
+                    board[fromSquare + 1] = Definitions.EmptySquare;
+                }
+            }
+            else if (sideToMove == Definitions.Black && hisBoard[fromSquare] == Definitions.BlackPawn &&
+                     hisEnPas == toSquare)
+            {
+                // example, fromsquare = enpassquare = d3 (45), fromSquare = e4 (54), white pawn on d4 (55) 
+                if (fromSquare - toSquare == 9)
+                {
+                    board[fromSquare + 1] = Definitions.EmptySquare;
+                }
+
+                else if (fromSquare - toSquare == 11)
+                {
+                    board[fromSquare - 1] = Definitions.EmptySquare;
+                }
+            }
+
+            // Set En passant square.
             if (hisBoard[fromSquare] == Definitions.WhitePawn && (toSquare - fromSquare) == 20)
             {
                 enPas = toSquare - 10;
@@ -163,7 +196,10 @@ namespace KCE.BoardRepresentation.PieceRules
                 enPas = fromSquare - 10;
             }
 
-            bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS, sideToMove);
+            #endregion
+
+            bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS,
+                sideToMove);
 
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
@@ -176,11 +212,12 @@ namespace KCE.BoardRepresentation.PieceRules
             bool possibleDoubleCheck = false;
 
             #region white side
+
             if (sideToMove == Definitions.White)
             {
                 Knight whiteKnight = new Knight(board, kingSquare[1], Definitions.White);
                 var listOfWhiteMoves = whiteKnight.MoveGeneration();
-                
+
                 foreach (var square in listOfWhiteMoves)
                 {
                     if (board[square] == Definitions.BlackKnight)
@@ -204,7 +241,7 @@ namespace KCE.BoardRepresentation.PieceRules
                         return true;
                     }
                 }
-                
+
 
                 Rook whiteRook = new Rook(board, kingSquare[1], Definitions.White);
                 listOfWhiteMoves = whiteRook.MoveGeneration();
@@ -219,8 +256,9 @@ namespace KCE.BoardRepresentation.PieceRules
             #endregion
 
             #region black side
+
             else
-            { 
+            {
                 Knight blackKnight = new Knight(board, kingSquare[0], Definitions.Black);
                 var listOfBlackMoves = blackKnight.MoveGeneration();
 
@@ -258,6 +296,7 @@ namespace KCE.BoardRepresentation.PieceRules
                     }
                 }
             }
+
             #endregion
 
             return false;
@@ -348,7 +387,6 @@ namespace KCE.BoardRepresentation.PieceRules
                 Console.WriteLine(" +---+---+---+---+---+---+---+---+");
                 counter--;
             }
-
         }
 
         private void PrintBoardBlackPerspective(int[] board)
@@ -463,7 +501,7 @@ namespace KCE.BoardRepresentation.PieceRules
             int enPasSquare;
             int fiftyMoveRule;
             int fullMoves;
-            int[] kingSquares = { 99, 99 };
+            int[] kingSquares = {99, 99};
 
             int index = 63;
             string[] pieces = fen.Split(' ');
@@ -612,6 +650,7 @@ namespace KCE.BoardRepresentation.PieceRules
             #endregion
 
             #region en passant square
+
             if (pieces[3].Equals("-"))
             {
                 enPasSquare = Definitions.NoEnPassantSquare;
@@ -640,22 +679,23 @@ namespace KCE.BoardRepresentation.PieceRules
 
             #endregion
 
-            return new BoardState(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS, BCCKS, BCCQS);
+            return new BoardState(boardRepresentation, sideToMove, kingSquares, enPasSquare, fiftyMoveRule, WCCKS, WCCQS,
+                BCCKS, BCCQS);
         }
 
         public bool IsPieceOnSecondRank(int square)
         {
-            return square/10 == 3;
+            return square / 10 == 3;
         }
 
         public bool IsPieceOnSeventhRank(int square)
         {
-            return square/10 == 8;
+            return square / 10 == 8;
         }
 
-        public bool[] UpdateCastlePermissions(int squareFrom, int squareTo, bool wccks, bool wccqs, bool bccks, bool bccqs, bool sideToMove)
+        public bool[] UpdateCastlePermissions(int squareFrom, int squareTo, bool wccks, bool wccqs, bool bccks,
+            bool bccqs, bool sideToMove)
         {
-
             bool WCCKS = false;
             bool WCCQS = false;
             bool BCCKS = false;
@@ -706,7 +746,7 @@ namespace KCE.BoardRepresentation.PieceRules
                 WCCQS = true;
             }
 
-            return new[] { BCCKS, BCCQS, WCCKS, WCCQS };
+            return new[] {BCCKS, BCCQS, WCCKS, WCCQS};
         }
     }
 }
