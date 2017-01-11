@@ -17,6 +17,8 @@ namespace KCE.Engine.Search
         public bool Quit { get; set; }
         public bool Stopped { get; set; }
         private Stopwatch stopwatch;
+        public float Fh { get; set; } = 0;
+        public float Fhf { get; set; } = 0;
 
         public SearchInfo()
         {

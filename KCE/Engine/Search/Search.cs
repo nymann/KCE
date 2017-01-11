@@ -1,7 +1,6 @@
-﻿using System;
+﻿using KCE.BoardRepresentation;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using KCE.BoardRepresentation;
 
 namespace KCE.Engine.Search
 {
@@ -101,12 +100,13 @@ namespace KCE.Engine.Search
             int nMoves = legalMoves.Count;
             int oldAlpha = alpha;
 
-            foreach (Ply move in legalMoves)
+            for (var moveNum = 0; moveNum < legalMoves.Count; moveNum++)
             {
                 // PickNextMove(moveNum, legalMoves)
-                mg.MakeMove(move);
+
+                mg.MakeMove(legalMoves[moveNum]);
                 score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
-                mg.UndoMove(move);
+                mg.UndoMove(legalMoves[moveNum]);
 
                 if (sInfo.Stopped)
                 {
@@ -119,9 +119,9 @@ namespace KCE.Engine.Search
                     {
                         if (nMoves == 1)
                         {
-                            // sInfo.fhf++;
+                            sInfo.Fhf++;
                         }
-                        // sInfo.fh++
+                        sInfo.Fh++;
 
                         /*if (!(list->moves[MoveNum].move & MFLAGCAP))
                         {
@@ -129,17 +129,17 @@ namespace KCE.Engine.Search
                             pos->searchKillers[0][pos->ply] = list->moves[MoveNum].move;
                         }*/
 
-                        return beta;
+                        return beta; // Fail hard beta-cutoff.
                     }
 
-                    alpha = score;
-                    BestMove = move;
+                    alpha = score; // alpha acts like max in minimax.
+                    BestMove = legalMoves[moveNum];
 
                     /*if (!(list->moves[MoveNum].move & MFLAGCAP))
                     {
                         pos->searchHistory[pos->pieces[FROMSQ(BestMove)]][TOSQ(BestMove)] += depth;
                     }*/
-                }    
+                }
             }
 
             if (nMoves == 0)
@@ -156,6 +156,7 @@ namespace KCE.Engine.Search
 
             if (alpha != oldAlpha)
             {
+                bs.BestPly = BestMove;
                 // StorePvMove(pos, BestMove);
             }
 
@@ -209,34 +210,17 @@ namespace KCE.Engine.Search
 
         public void SearchPosition(BoardState bs)
         {
-            Helper helper = new Helper();
             SearchInfo sInfo = new SearchInfo();
             int depth = 1;
-            Ply bestPly = null;
-            int bestScore;
-
-            /*while (depth < 3 && !sInfo.IsTimeUp(5000))
-            {
-                bestPly = Temp(depth, bs, sInfo);
-                Console.WriteLine("\n=================================================================================" +
-                                  "\nDepth: {0}, Move: {1}, Score: {2}, Nodes Searched: {3}, Time left: {4} ms." +
-                                  "\n=================================================================================\n"
-                    , depth, bestPly.GetAlgebraicPly(), bestPly.Score, sInfo.Nodes, sInfo.TimeLeft());
-                depth++;
-            }
-            Console.WriteLine("Best found move: {0}.\n" +
-                              "Depth found at: {1}.\n" +
-                              "Nodes searched: {2}.\n",
-                              bestPly.GetAlgebraicPly(), depth - 1, sInfo.Nodes);
-            helper.PrintBoardWhitePerspective(bs.BoardRepresentation);*/
 
             while (!sInfo.IsTimeUp())
             {
-                bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
-                Console.WriteLine("Score: {0}, Depth: {1}, Timeleft: {2} ms.", bestScore, depth, sInfo.TimeLeft());
+                var bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
+                Console.WriteLine("Move: {3}, Score: {0}, Depth: {1}, Timeleft: {2} ms. FH: {4}, FHF: {5}", 
+                    bestScore, depth, sInfo.TimeLeft(), bs.BestPly.GetAlgebraicPly(),
+                    sInfo.Fh, sInfo.Fhf);
                 depth++;
             }
-
         }
     }
 }
