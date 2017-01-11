@@ -463,9 +463,10 @@ namespace KCE.BoardRepresentation
             for (var i = 0; i < nMoves; i++)
             {
                 MakeMove(legalMoves[i]);
-                //Console.WriteLine("\n{0}\n", legalMoves[i].GetAlgebraicPly());
                 nodes += Perft(depth - 1);
                 UndoMove(legalMoves[i]);
+
+                Console.WriteLine("Perft: {0}: {1}", legalMoves[i].GetAlgebraicPly(), nodes);
             }
 
             return nodes;
@@ -485,7 +486,7 @@ namespace KCE.BoardRepresentation
                 var childNotes = depth == 1 ? 1 : Perft(depth - 1);
                 totalNodes += childNotes;
                 UndoMove(legalMove);
-                Console.WriteLine("{0}: {1}", legalMove.GetAlgebraicPly(), childNotes);
+                Console.WriteLine("Divide: {0}: {1}", legalMove.GetAlgebraicPly(), childNotes);
             }
 
             Console.WriteLine("\nTotal moves: {0}, Total nodes: {1}", nMoves, totalNodes);

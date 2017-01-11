@@ -57,7 +57,8 @@
     <Compile Include="Engine\PieceRules\Rook.cs" />
     <Compile Include="Engine\Definitions.cs" />
     <Compile Include="Engine\Ply.cs" />
-    <Compile Include="Engine\Search.cs" />
+    <Compile Include="Engine\Search\Search.cs" />
+    <Compile Include="Engine\Search\SearchInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

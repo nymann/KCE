@@ -1,4 +1,6 @@
-﻿namespace KCE.BoardRepresentation
+﻿using System.Collections.Generic;
+
+namespace KCE.BoardRepresentation
 {
     public class BoardState
     {
@@ -12,8 +14,10 @@
         public int[] KingSquares { get; set; }
         public int EnPasSquare { get; set; }
         public int FiftyMoveRule { get; set; }
-        public int Nodes { get; set; } = 0;
+        public int Ply { get; set; }
         public Ply BestPly { get; set; }
+        public List<Ply> PvTable { get; set; }
+        
 
         public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
         {

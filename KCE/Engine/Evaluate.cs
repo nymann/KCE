@@ -1,4 +1,7 @@
-﻿namespace KCE.BoardRepresentation
+﻿using System;
+using KCE.Engine;
+
+namespace KCE.BoardRepresentation
 {
     public class Evaluate
     {
@@ -16,14 +19,11 @@
 
         #region piece square tables
 
-        // https://youtu.be/zSJF6jZ61w0?list=PLZ1QII7yudbc-Ky058TEaOstZHVbT-2hg
-        private int[] pawnTable =
-        {
+        private int[] pawnTable = {
             0, 0, 0, 0, 0, 0, 0, 0,
             10, 10, 0, -10, -10, 0, 10, 10,
-            5, 0, 0, 5, 5, 0, 0, 5,
+            0, 5, 0, 5, 5, 0, 5, 0,
             0, 0, 10, 20, 20, 10, 0, 0,
-            5, 5, 5, 10, 10, 5, 5, 5,
             10, 10, 10, 20, 20, 10, 10, 10,
             20, 20, 20, 30, 30, 20, 20, 20,
             0, 0, 0, 0, 0, 0, 0, 0
@@ -67,13 +67,13 @@
 
         private int[] rookTable =
         {
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
+            1, 0, 5, 10, 10, 5, 0, 1,
             25, 25, 25, 25, 25, 25, 25, 25,
+            0, 0, 5, 10, 10, 5, 0, 0,
+            0, 0, 5, 10, 10, 5, 0, 0,
+            0, 0, 5, 10, 10, 5, 0, 0,
+            0, 0, 5, 10, 10, 5, 0, 0,
+            0, 0, 5, 10, 10, 5, 0, 0,
             0, 0, 5, 10, 10, 5, 0, 0
         };
 
@@ -86,28 +86,28 @@
         public int EvalPosition(BoardState bs)
         {
             int score = 0;
-            int counter64 = 0;
-            foreach (int square in _board64)
+
+            for (int square = 0; square < 64; square++)
             {
-                switch (bs.BoardRepresentation[square])
+                switch (bs.BoardRepresentation[_board64[square]])
                 {
                     #region white
 
                     case Definitions.WhitePawn:
                         score += 100;
-                        score += pawnTable[counter64];
+                        score += pawnTable[square];
                         break;
                     case Definitions.WhiteKnight:
                         score += 300;
-                        score += knightTable[counter64];
+                        score += knightTable[square];
                         break;
                     case Definitions.WhiteBishop:
                         score += 300;
-                        score += bishopTable[counter64];
+                        score += bishopTable[square];
                         break;
                     case Definitions.WhiteRook:
                         score += 500;
-                        score += rookTable[counter64];
+                        score += rookTable[square];
                         break;
                     case Definitions.WhiteQueen:
                         score += 900;
@@ -121,19 +121,19 @@
                     #region black
                     case Definitions.BlackPawn:
                         score -= 100;
-                        score -= pawnTable[mirror64[counter64]];
+                        score -= pawnTable[mirror64[square]];
                         break;
                     case Definitions.BlackKnight:
                         score -= 300;
-                        score -= knightTable[mirror64[counter64]];
+                        score -= knightTable[mirror64[square]];
                         break;
                     case Definitions.BlackBishop:
                         score -= 300;
-                        score -= bishopTable[mirror64[counter64]];
+                        score -= bishopTable[mirror64[square]];
                         break;
                     case Definitions.BlackRook:
                         score -= 500;
-                        score -= rookTable[mirror64[counter64]];
+                        score -= rookTable[mirror64[square]];
                         break;
                     case Definitions.BlackQueen:
                         score -= 900;
@@ -144,12 +144,14 @@
 
                     default:
                         break;
-                        
-                }
-                counter64++;
-            }
 
-            return score;
+                }
+            }
+            if (bs.SideToMove == Definitions.White)
+            {
+                return score;
+            }
+            return -score;
         }
     }
 }

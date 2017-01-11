@@ -4,6 +4,7 @@ namespace KCE.BoardRepresentation
 {
     public class Ply
     {
+        public int Score { get; set; } = 0;
         private int[] _board;
         private int[] _hisBoard;
 

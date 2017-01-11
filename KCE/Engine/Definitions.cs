@@ -55,7 +55,9 @@ namespace KCE.BoardRepresentation
         public const int INFINITE = 30000;
         public const int MATE = 29000;
 
-        public const int MAXDEPTH = 8;
+        public const int MAXDEPTH = 2;
 
+        public const string STDSETUP = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        public const long StdTimePrPly = 20000;
     }
 }
