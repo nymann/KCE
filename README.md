@@ -1,23 +1,23 @@
 # KCE
+
 A chess engine.
 
 
-Move generator:
-
+##Move generator
 In it's current state KCE is able to generate all legalmoves. (Tested via Perft(int depth) and Divide(int depth)). It's not fast at all though.
 
 
-Search:
+##Search
 
 Currently using NegaMax with Alpha Beta pruning.
 To do, at depth level 0 it should call the quiescence search function instead of returning the heuristic evaluation to prevet the horizon effect problem.
 
 
-Evaluation:
+##Evaluation
 
 Piece square tables and material.
 
-Strength of engine:
+##Strength of engine
 
 Move: e2e4, Score: 30, Depth: 1, Time: 10 ms. FH: 0, FHF: 0
 
