@@ -61,6 +61,7 @@
     <Compile Include="Engine\Search\SearchInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UCI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

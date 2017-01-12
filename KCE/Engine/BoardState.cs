@@ -17,7 +17,7 @@ namespace KCE.BoardRepresentation
         public int Ply { get; set; }
         public Ply BestPly { get; set; }
         public List<Ply> PvTable { get; set; }
-        
+        public Ply BestPlyAtLowerDepth { get; set; }
 
         public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
         {

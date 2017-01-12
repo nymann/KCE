@@ -1,4 +1,5 @@
 ﻿using KCE.BoardRepresentation;
+using KCE.Engine.Search;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Search
@@ -9,7 +10,7 @@ namespace Test.Search
         [TestMethod]
         public void StartPosition()
         {
-            Assert.AreEqual("d2d4", PerformBestMove(Definitions.STDSETUP));
+            Assert.AreEqual("e2e4", PerformBestMove(Definitions.STDSETUP));
         }
 
         private string PerformBestMove(string fen)
@@ -18,7 +19,8 @@ namespace Test.Search
             BoardState bs =
                 helper.BoardsetupFromFen(fen);
             KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
-            search.SearchPosition(bs);
+            var sInfo = new SearchInfo();
+            search.SearchPosition(bs, sInfo);
             return bs.BestPly.GetAlgebraicPly();
         }
 

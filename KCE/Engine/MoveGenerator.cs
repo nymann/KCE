@@ -504,6 +504,7 @@ namespace KCE.BoardRepresentation
             _boardState.WhiteCanCastleQueenSide = makePly.GetWCCQS();
             _boardState.BlackCanCastleKingSide = makePly.GetBCCKS();
             _boardState.BlackCanCastleQueenSide = makePly.GetBCCQS();
+            _boardState.Ply++;
             UpdateKingSquares();
         }
 
@@ -517,6 +518,7 @@ namespace KCE.BoardRepresentation
             _boardState.WhiteCanCastleQueenSide = undoPly.GetHisWCCQS();
             _boardState.BlackCanCastleKingSide = undoPly.GetHisBCCKS();
             _boardState.BlackCanCastleQueenSide = undoPly.GetHisBCCQS();
+            _boardState.Ply--;
             UpdateKingSquares();
         }
 

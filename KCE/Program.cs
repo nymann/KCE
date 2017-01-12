@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KCE.BoardRepresentation;
+using KCE.Engine.Search;
 
 namespace KCE
 {
@@ -29,8 +30,9 @@ namespace KCE
             //new BoardRepresentation.BoardRepresentation("r3k2r/p2pqpb1/bn2pnp1/2pP4/1pN1P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1", 1);
             //new BoardRepresentation.BoardRepresentation("r3k2r/p2pqpb1/bnP1pnp1/8/1pN1P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1", 1);
             //new BoardRepresentation.BoardRepresentation("r3k2r/p2pqpb1/bn2pnp1/2pP4/1pN1P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1", 4);
-            new Program().Stuff(Definitions.STDSETUP);
-            Console.ReadKey();
+            //new Program().Stuff("r1b1k2r/ppppnppp/2n2q2/2b5/3NP3/2P1B3/PP3PPP/RN1QKB1R w KQkq - 0 1");
+            //Console.ReadKey();
+            new UCI().Identify();
         }
 
         private void Stuff(string FEN)
@@ -38,7 +40,8 @@ namespace KCE
             var helper = new Engine.Helper();
             BoardState bs = helper.BoardsetupFromFen(FEN);
             var search = new KCE.Engine.Search.Search();
-            search.SearchPosition(bs);
+            var sInfo = new SearchInfo();
+            search.SearchPosition(bs, sInfo);
         }
     }
 }

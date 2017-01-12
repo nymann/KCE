@@ -53,8 +53,12 @@ namespace KCE.BoardRepresentation
         public const int WCCQS = 3;
         public const int INFINITE = 30000;
         public const int MATE = 29000;
-        public const int MAXDEPTH = 2;
+        public const int MAXDEPTH = 6;
         public const string STDSETUP = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        public const long StdTimePrPly = 20000;
+        public const long StdTimePrPly = 5000;
+        public const long InfiniteTime = long.MaxValue;
+        public const int Stopped = 28000;
+
+        public const int QuitCode = 2;
     }
 }

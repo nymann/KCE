@@ -19,6 +19,7 @@ namespace KCE.Engine.Search
         private Stopwatch stopwatch;
         public float Fh { get; set; } = 0;
         public float Fhf { get; set; } = 0;
+        public long TimeLeft { get; set; } = Definitions.StdTimePrPly;
 
         public SearchInfo()
         {
@@ -29,12 +30,12 @@ namespace KCE.Engine.Search
         public bool IsTimeUp()
         {
             long elapsedTime = stopwatch.ElapsedMilliseconds;
-            return elapsedTime > Definitions.StdTimePrPly;
+            return elapsedTime > TimeLeft;
         }
 
-        public long TimeLeft()
+        public long ElapsedTime()
         {
-            return Definitions.StdTimePrPly - stopwatch.ElapsedMilliseconds;
+            return stopwatch.ElapsedMilliseconds;
         }
     }
 }

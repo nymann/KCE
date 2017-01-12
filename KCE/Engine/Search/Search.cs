@@ -12,64 +12,6 @@ namespace KCE.Engine.Search
             
         }
 
-        /*public int AlphaBeta(int alpha, int beta, int depthLeft, BoardState bs)
-        {
-            bs.Nodes++;
-            if (depthLeft == 0)
-            {
-                return eval.EvalPosition(bs);
-            }
-
-            if (bs.FiftyMoveRule >= 100)
-            {
-                return 0;
-            }
-            
-            MoveGenerator moveGenerator = new MoveGenerator(bs);
-            Helper helper = new Helper();
-
-            var allLegalMoves = moveGenerator.AllLegalMoves();
-            int numberOfLegalMoves = allLegalMoves.Count;
-
-            foreach (var legalMove in allLegalMoves)
-            {
-                moveGenerator.MakeMove(legalMove);
-                var score = -AlphaBeta(-beta, -alpha, depthLeft - 1, bs);
-                moveGenerator.UndoMove(legalMove);
-                if (legalMove.GetAlgebraicPly() == "e2e4" /*|| legalMove.GetAlgebraicPly() == "e2e4"#1#)
-                {
-                    Console.WriteLine("Move: {0}, Score: {1}, Depth: {2}.", legalMove.GetAlgebraicPly(), score, depthLeft);
-                }
-
-                if (score == Definitions.MATE)
-                {
-                    bs.BestPly = legalMove;
-                    return Definitions.MATE;
-                }
-
-                if (score > alpha)
-                {
-                    if (score >= beta)
-                    {
-                        return beta;
-                    }
-                }
-                alpha = score;
-                bs.BestPly = legalMove;
-                
-            }
-            //Console.WriteLine("Score: {0}, Move: {1}, Depth: {2}", alpha, bs.BestPly.GetAlgebraicPly(), depthLeft);
-
-            if (numberOfLegalMoves != 0) return alpha;
-            if (helper.IsKingInCheck(bs.SideToMove, bs.BoardRepresentation, bs.KingSquares))
-            {
-                return -Definitions.MATE;
-            }
-
-            return 0; // stalemate
-        }*/
-
-
         // Inspiration from VICE Chess Engine.
         public int AlphaBeta(int alpha, int beta, int depth, BoardState bs, SearchInfo sInfo)
         {
@@ -91,31 +33,34 @@ namespace KCE.Engine.Search
             {
                 return 0;
             }
+
             MoveGenerator mg = new MoveGenerator(bs);
 
             List<Ply> legalMoves = mg.AllLegalMoves();
 
             Ply BestMove = null;
-            int score = -Definitions.INFINITE;
+            //int score = -Definitions.INFINITE;
             int nMoves = legalMoves.Count;
             int oldAlpha = alpha;
+            int moveNum = 0;
+            
 
-            for (var moveNum = 0; moveNum < legalMoves.Count; moveNum++)
+            for (moveNum = 0; moveNum < legalMoves.Count; moveNum++)
             {
-                // PickNextMove(moveNum, legalMoves)
+                //legalMoves = PickNextMove(moveNum, legalMoves);
 
                 mg.MakeMove(legalMoves[moveNum]);
-                score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
+                legalMoves[moveNum].Score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
                 mg.UndoMove(legalMoves[moveNum]);
 
                 if (sInfo.Stopped)
                 {
-                    return 0;
+                    return Definitions.Stopped;
                 }
 
-                if (score > alpha)
+                if (legalMoves[moveNum].Score > alpha)
                 {
-                    if (score >= beta)
+                    if (legalMoves[moveNum].Score >= beta)
                     {
                         if (nMoves == 1)
                         {
@@ -132,7 +77,7 @@ namespace KCE.Engine.Search
                         return beta; // Fail hard beta-cutoff.
                     }
 
-                    alpha = score; // alpha acts like max in minimax.
+                    alpha = legalMoves[moveNum].Score; // alpha acts like max in minimax.
                     BestMove = legalMoves[moveNum];
 
                     /*if (!(list->moves[MoveNum].move & MFLAGCAP))
@@ -163,64 +108,55 @@ namespace KCE.Engine.Search
             return alpha;
         }
 
-        public Ply Temp(int depth, BoardState bs, SearchInfo sInfo)
+        public void SearchPosition(BoardState bs, SearchInfo sInfo)
         {
-            Helper helper = new Helper();
-            Ply bestPly = null;
-            int bestScore = (-1) * Definitions.INFINITE + depth;
-            MoveGenerator mg = new MoveGenerator(bs);
-
-            var legalMoves = mg.AllLegalMoves();
-            sInfo.Nodes += (ulong) legalMoves.Count;
-            Evaluate evaluate = new Evaluate();
-            if (depth == 1)
-            {
-                foreach (Ply legalMove in legalMoves)
-                {
-                    mg.MakeMove(legalMove);
-                    legalMove.Score = evaluate.EvalPosition(bs);
-                    mg.UndoMove(legalMove);
-
-                    if (legalMove.Score > bestScore)
-                    {
-                        Console.WriteLine("\nMove: {0}, Score: {1}, Nodes: {2}.", legalMove.GetAlgebraicPly(), legalMove.Score, sInfo.Nodes);
-                        helper.PrintBoardWhitePerspective(legalMove.GetBoard());
-                        bestPly = legalMove;
-                        bestScore = legalMove.Score;
-                    }
-                }
-            }
-            else
-            {
-
-                foreach (Ply legalMove in legalMoves)
-                {
-                    mg.MakeMove(legalMove);
-                    Ply currentPly = Temp(depth - 1, bs, sInfo);
-                    mg.UndoMove(legalMove);
-
-                    if (currentPly != null)
-                    {
-                        bestPly = currentPly;
-                    }
-                }
-            }
-            return bestPly;
-        }
-
-        public void SearchPosition(BoardState bs)
-        {
-            SearchInfo sInfo = new SearchInfo();
+            
             int depth = 1;
 
             while (!sInfo.IsTimeUp())
             {
                 var bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
-                Console.WriteLine("Move: {3}, Score: {0}, Depth: {1}, Timeleft: {2} ms. FH: {4}, FHF: {5}", 
-                    bestScore, depth, sInfo.TimeLeft(), bs.BestPly.GetAlgebraicPly(),
-                    sInfo.Fh, sInfo.Fhf);
+                
+                if (bestScore == Definitions.Stopped)
+                {
+                    bs.BestPly = bs.BestPlyAtLowerDepth;
+                    break;
+                }
+                bs.BestPlyAtLowerDepth = bs.BestPly;
+                /*Console.WriteLine("Move: {3}, Score: {0}, Depth: {1}, Nodes: {4}, Time: {2} ms, Ordering: {5}/{6}.",
+                    bestScore, depth, Definitions.StdTimePrPly - sInfo.TimeLeft(), bs.BestPly.GetAlgebraicPly(),
+                    sInfo.Nodes, sInfo.Fhf, sInfo.Fh);*/
+                Console.WriteLine("info depth {1} nodes {2} time {3} score cp {0}", bestScore, depth, sInfo.Nodes, sInfo.ElapsedTime());
+                Console.WriteLine("info currmove {0}", bs.BestPly.GetAlgebraicPly());
                 depth++;
             }
+
+            Console.WriteLine("bestmove {0}", bs.BestPly.GetAlgebraicPly());
+            //new Helper().PrintBoardWhitePerspective(bs.BoardRepresentation);
+        }
+
+        private List<Ply> PickNextMove(int moveNum, List<Ply> legalMoves)
+        {
+            Ply temp;
+            int index = 0;
+            int bestScore = 0;
+            int bestNum = moveNum;
+
+            for (index = moveNum; index < legalMoves.Count; index++)
+            {
+                if (legalMoves[index].Score != - Definitions.INFINITE)
+                {
+                    Console.WriteLine("Changing indexes.");
+                    bestScore = legalMoves[index].Score;
+                    bestNum = index;
+                }
+            }
+
+            temp = legalMoves[moveNum];
+            legalMoves[moveNum] = legalMoves[bestNum];
+            legalMoves[bestNum] = temp;
+
+            return legalMoves;
         }
     }
 }

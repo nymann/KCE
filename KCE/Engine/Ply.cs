@@ -4,7 +4,7 @@ namespace KCE.BoardRepresentation
 {
     public class Ply
     {
-        public int Score { get; set; } = 0;
+        public int Score { get; set; } = - Definitions.INFINITE;
         private int[] _board;
         private int[] _hisBoard;
 
