@@ -1,0 +1,684 @@
+From 893618a7b7b1cc15a3f409be5226795d863e60c1 Mon Sep 17 00:00:00 2001
+From: Nymann <s144833@student.dtu.dk>
+Date: Thu, 12 Jan 2017 09:35:42 +0100
+Subject: [PATCH] #22 UCI protocol partially implemented, can now play a game
+ in arena where the time control is set to time pr. move.
+
+---
+ KCE/Engine/BoardState.cs        |   2 +-
+ KCE/Engine/Definitions.cs       |   8 +-
+ KCE/Engine/MoveGenerator.cs     |   2 +
+ KCE/Engine/Ply.cs               |   2 +-
+ KCE/Engine/Search/Search.cs     | 158 ++++++++++-----------------------
+ KCE/Engine/Search/SearchInfo.cs |   7 +-
+ KCE/KCE.csproj                  |   1 +
+ KCE/Program.cs                  |   9 +-
+ KCE/UCI.cs                      | 192 ++++++++++++++++++++++++++++++++++++++++
+ Test/Evaluate.cs                |   2 +-
+ Test/Search/BestMove.cs         |   6 +-
+ Test/Search/Mates.cs            |  23 ++---
+ 12 files changed, 278 insertions(+), 134 deletions(-)
+ create mode 100644 KCE/UCI.cs
+
+diff --git a/KCE/Engine/BoardState.cs b/KCE/Engine/BoardState.cs
+index e7dea7d..3acf909 100644
+--- a/KCE/Engine/BoardState.cs
++++ b/KCE/Engine/BoardState.cs
+@@ -17,7 +17,7 @@ namespace KCE.BoardRepresentation
+         public int Ply { get; set; }
+         public Ply BestPly { get; set; }
+         public List<Ply> PvTable { get; set; }
+-        
++        public Ply BestPlyAtLowerDepth { get; set; }
+ 
+         public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
+         {
+diff --git a/KCE/Engine/Definitions.cs b/KCE/Engine/Definitions.cs
+index ea26885..f691dbc 100644
+--- a/KCE/Engine/Definitions.cs
++++ b/KCE/Engine/Definitions.cs
+@@ -53,8 +53,12 @@ namespace KCE.BoardRepresentation
+         public const int WCCQS = 3;
+         public const int INFINITE = 30000;
+         public const int MATE = 29000;
+-        public const int MAXDEPTH = 2;
++        public const int MAXDEPTH = 6;
+         public const string STDSETUP = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+-        public const long StdTimePrPly = 20000;
++        public const long StdTimePrPly = 5000;
++        public const long InfiniteTime = long.MaxValue;
++        public const int Stopped = 28000;
++
++        public const int QuitCode = 2;
+     }
+ }
+\ No newline at end of file
+diff --git a/KCE/Engine/MoveGenerator.cs b/KCE/Engine/MoveGenerator.cs
+index fd1fd0e..2fa1493 100644
+--- a/KCE/Engine/MoveGenerator.cs
++++ b/KCE/Engine/MoveGenerator.cs
+@@ -504,6 +504,7 @@ namespace KCE.BoardRepresentation
+             _boardState.WhiteCanCastleQueenSide = makePly.GetWCCQS();
+             _boardState.BlackCanCastleKingSide = makePly.GetBCCKS();
+             _boardState.BlackCanCastleQueenSide = makePly.GetBCCQS();
++            _boardState.Ply++;
+             UpdateKingSquares();
+         }
+ 
+@@ -517,6 +518,7 @@ namespace KCE.BoardRepresentation
+             _boardState.WhiteCanCastleQueenSide = undoPly.GetHisWCCQS();
+             _boardState.BlackCanCastleKingSide = undoPly.GetHisBCCKS();
+             _boardState.BlackCanCastleQueenSide = undoPly.GetHisBCCQS();
++            _boardState.Ply--;
+             UpdateKingSquares();
+         }
+ 
+diff --git a/KCE/Engine/Ply.cs b/KCE/Engine/Ply.cs
+index 25f5caf..c3d44c9 100644
+--- a/KCE/Engine/Ply.cs
++++ b/KCE/Engine/Ply.cs
+@@ -4,7 +4,7 @@ namespace KCE.BoardRepresentation
+ {
+     public class Ply
+     {
+-        public int Score { get; set; } = 0;
++        public int Score { get; set; } = - Definitions.INFINITE;
+         private int[] _board;
+         private int[] _hisBoard;
+ 
+diff --git a/KCE/Engine/Search/Search.cs b/KCE/Engine/Search/Search.cs
+index ab97049..900c9e5 100644
+--- a/KCE/Engine/Search/Search.cs
++++ b/KCE/Engine/Search/Search.cs
+@@ -12,64 +12,6 @@ namespace KCE.Engine.Search
+             
+         }
+ 
+-        /*public int AlphaBeta(int alpha, int beta, int depthLeft, BoardState bs)
+-        {
+-            bs.Nodes++;
+-            if (depthLeft == 0)
+-            {
+-                return eval.EvalPosition(bs);
+-            }
+-
+-            if (bs.FiftyMoveRule >= 100)
+-            {
+-                return 0;
+-            }
+-            
+-            MoveGenerator moveGenerator = new MoveGenerator(bs);
+-            Helper helper = new Helper();
+-
+-            var allLegalMoves = moveGenerator.AllLegalMoves();
+-            int numberOfLegalMoves = allLegalMoves.Count;
+-
+-            foreach (var legalMove in allLegalMoves)
+-            {
+-                moveGenerator.MakeMove(legalMove);
+-                var score = -AlphaBeta(-beta, -alpha, depthLeft - 1, bs);
+-                moveGenerator.UndoMove(legalMove);
+-                if (legalMove.GetAlgebraicPly() == "e2e4" /*|| legalMove.GetAlgebraicPly() == "e2e4"#1#)
+-                {
+-                    Console.WriteLine("Move: {0}, Score: {1}, Depth: {2}.", legalMove.GetAlgebraicPly(), score, depthLeft);
+-                }
+-
+-                if (score == Definitions.MATE)
+-                {
+-                    bs.BestPly = legalMove;
+-                    return Definitions.MATE;
+-                }
+-
+-                if (score > alpha)
+-                {
+-                    if (score >= beta)
+-                    {
+-                        return beta;
+-                    }
+-                }
+-                alpha = score;
+-                bs.BestPly = legalMove;
+-                
+-            }
+-            //Console.WriteLine("Score: {0}, Move: {1}, Depth: {2}", alpha, bs.BestPly.GetAlgebraicPly(), depthLeft);
+-
+-            if (numberOfLegalMoves != 0) return alpha;
+-            if (helper.IsKingInCheck(bs.SideToMove, bs.BoardRepresentation, bs.KingSquares))
+-            {
+-                return -Definitions.MATE;
+-            }
+-
+-            return 0; // stalemate
+-        }*/
+-
+-
+         // Inspiration from VICE Chess Engine.
+         public int AlphaBeta(int alpha, int beta, int depth, BoardState bs, SearchInfo sInfo)
+         {
+@@ -91,31 +33,34 @@ namespace KCE.Engine.Search
+             {
+                 return 0;
+             }
++
+             MoveGenerator mg = new MoveGenerator(bs);
+ 
+             List<Ply> legalMoves = mg.AllLegalMoves();
+ 
+             Ply BestMove = null;
+-            int score = -Definitions.INFINITE;
++            //int score = -Definitions.INFINITE;
+             int nMoves = legalMoves.Count;
+             int oldAlpha = alpha;
++            int moveNum = 0;
++            
+ 
+-            for (var moveNum = 0; moveNum < legalMoves.Count; moveNum++)
++            for (moveNum = 0; moveNum < legalMoves.Count; moveNum++)
+             {
+-                // PickNextMove(moveNum, legalMoves)
++                //legalMoves = PickNextMove(moveNum, legalMoves);
+ 
+                 mg.MakeMove(legalMoves[moveNum]);
+-                score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
++                legalMoves[moveNum].Score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
+                 mg.UndoMove(legalMoves[moveNum]);
+ 
+                 if (sInfo.Stopped)
+                 {
+-                    return 0;
++                    return Definitions.Stopped;
+                 }
+ 
+-                if (score > alpha)
++                if (legalMoves[moveNum].Score > alpha)
+                 {
+-                    if (score >= beta)
++                    if (legalMoves[moveNum].Score >= beta)
+                     {
+                         if (nMoves == 1)
+                         {
+@@ -132,7 +77,7 @@ namespace KCE.Engine.Search
+                         return beta; // Fail hard beta-cutoff.
+                     }
+ 
+-                    alpha = score; // alpha acts like max in minimax.
++                    alpha = legalMoves[moveNum].Score; // alpha acts like max in minimax.
+                     BestMove = legalMoves[moveNum];
+ 
+                     /*if (!(list->moves[MoveNum].move & MFLAGCAP))
+@@ -163,64 +108,55 @@ namespace KCE.Engine.Search
+             return alpha;
+         }
+ 
+-        public Ply Temp(int depth, BoardState bs, SearchInfo sInfo)
++        public void SearchPosition(BoardState bs, SearchInfo sInfo)
+         {
+-            Helper helper = new Helper();
+-            Ply bestPly = null;
+-            int bestScore = (-1) * Definitions.INFINITE + depth;
+-            MoveGenerator mg = new MoveGenerator(bs);
++            
++            int depth = 1;
+ 
+-            var legalMoves = mg.AllLegalMoves();
+-            sInfo.Nodes += (ulong) legalMoves.Count;
+-            Evaluate evaluate = new Evaluate();
+-            if (depth == 1)
++            while (!sInfo.IsTimeUp())
+             {
+-                foreach (Ply legalMove in legalMoves)
++                var bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
++                
++                if (bestScore == Definitions.Stopped)
+                 {
+-                    mg.MakeMove(legalMove);
+-                    legalMove.Score = evaluate.EvalPosition(bs);
+-                    mg.UndoMove(legalMove);
+-
+-                    if (legalMove.Score > bestScore)
+-                    {
+-                        Console.WriteLine("\nMove: {0}, Score: {1}, Nodes: {2}.", legalMove.GetAlgebraicPly(), legalMove.Score, sInfo.Nodes);
+-                        helper.PrintBoardWhitePerspective(legalMove.GetBoard());
+-                        bestPly = legalMove;
+-                        bestScore = legalMove.Score;
+-                    }
++                    bs.BestPly = bs.BestPlyAtLowerDepth;
++                    break;
+                 }
++                bs.BestPlyAtLowerDepth = bs.BestPly;
++                /*Console.WriteLine("Move: {3}, Score: {0}, Depth: {1}, Nodes: {4}, Time: {2} ms, Ordering: {5}/{6}.",
++                    bestScore, depth, Definitions.StdTimePrPly - sInfo.TimeLeft(), bs.BestPly.GetAlgebraicPly(),
++                    sInfo.Nodes, sInfo.Fhf, sInfo.Fh);*/
++                Console.WriteLine("info depth {1} nodes {2} time {3} score cp {0}", bestScore, depth, sInfo.Nodes, sInfo.ElapsedTime());
++                Console.WriteLine("info currmove {0}", bs.BestPly.GetAlgebraicPly());
++                depth++;
+             }
+-            else
+-            {
+ 
+-                foreach (Ply legalMove in legalMoves)
+-                {
+-                    mg.MakeMove(legalMove);
+-                    Ply currentPly = Temp(depth - 1, bs, sInfo);
+-                    mg.UndoMove(legalMove);
+-
+-                    if (currentPly != null)
+-                    {
+-                        bestPly = currentPly;
+-                    }
+-                }
+-            }
+-            return bestPly;
++            Console.WriteLine("bestmove {0}", bs.BestPly.GetAlgebraicPly());
++            //new Helper().PrintBoardWhitePerspective(bs.BoardRepresentation);
+         }
+ 
+-        public void SearchPosition(BoardState bs)
++        private List<Ply> PickNextMove(int moveNum, List<Ply> legalMoves)
+         {
+-            SearchInfo sInfo = new SearchInfo();
+-            int depth = 1;
++            Ply temp;
++            int index = 0;
++            int bestScore = 0;
++            int bestNum = moveNum;
+ 
+-            while (!sInfo.IsTimeUp())
++            for (index = moveNum; index < legalMoves.Count; index++)
+             {
+-                var bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
+-                Console.WriteLine("Move: {3}, Score: {0}, Depth: {1}, Timeleft: {2} ms. FH: {4}, FHF: {5}", 
+-                    bestScore, depth, sInfo.TimeLeft(), bs.BestPly.GetAlgebraicPly(),
+-                    sInfo.Fh, sInfo.Fhf);
+-                depth++;
++                if (legalMoves[index].Score != - Definitions.INFINITE)
++                {
++                    Console.WriteLine("Changing indexes.");
++                    bestScore = legalMoves[index].Score;
++                    bestNum = index;
++                }
+             }
++
++            temp = legalMoves[moveNum];
++            legalMoves[moveNum] = legalMoves[bestNum];
++            legalMoves[bestNum] = temp;
++
++            return legalMoves;
+         }
+     }
+ }
+\ No newline at end of file
+diff --git a/KCE/Engine/Search/SearchInfo.cs b/KCE/Engine/Search/SearchInfo.cs
+index 8e956a8..6db6bf0 100644
+--- a/KCE/Engine/Search/SearchInfo.cs
++++ b/KCE/Engine/Search/SearchInfo.cs
+@@ -19,6 +19,7 @@ namespace KCE.Engine.Search
+         private Stopwatch stopwatch;
+         public float Fh { get; set; } = 0;
+         public float Fhf { get; set; } = 0;
++        public long TimeLeft { get; set; } = Definitions.StdTimePrPly;
+ 
+         public SearchInfo()
+         {
+@@ -29,12 +30,12 @@ namespace KCE.Engine.Search
+         public bool IsTimeUp()
+         {
+             long elapsedTime = stopwatch.ElapsedMilliseconds;
+-            return elapsedTime > Definitions.StdTimePrPly;
++            return elapsedTime > TimeLeft;
+         }
+ 
+-        public long TimeLeft()
++        public long ElapsedTime()
+         {
+-            return Definitions.StdTimePrPly - stopwatch.ElapsedMilliseconds;
++            return stopwatch.ElapsedMilliseconds;
+         }
+     }
+ }
+\ No newline at end of file
+diff --git a/KCE/KCE.csproj b/KCE/KCE.csproj
+index d9bedf6..b24b993 100644
+--- a/KCE/KCE.csproj
++++ b/KCE/KCE.csproj
+@@ -61,6 +61,7 @@
+     <Compile Include="Engine\Search\SearchInfo.cs" />
+     <Compile Include="Program.cs" />
+     <Compile Include="Properties\AssemblyInfo.cs" />
++    <Compile Include="UCI.cs" />
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="App.config" />
+diff --git a/KCE/Program.cs b/KCE/Program.cs
+index c172294..8457380 100644
+--- a/KCE/Program.cs
++++ b/KCE/Program.cs
+@@ -4,6 +4,7 @@ using System.Linq;
+ using System.Text;
+ using System.Threading.Tasks;
+ using KCE.BoardRepresentation;
++using KCE.Engine.Search;
+ 
+ namespace KCE
+ {
+@@ -29,8 +30,9 @@ namespace KCE
+             //new BoardRepresentation.BoardRepresentation("r3k2r/p2pqpb1/bn2pnp1/2pP4/1pN1P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1", 1);
+             //new BoardRepresentation.BoardRepresentation("r3k2r/p2pqpb1/bnP1pnp1/8/1pN1P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1", 1);
+             //new BoardRepresentation.BoardRepresentation("r3k2r/p2pqpb1/bn2pnp1/2pP4/1pN1P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1", 4);
+-            new Program().Stuff(Definitions.STDSETUP);
+-            Console.ReadKey();
++            //new Program().Stuff("r1b1k2r/ppppnppp/2n2q2/2b5/3NP3/2P1B3/PP3PPP/RN1QKB1R w KQkq - 0 1");
++            //Console.ReadKey();
++            new UCI().Identify();
+         }
+ 
+         private void Stuff(string FEN)
+@@ -38,7 +40,8 @@ namespace KCE
+             var helper = new Engine.Helper();
+             BoardState bs = helper.BoardsetupFromFen(FEN);
+             var search = new KCE.Engine.Search.Search();
+-            search.SearchPosition(bs);
++            var sInfo = new SearchInfo();
++            search.SearchPosition(bs, sInfo);
+         }
+     }
+ }
+diff --git a/KCE/UCI.cs b/KCE/UCI.cs
+new file mode 100644
+index 0000000..4d9236b
+--- /dev/null
++++ b/KCE/UCI.cs
+@@ -0,0 +1,192 @@
++﻿using System;
++using System.Net.Mime;
++using System.Runtime.Remoting.Messaging;
++using KCE.BoardRepresentation;
++using KCE.Engine;
++using KCE.Engine.Search;
++
++namespace KCE
++{
++    public class UCI
++    {
++        /*
++         * This class is called when the engine receives "uci", which tells the engine to use the UCI interface.
++         * UCI
++         * Commands to support:
++         * "isready" = IsReady();
++         * "register" 
++         */
++
++
++        private static BoardState bs;
++        private Helper helper;
++        private Search search;
++        private SearchInfo sInfo;
++
++        public UCI()
++        {
++            helper = new Helper();
++            search = new Search();
++        }
++
++        private void MainLoop()
++        {
++            while (true)
++            {
++                string input = Console.ReadLine();
++
++                if (input.Contains("position"))
++                {
++                    Position(input);
++                }
++
++                if (input.Contains("go"))
++                {
++                    Go(input);
++                }
++
++                switch (input)
++                {
++                    case "isready":
++                        IsReady();
++                        break;
++
++                    case "quit":
++                        Quit();
++                        break;
++
++                    case "stop":
++                        break;
++                }
++            }
++        }
++
++        public void Identify()
++        {
++            Console.WriteLine("id name KCE");
++            Console.WriteLine("id author Kristian Nymann Jakobsen");
++            Console.WriteLine("uciok");
++            MainLoop();
++        }
++
++        private void Quit()
++        {
++            Environment.Exit(Definitions.QuitCode);
++        }
++
++        private void IsReady()
++        {
++            Console.WriteLine("readyok");
++        }
++
++        private void Register()
++        {
++            Console.WriteLine("register name Kristian NJ code 1");
++        }
++
++        private void Position(string command)
++        {
++            if (command.Contains("startpos"))
++            {
++                command = command.Replace("startpos", "fen " + Definitions.STDSETUP);
++                //Console.WriteLine(command);
++            }
++
++            string fen = command;
++            int index;
++            string[] moves = null;
++
++            if (command.Contains("moves"))
++            {
++                index = command.IndexOf("moves") - 1;
++                fen = command.Substring(0, index);
++                index = command.IndexOf("moves") + 6;
++                string temp = command.Substring(index);
++                moves = temp.Split(' ');
++            }
++
++            index = fen.IndexOf("fen") + 4;
++            fen = fen.Substring(index);
++            //Console.WriteLine(fen);
++
++            // Setup new BoardState.
++            bs = helper.BoardsetupFromFen(fen);
++
++            if (moves != null)
++            {
++                MoveGenerator mg = new MoveGenerator(bs);
++                foreach (var move in moves)
++                {
++                    // perform those moves                 
++                    var validMoves = mg.AllLegalMoves();
++                    foreach (var validMove in validMoves)
++                    {
++                        if (validMove.GetAlgebraicPly() == move)
++                        {
++                            mg.MakeMove(validMove);
++                            break;
++                        }
++                    }
++                    
++                }
++            }
++
++            //helper.PrintBoardWhitePerspective(bs.BoardRepresentation);
++        }
++
++        private void Go(string command)
++        {
++            sInfo = new SearchInfo();
++            if (command.Contains("infinite"))
++            {
++                sInfo.TimeLeft = Definitions.InfiniteTime;
++            }
++        
++            else if (command.Contains("wtime"))
++            {
++                long timeLeft;
++                int index;
++
++                if (bs.SideToMove == Definitions.White)
++                {
++                    // We are white.
++                    index = command.IndexOf("wtime") + 6;
++                    string temp = command.Substring(index);
++                    index = temp.IndexOf(' ');
++                    temp = temp.Substring(0, index);
++                    timeLeft = long.Parse(temp);
++                    
++                }
++                else
++                {
++                    // we are black.
++                    index = command.IndexOf("btime") + 6;
++                    string temp = command.Substring(index);
++                    index = temp.IndexOf(' ');
++                    temp = temp.Substring(0, index);
++                    timeLeft = long.Parse(temp);
++                }
++                sInfo.TimeLeft = timeLeft;
++            }
++
++            else if (command.Contains("movetime"))
++            {
++                long timeLeft;
++                int index = command.IndexOf("movetime") + 9;
++                string temp = command.Substring(index);
++                if (temp.Contains(" "))
++                {
++                    index = temp.IndexOf(' ');
++                    temp = temp.Substring(0, index);
++                }
++
++                timeLeft = long.Parse(temp);
++                sInfo.TimeLeft = timeLeft;
++            }
++
++            search.SearchPosition(bs, sInfo);
++        }
++
++        // Engine to GUI;
++    }
++}
+\ No newline at end of file
+diff --git a/Test/Evaluate.cs b/Test/Evaluate.cs
+index 4fcbe72..bbe17a0 100644
+--- a/Test/Evaluate.cs
++++ b/Test/Evaluate.cs
+@@ -10,7 +10,7 @@ namespace Test
+         public void EvaluateTest()
+         {
+             Assert.AreEqual(0, PerformEvaluate(Definitions.STDSETUP));
+-            Assert.AreEqual(30, PerformEvaluate("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"));
++            Assert.AreEqual(-30, PerformEvaluate("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"));
+         }
+ 
+         private int PerformEvaluate(string fen)
+diff --git a/Test/Search/BestMove.cs b/Test/Search/BestMove.cs
+index 56ed8d3..ad7d26d 100644
+--- a/Test/Search/BestMove.cs
++++ b/Test/Search/BestMove.cs
+@@ -1,4 +1,5 @@
+ ﻿using KCE.BoardRepresentation;
++using KCE.Engine.Search;
+ using Microsoft.VisualStudio.TestTools.UnitTesting;
+ 
+ namespace Test.Search
+@@ -9,7 +10,7 @@ namespace Test.Search
+         [TestMethod]
+         public void StartPosition()
+         {
+-            Assert.AreEqual("d2d4", PerformBestMove(Definitions.STDSETUP));
++            Assert.AreEqual("e2e4", PerformBestMove(Definitions.STDSETUP));
+         }
+ 
+         private string PerformBestMove(string fen)
+@@ -18,7 +19,8 @@ namespace Test.Search
+             BoardState bs =
+                 helper.BoardsetupFromFen(fen);
+             KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
+-            search.SearchPosition(bs);
++            var sInfo = new SearchInfo();
++            search.SearchPosition(bs, sInfo);
+             return bs.BestPly.GetAlgebraicPly();
+         }
+ 
+diff --git a/Test/Search/Mates.cs b/Test/Search/Mates.cs
+index d9ffee9..621bde9 100644
+--- a/Test/Search/Mates.cs
++++ b/Test/Search/Mates.cs
+@@ -1,4 +1,5 @@
+ ﻿using KCE.BoardRepresentation;
++using KCE.Engine.Search;
+ using Microsoft.VisualStudio.TestTools.UnitTesting;
+ 
+ namespace Test.Search
+@@ -7,21 +8,21 @@ namespace Test.Search
+     public class Mates
+     {
+         [TestMethod]
+-        public void MateIn2()
++        public void MateIn1()
+         {
+-            KCE.Engine.Helper helper = new KCE.Engine.Helper();
+-            BoardState bs =
+-                helper.BoardsetupFromFen("2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2 w - - 0 1");
+-            KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
+-            search.SearchPosition(bs);
+-            Assert.AreEqual("f3f7", bs.BestPly.GetAlgebraicPly());
++            Assert.AreEqual("g6g8", PerformMateTest("4k3/8/4K1R1/8/8/8/8/8 w - - 0 1"));
+         }
+ 
+         [TestMethod]
+-        public void MateIn1()
++        public void MateIn2()
+         {
++            Assert.AreEqual("f3f7", PerformMateTest("2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2 w - - 0 1"));
++        }
+ 
+-            Assert.AreEqual("g6g8", PerformMateTest("4k3/8/4K1R1/8/8/8/8/8 w - - 0 1"));
++        [TestMethod]
++        public void MateIn3()
++        {
++            Assert.AreEqual("b2b4",PerformMateTest("r3Bb1r/pQ6/2p2p1p/k3q3/4P3/2N1B3/PP4PP/6K1 w - - 0 1"));
+         }
+ 
+         [TestMethod]
+@@ -35,9 +36,11 @@ namespace Test.Search
+             KCE.Engine.Helper helper = new KCE.Engine.Helper();
+             BoardState bs = helper.BoardsetupFromFen(fen);
+             KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
+-            search.SearchPosition(bs);
++            var sInfo = new SearchInfo();
++            search.SearchPosition(bs, sInfo);
+ 
+             return bs.BestPly.GetAlgebraicPly();
+         }
++
+     }
+ }
+\ No newline at end of file
+-- 
+2.7.0.windows.1
+
