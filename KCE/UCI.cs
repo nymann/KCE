@@ -155,7 +155,7 @@ namespace KCE
                     index = temp.IndexOf(' ');
                     temp = temp.Substring(0, index);
                     timeLeft = long.Parse(temp);
-                    
+                    timeLeft = timeLeft / 30;
                 }
                 else
                 {
@@ -165,6 +165,7 @@ namespace KCE
                     index = temp.IndexOf(' ');
                     temp = temp.Substring(0, index);
                     timeLeft = long.Parse(temp);
+                    timeLeft = timeLeft / 30;
                 }
                 sInfo.TimeLeft = timeLeft;
             }

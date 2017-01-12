@@ -499,7 +499,7 @@ namespace KCE.Engine
             bool BCCQS = false;
             int enPasSquare;
             int fiftyMoveRule;
-            int fullMoves;
+
             int[] kingSquares = {99, 99};
 
             int index = 63;
@@ -669,12 +669,6 @@ namespace KCE.Engine
             #region fifty move rule
 
             fiftyMoveRule = Convert.ToInt16(pieces[4]);
-
-            #endregion
-
-            #region full moves
-
-            fullMoves = Convert.ToInt16(pieces[5]);
 
             #endregion
 

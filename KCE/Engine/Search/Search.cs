@@ -1,6 +1,7 @@
 ﻿using KCE.BoardRepresentation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KCE.Engine.Search
 {
@@ -38,20 +39,22 @@ namespace KCE.Engine.Search
 
             List<Ply> legalMoves = mg.AllLegalMoves();
 
-            Ply BestMove = null;
-            //int score = -Definitions.INFINITE;
+            Ply bestMove = null;
             int nMoves = legalMoves.Count;
             int oldAlpha = alpha;
             int moveNum = 0;
-            
-
             for (moveNum = 0; moveNum < legalMoves.Count; moveNum++)
             {
-                //legalMoves = PickNextMove(moveNum, legalMoves);
+                if (bs.BestPlyAtLowerDepth != null && !bs.HaveSearched)
+                {
+                    legalMoves = PickNextMove(moveNum, legalMoves, bs.BestPlyAtLowerDepth);
+                }
 
                 mg.MakeMove(legalMoves[moveNum]);
                 legalMoves[moveNum].Score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
                 mg.UndoMove(legalMoves[moveNum]);
+
+                bs.HaveSearched = true;
 
                 if (sInfo.Stopped)
                 {
@@ -78,7 +81,7 @@ namespace KCE.Engine.Search
                     }
 
                     alpha = legalMoves[moveNum].Score; // alpha acts like max in minimax.
-                    BestMove = legalMoves[moveNum];
+                    bestMove = legalMoves[moveNum];
 
                     /*if (!(list->moves[MoveNum].move & MFLAGCAP))
                     {
@@ -91,7 +94,7 @@ namespace KCE.Engine.Search
             {
                 if (new Helper().IsKingInCheck(bs.SideToMove, bs.BoardRepresentation, bs.KingSquares))
                 {
-                    // We are mate in X plys (bs.Ply).
+                    // Mate in X plys (bs.Ply).
                     return -Definitions.MATE + bs.Ply;
                 }
 
@@ -101,7 +104,8 @@ namespace KCE.Engine.Search
 
             if (alpha != oldAlpha)
             {
-                bs.BestPly = BestMove;
+                
+                bs.BestPly = bestMove;
                 // StorePvMove(pos, BestMove);
             }
 
@@ -122,37 +126,45 @@ namespace KCE.Engine.Search
                     bs.BestPly = bs.BestPlyAtLowerDepth;
                     break;
                 }
+                else if (bestScore > Definitions.MATE - 20)
+                {
+                    Console.WriteLine("info depth {1} nodes {2} time {3} score mate {0}", Definitions.MATE - bestScore, depth, sInfo.Nodes, sInfo.ElapsedTime());
+                }
+                else if(bestScore < - Definitions.MATE + 20)
+                {
+                    Console.WriteLine("info depth {1} nodes {2} time {3} score mate -{0}", Definitions.MATE - bestScore, depth, sInfo.Nodes, sInfo.ElapsedTime());
+                }
+                else
+                {
+                    Console.WriteLine("info depth {1} nodes {2} time {3} score cp {0}", bestScore, depth, sInfo.Nodes, sInfo.ElapsedTime());
+                }
+
                 bs.BestPlyAtLowerDepth = bs.BestPly;
                 /*Console.WriteLine("Move: {3}, Score: {0}, Depth: {1}, Nodes: {4}, Time: {2} ms, Ordering: {5}/{6}.",
-                    bestScore, depth, Definitions.StdTimePrPly - sInfo.TimeLeft(), bs.BestPly.GetAlgebraicPly(),
+                    bestScore, depth, sInfo.ElapsedTime(), bs.BestPly.GetAlgebraicPly(),
                     sInfo.Nodes, sInfo.Fhf, sInfo.Fh);*/
-                Console.WriteLine("info depth {1} nodes {2} time {3} score cp {0}", bestScore, depth, sInfo.Nodes, sInfo.ElapsedTime());
+                
                 Console.WriteLine("info currmove {0}", bs.BestPly.GetAlgebraicPly());
                 depth++;
+                bs.HaveSearched = false;
             }
-
             Console.WriteLine("bestmove {0}", bs.BestPly.GetAlgebraicPly());
-            //new Helper().PrintBoardWhitePerspective(bs.BoardRepresentation);
         }
 
-        private List<Ply> PickNextMove(int moveNum, List<Ply> legalMoves)
+        private List<Ply> PickNextMove(int moveNum, List<Ply> legalMoves, Ply bestPlyAtLowerDepth)
         {
-            Ply temp;
             int index = 0;
-            int bestScore = 0;
             int bestNum = moveNum;
 
             for (index = moveNum; index < legalMoves.Count; index++)
             {
-                if (legalMoves[index].Score != - Definitions.INFINITE)
+                if (legalMoves[index].GetAlgebraicPly().Equals(bestPlyAtLowerDepth.GetAlgebraicPly()))
                 {
-                    Console.WriteLine("Changing indexes.");
-                    bestScore = legalMoves[index].Score;
                     bestNum = index;
+                    break;
                 }
             }
-
-            temp = legalMoves[moveNum];
+            var temp = legalMoves[moveNum];
             legalMoves[moveNum] = legalMoves[bestNum];
             legalMoves[bestNum] = temp;
 

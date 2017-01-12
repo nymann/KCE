@@ -21,6 +21,7 @@ namespace Test.Search
             KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
             var sInfo = new SearchInfo();
             search.SearchPosition(bs, sInfo);
+            sInfo.TimeLeft = 30000;
             return bs.BestPly.GetAlgebraicPly();
         }
 

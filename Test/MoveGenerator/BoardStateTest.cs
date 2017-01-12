@@ -14,10 +14,10 @@ namespace Test.MoveGenerator
 
             BoardState bs = helper.BoardsetupFromFen("r3k3/1K6/8/8/8/8/8/8 w q - 0 1");
             
-            Assert.AreEqual(false, bs.BlackCanCastleKingSide);
-            Assert.AreEqual(true, bs.BlackCanCastleQueenSide);
-            Assert.AreEqual(false, bs.WhiteCanCastleKingSide);
-            Assert.AreEqual(false, bs.WhiteCanCastleQueenSide);
+            Assert.AreEqual(false, bs.BCKS);
+            Assert.AreEqual(true, bs.BCQS);
+            Assert.AreEqual(false, bs.WCKS);
+            Assert.AreEqual(false, bs.WCQS);
         }
 
         [TestMethod]

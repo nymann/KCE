@@ -6,31 +6,29 @@ namespace KCE.BoardRepresentation
     {
         public int[] BoardRepresentation { get; set; }
         public bool SideToMove { get; set; }
-        public bool WhiteCanCastleKingSide { get; set; }
-        public bool WhiteCanCastleQueenSide { get; set; }
-        public bool BlackCanCastleKingSide { get; set; }
-        public bool BlackCanCastleQueenSide { get; set; }
-        public string LastMove { get; set; }
+        public bool WCKS { get; set; }
+        public bool WCQS { get; set; }
+        public bool BCKS { get; set; }
+        public bool BCQS { get; set; }
         public int[] KingSquares { get; set; }
         public int EnPasSquare { get; set; }
         public int FiftyMoveRule { get; set; }
         public int Ply { get; set; }
         public Ply BestPly { get; set; }
-        public List<Ply> PvTable { get; set; }
-        public Ply BestPlyAtLowerDepth { get; set; }
+        public Ply BestPlyAtLowerDepth { get; set; } = null;
+        public bool HaveSearched { get; set; } = false;
 
-        public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCCKS, bool WCCQS, bool BCCKS, bool BCCQS)
+        public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCKS, bool WCQS, bool BCKS, bool BCQS)
         {
             BoardRepresentation = boardRepresentation;
             SideToMove = sideToMove;
             KingSquares = kingSquares;
             EnPasSquare = enPasSquare;
             FiftyMoveRule = fiftyMoveRule;
-
-            WhiteCanCastleKingSide = WCCKS;
-            WhiteCanCastleQueenSide = WCCQS;
-            BlackCanCastleKingSide = BCCKS;
-            BlackCanCastleQueenSide = BCCQS;
+            this.WCKS = WCKS;
+            this.WCQS = WCQS;
+            this.BCKS = BCKS;
+            this.BCQS = BCQS;
         }
 
         public BoardState()

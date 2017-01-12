@@ -37,8 +37,8 @@ namespace Test.Search
             BoardState bs = helper.BoardsetupFromFen(fen);
             KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
             var sInfo = new SearchInfo();
+            sInfo.TimeLeft = 60000;
             search.SearchPosition(bs, sInfo);
-
             return bs.BestPly.GetAlgebraicPly();
         }
 
