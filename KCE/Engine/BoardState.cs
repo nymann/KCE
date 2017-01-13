@@ -15,6 +15,7 @@
         public Ply BestPly { get; set; }
         public Ply BestPlyAtLowerDepth { get; set; } = null;
         public bool HaveSearched { get; set; } = false;
+        public bool EndGame { get; set; } = false;
         //public int LegalMovesCount { get; set; } = 0;
 
         public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCKS, bool WCQS, bool BCKS, bool BCQS)

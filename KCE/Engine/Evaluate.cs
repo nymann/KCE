@@ -15,6 +15,9 @@
         };
 
         #region piece square tables
+
+        private bool endGame = false;
+
         // As seen on.
         // https://chessprogramming.wikispaces.com/Simplified+evaluation+function
         private readonly int[] _pawnTable =
@@ -90,6 +93,30 @@
             -20, -10, -10, -5, -5, -10, -10, -20
         };
 
+        private readonly int[] _kingMiddleGameTabe =
+        {
+            -30, -40, -40, -50, -50, -40, -40, -30,
+            -30, -40, -40, -50, -50, -40, -40, -30,
+            -30, -40, -40, -50, -50, -40, -40, -30,
+            -30, -40, -40, -50, -50, -40, -40, -30,
+            -20, -30, -30, -40, -40, -30, -30, -20,
+            -10, -20, -20, -20, -20, -20, -20, -10,
+            20, 20, 0, 0, 0, 0, 20, 20,
+            20, 30, 10, 0, 0, 10, 30, 20
+        };
+
+        private readonly int[] _kingEndGameTable =
+        {
+            -50, -40, -30, -20, -20, -30, -40, -50,
+            -30, -20, -10, 0, 0, -10, -20, -30,
+            -30, -10, 20, 30, 30, 20, -10, -30,
+            -30, -10, 30, 40, 40, 30, -10, -30,
+            -30, -10, 30, 40, 40, 30, -10, -30,
+            -30, -10, 20, 30, 30, 20, -10, -30,
+            -30, -30, 0, 0, 0, 0, -30, -30,
+            -50, -30, -30, -30, -30, -30, -30, -50
+        };
+
         #endregion
 
         public Evaluate()
@@ -98,22 +125,22 @@
 
         public int EvalPosition(BoardState bs)
         {
-            /*int wP = 0;
-            int wN = 0;
-            int bB = 0;
-            int wR = 0;
-            int wQ = 0;
-            int bP = 0;
-            int bN = 0;
-            int bB = 0;
-            int bR = 0;
-            int bQ = 0;*/
-
+            //int wP = 0;
+            var wN = 0;
             var wB = 0;
+            var wR = 0;
+            var wQ = 0;
+            //int bP = 0;
+            var bN = 0;
             var bB = 0;
+            var bR = 0;
+            var bQ = 0;
+
+            var whiteKingIndex = 0;
+            var blackKingIndex = 0;
 
             var score = 0;
-            int index = 0;
+            var index = 0;
             foreach (var square in _board64)
             {
                 switch (bs.BoardRepresentation[square])
@@ -128,7 +155,7 @@
                     case Definitions.WhiteKnight:
                         score += 300;
                         score += _knightTable[_mirror64[index]];
-                        //wN++;
+                        wN++;
                         break;
                     case Definitions.WhiteBishop:
                         score += 300;
@@ -138,15 +165,15 @@
                     case Definitions.WhiteRook:
                         score += 500;
                         score += _rookTable[_mirror64[index]];
-                        //wR++;
+                        wR++;
                         break;
                     case Definitions.WhiteQueen:
                         score += 900;
                         score += _queenTable[_mirror64[index]];
-                        //wQ++;
+                        wQ++;
                         break;
                     case Definitions.WhiteKing:
-
+                        whiteKingIndex = index;
                         break;
 
                         #endregion
@@ -161,7 +188,7 @@
                     case Definitions.BlackKnight:
                         score -= 300;
                         score -= _knightTable[index];
-                        //bN++;
+                        bN++;
                         break;
                     case Definitions.BlackBishop:
                         score -= 300;
@@ -171,14 +198,15 @@
                     case Definitions.BlackRook:
                         score -= 500;
                         score -= _rookTable[index];
-                        //bR++;
+                        bR++;
                         break;
                     case Definitions.BlackQueen:
                         score -= 900;
                         score -= _queenTable[index];
-                        //bQ++;
+                        bQ++;
                         break;
                     case Definitions.BlackKing:
+                        blackKingIndex = index;
                         break;
 
                         #endregion
@@ -197,6 +225,19 @@
             if (wB == 2)
                 score += 5;
 
+            endGame = EndGame(wN, wB, wR, wQ, bN, bB, bR, bQ);
+
+            if (endGame)
+            {
+                score += _kingEndGameTable[_mirror64[whiteKingIndex]];
+                score -= _kingEndGameTable[blackKingIndex];
+            }
+
+            else
+            {
+                score += _kingMiddleGameTabe[_mirror64[whiteKingIndex]];
+                score -= _kingMiddleGameTabe[blackKingIndex];
+            }
 
             // Mobility, disabled for now.
             //int mobility = bs.LegalMovesCount / 10;
@@ -209,23 +250,23 @@
 
 
         // https://chessprogramming.wikispaces.com/Tapered+Eval
-        private int TaperedEval(int wP, int wN, int wB, int wR, int wQ, int bP, int bN, int bB, int bR, int bQ)
+        private int TaperedEval(/*int wP,*/ int wN, int wB, int wR, int wQ, /*int bP,*/ int bN, int bB, int bR, int bQ)
         {
-            var pawnPhase = 0;
+            //var pawnPhase = 0;
             var knightPhase = 1;
             var bishopPhase = 1;
             var rookPhase = 2;
             var queenPhase = 4;
-            var totalPhase = pawnPhase * 16 + knightPhase * 4 + bishopPhase * 4 + rookPhase * 4 + queenPhase * 2;
+            var totalPhase = /*pawnPhase * 16 +*/ knightPhase * 4 + bishopPhase * 4 + rookPhase * 4 + queenPhase * 2;
             var phase = totalPhase;
 
-            phase -= wP * pawnPhase;
+            //phase -= wP * pawnPhase;
             phase -= wN * knightPhase;
             phase -= wB * bishopPhase;
             phase -= wR * rookPhase;
             phase -= wQ * queenPhase;
 
-            phase -= bP * pawnPhase;
+            //phase -= bP * pawnPhase;
             phase -= bN * knightPhase;
             phase -= bB * bishopPhase;
             phase -= bR * rookPhase;
@@ -236,6 +277,11 @@
             var eval = (100 * (256 - phase) + 300 * phase) / 256;
 
             return eval;
+        }
+
+        private bool EndGame(int wN, int wB, int wR, int wQ, int bN, int bB, int bR, int bQ)
+        {
+            return TaperedEval(wN, wB, wR, wQ, bN, bB, bR, bQ) > 230;
         }
     }
 }

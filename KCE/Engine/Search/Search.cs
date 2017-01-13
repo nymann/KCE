@@ -41,6 +41,7 @@ namespace KCE.Engine.Search
                 bs.HaveSearched = true;
                 bestMove = bs.BestPlyAtLowerDepth;
                 alpha = bestMove.Score;
+                //Console.WriteLine("This never happens.");
             }
 
             for (moveNum = 0; moveNum < capMoves.Count; moveNum++)
@@ -68,8 +69,10 @@ namespace KCE.Engine.Search
             }
 
             if (alpha != oldAlpha)
+            {
+                //Console.WriteLine("New best ply!");
                 bs.BestPly = bestMove;
-
+            }
             return alpha;
         }
 
@@ -77,8 +80,10 @@ namespace KCE.Engine.Search
         public int AlphaBeta(int alpha, int beta, int depth, BoardState bs, SearchInfo sInfo)
         {
             if (depth == 0)
+            {
                 //return _eval.EvalPosition(bs);
                 return Quiescene(alpha, beta, bs, sInfo);
+            }
 
             // Check if time is up or interrupted by the GUI.
             if (sInfo.IsTimeUp())
@@ -152,10 +157,10 @@ namespace KCE.Engine.Search
         public void SearchPosition(BoardState bs, SearchInfo sInfo)
         {
             var depth = 1;
-
-            while (!sInfo.IsTimeUp())
+            var bestScore = - Definitions.INFINITE;
+            while (!sInfo.IsTimeUp() || bestScore < Definitions.MATE - 10)
             {
-                var bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
+                bestScore = AlphaBeta(-Definitions.INFINITE, Definitions.INFINITE, depth, bs, sInfo);
 
                 if (bestScore == Definitions.Stopped)
                 {
@@ -167,8 +172,10 @@ namespace KCE.Engine.Search
                 {
                     Console.WriteLine("info depth {1} nodes {2} time {3} score mate {0}", Definitions.MATE - bestScore,
                         depth, sInfo.Nodes, sInfo.ElapsedTime());
+                    break;
                 }
-                else if (bestScore < -Definitions.MATE + 20)
+
+                if (bestScore < -Definitions.MATE + 20)
                 {
                     Console.WriteLine("info depth {1} nodes {2} time {3} score mate -{0}", Definitions.MATE - bestScore,
                         depth, sInfo.Nodes, sInfo.ElapsedTime());
