@@ -43,18 +43,29 @@ namespace KCE.Engine.Search
             int nMoves = legalMoves.Count;
             int oldAlpha = alpha;
             int moveNum = 0;
+
+            if (bs.BestPlyAtLowerDepth != null && !bs.HaveSearched)
+            {
+                mg.MakeMove(bs.BestPlyAtLowerDepth);
+                bs.BestPlyAtLowerDepth.Score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
+                mg.UndoMove(bs.BestPlyAtLowerDepth);
+                bs.HaveSearched = true;
+                bestMove = bs.BestPlyAtLowerDepth;
+                alpha = bestMove.Score;
+            }
+
             for (moveNum = 0; moveNum < legalMoves.Count; moveNum++)
             {
-                if (bs.BestPlyAtLowerDepth != null && !bs.HaveSearched)
+                /*if (bs.BestPlyAtLowerDepth != null && !bs.HaveSearched)
                 {
                     legalMoves = PickNextMove(moveNum, legalMoves, bs.BestPlyAtLowerDepth);
-                }
+                }*/
 
                 mg.MakeMove(legalMoves[moveNum]);
                 legalMoves[moveNum].Score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);
                 mg.UndoMove(legalMoves[moveNum]);
 
-                bs.HaveSearched = true;
+                //  bs.HaveSearched = true;
 
                 if (sInfo.Stopped)
                 {
@@ -151,7 +162,7 @@ namespace KCE.Engine.Search
             Console.WriteLine("bestmove {0}", bs.BestPly.GetAlgebraicPly());
         }
 
-        private List<Ply> PickNextMove(int moveNum, List<Ply> legalMoves, Ply bestPlyAtLowerDepth)
+        /*private List<Ply> PickNextMove(int moveNum, List<Ply> legalMoves, Ply bestPlyAtLowerDepth)
         {
             int index = 0;
             int bestNum = moveNum;
@@ -169,6 +180,6 @@ namespace KCE.Engine.Search
             legalMoves[bestNum] = temp;
 
             return legalMoves;
-        }
+        }*/
     }
 }

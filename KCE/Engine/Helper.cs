@@ -668,7 +668,8 @@ namespace KCE.Engine
 
             #region fifty move rule
 
-            fiftyMoveRule = Convert.ToInt16(pieces[4]);
+            fiftyMoveRule = pieces.Length > 5 ? Convert.ToInt16(pieces[4]) : 0;
+            
 
             #endregion
 

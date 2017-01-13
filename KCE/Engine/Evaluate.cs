@@ -85,6 +85,12 @@ namespace KCE.BoardRepresentation
 
         public int EvalPosition(BoardState bs)
         {
+            int whitePieces;
+            int blackPieces;
+
+            int whiteBishopPair = 0;
+            int blackBishopPair = 0;
+
             int score = 0;
 
             for (int square = 0; square < 64; square++)
@@ -104,6 +110,7 @@ namespace KCE.BoardRepresentation
                     case Definitions.WhiteBishop:
                         score += 300;
                         score += bishopTable[square];
+                        whiteBishopPair++;
                         break;
                     case Definitions.WhiteRook:
                         score += 500;
@@ -130,6 +137,7 @@ namespace KCE.BoardRepresentation
                     case Definitions.BlackBishop:
                         score -= 300;
                         score -= bishopTable[mirror64[square]];
+                        blackBishopPair++;
                         break;
                     case Definitions.BlackRook:
                         score -= 500;
@@ -147,6 +155,18 @@ namespace KCE.BoardRepresentation
 
                 }
             }
+
+            if (blackBishopPair == 2)
+            {
+                // technically he could've promoted a pawn to a bishop and now have 2 same color bishops, but we'll not handle that.
+                score -= 10;
+            }
+
+            if (whiteBishopPair == 2)
+            {
+                score += 10;
+            }
+
             if (bs.SideToMove == Definitions.White)
             {
                 return score;
