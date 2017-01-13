@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using KCE.BoardRepresentation;
+﻿using System.Diagnostics;
 
 namespace KCE.Engine.Search
 {
@@ -16,26 +14,26 @@ namespace KCE.Engine.Search
         public ulong Nodes { get; set; } = 0;
         public bool Quit { get; set; }
         public bool Stopped { get; set; }
-        private Stopwatch stopwatch;
+        private readonly Stopwatch _sWatch;
         public float Fh { get; set; } = 0;
         public float Fhf { get; set; } = 0;
         public long TimeLeft { get; set; } = Definitions.StdTimePrPly;
 
         public SearchInfo()
         {
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            _sWatch = new Stopwatch();
+            _sWatch.Start();
         }
 
         public bool IsTimeUp()
         {
-            long elapsedTime = stopwatch.ElapsedMilliseconds;
+            var elapsedTime = _sWatch.ElapsedMilliseconds;
             return elapsedTime > TimeLeft;
         }
 
         public long ElapsedTime()
         {
-            return stopwatch.ElapsedMilliseconds;
+            return _sWatch.ElapsedMilliseconds;
         }
     }
 }

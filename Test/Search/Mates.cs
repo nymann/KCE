@@ -1,4 +1,4 @@
-﻿using KCE.BoardRepresentation;
+﻿using KCE.Engine;
 using KCE.Engine.Search;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,11 +33,10 @@ namespace Test.Search
 
         private string PerformMateTest(string fen)
         {
-            KCE.Engine.Helper helper = new KCE.Engine.Helper();
-            BoardState bs = helper.BoardsetupFromFen(fen);
-            KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
-            var sInfo = new SearchInfo();
-            sInfo.TimeLeft = 5000;
+            var helper = new Helper();
+            var bs = helper.BoardsetupFromFen(fen);
+            var search = new KCE.Engine.Search.Search();
+            var sInfo = new SearchInfo {TimeLeft = 5000};
             search.SearchPosition(bs, sInfo);
             return bs.BestPly.GetAlgebraicPly();
         }

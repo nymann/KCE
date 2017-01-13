@@ -1,7 +1,4 @@
-﻿using System;
-using KCE.Engine;
-
-namespace KCE.BoardRepresentation
+﻿namespace KCE.Engine
 {
     public class Evaluate
     {
@@ -18,63 +15,79 @@ namespace KCE.BoardRepresentation
         };
 
         #region piece square tables
-
-        private int[] pawnTable = {
+        // As seen on.
+        // https://chessprogramming.wikispaces.com/Simplified+evaluation+function
+        private readonly int[] _pawnTable =
+        {
             0, 0, 0, 0, 0, 0, 0, 0,
-            10, 10, 0, -10, -10, 0, 10, 10,
-            0, 5, 0, 5, 5, 0, 5, 0,
-            0, 0, 10, 20, 20, 10, 0, 0,
-            10, 10, 10, 20, 20, 10, 10, 10,
-            20, 20, 20, 30, 30, 20, 20, 20,
+            50, 50, 50, 50, 50, 50, 50, 50,
+            10, 10, 20, 30, 30, 20, 10, 10,
+            5, 5, 10, 25, 25, 10, 5, 5,
+            0, 0, 0, 20, 20, 0, 0, 0,
+            5, -5, -10, 0, 0, -10, -5, 5,
+            5, 10, 10, -20, -20, 10, 10, 5,
             0, 0, 0, 0, 0, 0, 0, 0
         };
 
 
-        private int[] knightTable =
+        private readonly int[] _knightTable =
         {
-            0, -10, 0, 0, 0, 0, -10, 0,
-            0, 0, 0, 5, 5, 0, 0, 0,
-            0, 0, 10, 10, 10, 10, 0, 0,
-            0, 0, 10, 20, 20, 10, 5, 0,
-            5, 10, 15, 20, 20, 15, 10, 5,
-            5, 10, 10, 20, 20, 10, 10, 5,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0
+            -50, -40, -30, -30, -30, -30, -40, -50,
+            -40, -20, 0, 0, 0, 0, -20, -40,
+            -30, 0, 10, 15, 15, 10, 0, -30,
+            -30, 5, 15, 20, 20, 15, 5, -30,
+            -30, 0, 15, 20, 20, 15, 0, -30,
+            -30, 5, 10, 15, 15, 10, 5, -30,
+            -40, -20, 0, 5, 5, 0, -20, -40,
+            -50, -40, -30, -30, -30, -30, -40, -50,
         };
 
-        private int[] mirror64 = {
-            56  ,   57  ,   58  ,   59  ,   60  ,   61  ,   62  ,   63  ,
-            48  ,   49  ,   50  ,   51  ,   52  ,   53  ,   54  ,   55  ,
-            40  ,   41  ,   42  ,   43  ,   44  ,   45  ,   46  ,   47  ,
-            32  ,   33  ,   34  ,   35  ,   36  ,   37  ,   38  ,   39  ,
-            24  ,   25  ,   26  ,   27  ,   28  ,   29  ,   30  ,   31  ,
-            16  ,   17  ,   18  ,   19  ,   20  ,   21  ,   22  ,   23  ,
-            8   ,   9   ,   10  ,   11  ,   12  ,   13  ,   14  ,   15  ,
-            0   ,   1   ,   2   ,   3   ,   4   ,   5   ,   6   ,   7
+        private readonly int[] _mirror64 =
+        {
+            56, 57, 58, 59, 60, 61, 62, 63,
+            48, 49, 50, 51, 52, 53, 54, 55,
+            40, 41, 42, 43, 44, 45, 46, 47,
+            32, 33, 34, 35, 36, 37, 38, 39,
+            24, 25, 26, 27, 28, 29, 30, 31,
+            16, 17, 18, 19, 20, 21, 22, 23,
+            8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7
         };
 
-        private int[] bishopTable =
+        private readonly int[] _bishopTable =
         {
-            0, 0, -10, 0, 0, -10, 0, 0,
-            0, 0, 0, 10, 10, 0, 0, 0,
-            0, 0, 10, 15, 15, 10, 0, 0,
-            0, 10, 15, 20, 20, 15, 10, 0,
-            0, 10, 15, 20, 20, 15, 10, 0,
-            0, 0, 10, 15, 15, 10, 0, 0,
-            0, 0, 0, 10, 10, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0
+            -20, -10, -10, -10, -10, -10, -10, -20,
+            -10, 0, 0, 0, 0, 0, 0, -10,
+            -10, 0, 5, 10, 10, 5, 0, -10,
+            -10, 5, 5, 10, 10, 5, 5, -10,
+            -10, 0, 10, 10, 10, 10, 0, -10,
+            -10, 10, 10, 10, 10, 10, 10, -10,
+            -10, 5, 0, 0, 0, 0, 5, -10,
+            -20, -10, -10, -10, -10, -10, -10, -20,
         };
 
-        private int[] rookTable =
+        private readonly int[] _rookTable =
         {
-            1, 0, 5, 10, 10, 5, 0, 1,
-            25, 25, 25, 25, 25, 25, 25, 25,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0,
-            0, 0, 5, 10, 10, 5, 0, 0
+            0, 0, 0, 0, 0, 0, 0, 0,
+            5, 10, 10, 10, 10, 10, 10, 5,
+            -5, 0, 0, 0, 0, 0, 0, -5,
+            -5, 0, 0, 0, 0, 0, 0, -5,
+            -5, 0, 0, 0, 0, 0, 0, -5,
+            -5, 0, 0, 0, 0, 0, 0, -5,
+            -5, 0, 0, 0, 0, 0, 0, -5,
+            0, 0, 0, 5, 5, 0, 0, 0
+        };
+
+        private readonly int[] _queenTable =
+        {
+            -20, -10, -10, -5, -5, -10, -10, -20,
+            -10, 0, 0, 0, 0, 0, 0, -10,
+            -10, 0, 5, 5, 5, 5, 0, -10,
+            -5, 0, 5, 5, 5, 5, 0, -5,
+            0, 0, 5, 5, 5, 5, 0, -5,
+            -10, 5, 5, 5, 5, 5, 0, -10,
+            -10, 0, 5, 0, 0, 0, 0, -10,
+            -20, -10, -10, -5, -5, -10, -10, -20
         };
 
         #endregion
@@ -96,102 +109,100 @@ namespace KCE.BoardRepresentation
             int bR = 0;
             int bQ = 0;*/
 
-            int wB = 0;
-            int bB = 0;
+            var wB = 0;
+            var bB = 0;
 
-            int score = 0;
-
-            for (int square = 0; square < 64; square++)
+            var score = 0;
+            int index = 0;
+            foreach (var square in _board64)
             {
-                switch (bs.BoardRepresentation[_board64[square]])
+                switch (bs.BoardRepresentation[square])
                 {
-                    #region white
+                        #region white
 
                     case Definitions.WhitePawn:
                         score += 100;
-                        score += pawnTable[square];
+                        score += _pawnTable[_mirror64[index]];
                         //wP++;
                         break;
                     case Definitions.WhiteKnight:
                         score += 300;
-                        score += knightTable[square];
+                        score += _knightTable[_mirror64[index]];
                         //wN++;
                         break;
                     case Definitions.WhiteBishop:
                         score += 300;
-                        score += bishopTable[square];
+                        score += _bishopTable[_mirror64[index]];
                         wB++;
                         break;
                     case Definitions.WhiteRook:
                         score += 500;
-                        score += rookTable[square];
+                        score += _rookTable[_mirror64[index]];
                         //wR++;
                         break;
                     case Definitions.WhiteQueen:
                         score += 900;
+                        score += _queenTable[_mirror64[index]];
                         //wQ++;
                         break;
                     case Definitions.WhiteKing:
 
                         break;
 
-                    #endregion
+                        #endregion
 
-                    #region black
+                        #region black
+
                     case Definitions.BlackPawn:
                         score -= 100;
-                        score -= pawnTable[mirror64[square]];
+                        score -= _pawnTable[index];
                         //bP++;
                         break;
                     case Definitions.BlackKnight:
                         score -= 300;
-                        score -= knightTable[mirror64[square]];
+                        score -= _knightTable[index];
                         //bN++;
                         break;
                     case Definitions.BlackBishop:
                         score -= 300;
-                        score -= bishopTable[mirror64[square]];
+                        score -= _bishopTable[index];
                         bB++;
                         break;
                     case Definitions.BlackRook:
                         score -= 500;
-                        score -= rookTable[mirror64[square]];
+                        score -= _rookTable[index];
                         //bR++;
                         break;
                     case Definitions.BlackQueen:
                         score -= 900;
+                        score -= _queenTable[index];
                         //bQ++;
                         break;
                     case Definitions.BlackKing:
                         break;
-                    #endregion
+
+                        #endregion
 
                     default:
                         break;
-
                 }
+
+                index++;
             }
+
 
             if (bB == 2)
-            {
-                // technically he could've promoted a pawn to a bishop and now have 2 same color bishops, but we'll not handle that.
                 score -= 5;
-            }
 
             if (wB == 2)
-            {
                 score += 5;
-            }
 
 
             // Mobility, disabled for now.
             //int mobility = bs.LegalMovesCount / 10;
             //new Helper().PrintBoardWhitePerspective(bs.BoardRepresentation);
             if (bs.SideToMove == Definitions.White)
-            {         
-                /*Console.WriteLine("Side: White, Score: {0}, Mobility: {1}, Total: {2}.", score, mobility, score + mobility);*/
                 return score /*+ mobility*/;
-            }
             /*Console.WriteLine("Side: Black, Score: {0}, Mobility: {1}, Total {2}.", -score, mobility, -score - mobility);*/
             return -score /*- mobility*/;
         }
@@ -200,13 +211,13 @@ namespace KCE.BoardRepresentation
         // https://chessprogramming.wikispaces.com/Tapered+Eval
         private int TaperedEval(int wP, int wN, int wB, int wR, int wQ, int bP, int bN, int bB, int bR, int bQ)
         {
-            int pawnPhase = 0;
-            int knightPhase = 1;
-            int bishopPhase = 1;
-            int rookPhase = 2;
-            int queenPhase = 4;
-            int totalPhase = pawnPhase * 16 + knightPhase * 4 + bishopPhase * 4 + rookPhase * 4 + queenPhase * 2;
-            int phase = totalPhase;
+            var pawnPhase = 0;
+            var knightPhase = 1;
+            var bishopPhase = 1;
+            var rookPhase = 2;
+            var queenPhase = 4;
+            var totalPhase = pawnPhase * 16 + knightPhase * 4 + bishopPhase * 4 + rookPhase * 4 + queenPhase * 2;
+            var phase = totalPhase;
 
             phase -= wP * pawnPhase;
             phase -= wN * knightPhase;
@@ -220,9 +231,9 @@ namespace KCE.BoardRepresentation
             phase -= bR * rookPhase;
             phase -= bQ * queenPhase;
 
-            phase = (phase * 256 + (totalPhase / 2)) / totalPhase;
+            phase = (phase * 256 + totalPhase / 2) / totalPhase;
 
-            int eval = ((100 * (256 - phase)) + (300 * phase)) / 256;
+            var eval = (100 * (256 - phase) + 300 * phase) / 256;
 
             return eval;
         }

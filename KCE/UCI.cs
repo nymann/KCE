@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Net.Mime;
-using System.Runtime.Remoting.Messaging;
-using KCE.BoardRepresentation;
 using KCE.Engine;
 using KCE.Engine.Search;
 
@@ -9,41 +6,28 @@ namespace KCE
 {
     public class UCI
     {
-        /*
-         * This class is called when the engine receives "uci", which tells the engine to use the UCI interface.
-         * UCI
-         * Commands to support:
-         * "isready" = IsReady();
-         * "register" 
-         */
-
-
-        private static BoardState bs;
-        private Helper helper;
-        private Search search;
-        private SearchInfo sInfo;
+        private static BoardState _bs;
+        private readonly Helper _helper;
+        private readonly Search _search;
+        private SearchInfo _sInfo;
 
         public UCI()
         {
-            helper = new Helper();
-            search = new Search();
+            _helper = new Helper();
+            _search = new Search();
         }
 
         private void MainLoop()
         {
             while (true)
             {
-                string input = Console.ReadLine();
+                var input = Console.ReadLine();
 
                 if (input.Contains("position"))
-                {
                     Position(input);
-                }
 
                 if (input.Contains("go"))
-                {
                     Go(input);
-                }
 
                 switch (input)
                 {
@@ -87,12 +71,9 @@ namespace KCE
         private void Position(string command)
         {
             if (command.Contains("startpos"))
-            {
                 command = command.Replace("startpos", "fen " + Definitions.STDSETUP);
-                //Console.WriteLine(command);
-            }
 
-            string fen = command;
+            var fen = command;
             int index;
             string[] moves = null;
 
@@ -101,7 +82,7 @@ namespace KCE
                 index = command.IndexOf("moves") - 1;
                 fen = command.Substring(0, index);
                 index = command.IndexOf("moves") + 6;
-                string temp = command.Substring(index);
+                var temp = command.Substring(index);
                 moves = temp.Split(' ');
             }
 
@@ -110,24 +91,21 @@ namespace KCE
             //Console.WriteLine(fen);
 
             // Setup new BoardState.
-            bs = helper.BoardsetupFromFen(fen);
+            _bs = _helper.BoardsetupFromFen(fen);
 
             if (moves != null)
             {
-                MoveGenerator mg = new MoveGenerator(bs);
+                var mg = new MoveGenerator(_bs);
                 foreach (var move in moves)
                 {
                     // perform those moves                 
                     var validMoves = mg.AllLegalMoves();
                     foreach (var validMove in validMoves)
-                    {
                         if (validMove.GetAlgebraicPly() == move)
                         {
                             mg.MakeMove(validMove);
                             break;
                         }
-                    }
-                    
                 }
             }
 
@@ -136,10 +114,10 @@ namespace KCE
 
         private void Go(string command)
         {
-            sInfo = new SearchInfo();
+            _sInfo = new SearchInfo();
             if (command.Contains("infinite"))
             {
-                sInfo.TimeLeft = Definitions.InfiniteTime;
+                _sInfo.TimeLeft = Definitions.InfiniteTime;
             }
         
             else if (command.Contains("wtime"))
@@ -147,11 +125,11 @@ namespace KCE
                 long timeLeft;
                 int index;
 
-                if (bs.SideToMove == Definitions.White)
+                if (_bs.SideToMove == Definitions.White)
                 {
                     // We are white.
                     index = command.IndexOf("wtime") + 6;
-                    string temp = command.Substring(index);
+                    var temp = command.Substring(index);
                     index = temp.IndexOf(' ');
                     temp = temp.Substring(0, index);
                     timeLeft = long.Parse(temp);
@@ -161,20 +139,20 @@ namespace KCE
                 {
                     // we are black.
                     index = command.IndexOf("btime") + 6;
-                    string temp = command.Substring(index);
+                    var temp = command.Substring(index);
                     index = temp.IndexOf(' ');
                     temp = temp.Substring(0, index);
                     timeLeft = long.Parse(temp);
                     timeLeft = timeLeft / 30;
                 }
-                sInfo.TimeLeft = timeLeft;
+                _sInfo.TimeLeft = timeLeft;
             }
 
             else if (command.Contains("movetime"))
             {
                 long timeLeft;
-                int index = command.IndexOf("movetime") + 9;
-                string temp = command.Substring(index);
+                var index = command.IndexOf("movetime") + 9;
+                var temp = command.Substring(index);
                 if (temp.Contains(" "))
                 {
                     index = temp.IndexOf(' ');
@@ -182,10 +160,10 @@ namespace KCE
                 }
 
                 timeLeft = long.Parse(temp);
-                sInfo.TimeLeft = timeLeft;
+                _sInfo.TimeLeft = timeLeft;
             }
 
-            search.SearchPosition(bs, sInfo);
+            _search.SearchPosition(_bs, _sInfo);
         }
 
         // Engine to GUI;

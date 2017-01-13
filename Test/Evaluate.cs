@@ -1,5 +1,4 @@
-﻿using System;
-using KCE.BoardRepresentation;
+﻿using KCE.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test
@@ -18,7 +17,7 @@ namespace Test
         {
             KCE.Engine.Helper helper = new KCE.Engine.Helper();
             BoardState bs = helper.BoardsetupFromFen(fen);
-            return new KCE.BoardRepresentation.Evaluate().EvalPosition(bs);
+            return new KCE.Engine.Evaluate().EvalPosition(bs);
         }
 
         // https://chessprogramming.wikispaces.com/Tapered+Eval
@@ -29,7 +28,6 @@ namespace Test
             string actual = StateOfGame(TaperedEval(0, 1, 2, 2, 0, 0, 2, 2, 2, 0));
             Assert.AreEqual(expected, actual);
         }
-
 
         private int TaperedEval(int wP, int wN, int wB, int wR, int wQ, int bP, int bN, int bB, int bR, int bQ)
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KCE.BoardRepresentation.PieceRules
+namespace KCE.Engine.PieceRules
 {
     public interface IMoveGeneration
     {

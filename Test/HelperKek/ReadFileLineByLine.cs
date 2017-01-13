@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Test.Helper
+namespace Test.HelperKek
 {
     public class ReadFileLineByLine
     {

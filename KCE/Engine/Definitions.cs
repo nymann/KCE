@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace KCE.BoardRepresentation
+namespace KCE.Engine
 {
     public static class Definitions
     {

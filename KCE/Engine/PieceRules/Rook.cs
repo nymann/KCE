@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KCE.BoardRepresentation.PieceRules
+namespace KCE.Engine.PieceRules
 {
     public class Rook : IMoveGeneration
     {
@@ -35,9 +35,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square - 10 * i] > 6 && _board[_square - 10 * i] < 13)
-            {
                 validMoves.Add(_square - 10 * i);
-            }
 
             i = 1;
 
@@ -48,9 +46,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square + 10 * i] > 6 && _board[_square + 10 * i] < 13)
-            {
                 validMoves.Add(_square + 10 * i);
-            }
 
             i = 1;
 
@@ -61,9 +57,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square + 1 * i] > 6 && _board[_square + 1 * i] < 13)
-            {
                 validMoves.Add(_square + 1 * i);
-            }
 
             i = 1;
 
@@ -74,9 +68,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square - 1 * i] > 6 && _board[_square - 1 * i] < 13)
-            {
                 validMoves.Add(_square - 1 * i);
-            }
 
             return validMoves;
         }
@@ -94,9 +86,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square - 10 * i] < 6)
-            {
                 validMoves.Add(_square - 10 * i);
-            }
 
             i = 1;
 
@@ -107,9 +97,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square + 10 * i] < 6)
-            {
                 validMoves.Add(_square + 10 * i);
-            }
 
             i = 1;
 
@@ -120,9 +108,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square + 1 * i] < 6)
-            {
                 validMoves.Add(_square + 1 * i);
-            }
 
             i = 1;
 
@@ -133,9 +119,7 @@ namespace KCE.BoardRepresentation.PieceRules
             }
 
             if (_board[_square - 1 * i] < 6)
-            {
                 validMoves.Add(_square - 1 * i);
-            }
 
             return validMoves;
         }

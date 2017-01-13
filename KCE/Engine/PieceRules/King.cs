@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using KCE.Engine;
 
-namespace KCE.BoardRepresentation.PieceRules
+namespace KCE.Engine.PieceRules
 {
     public class King : IMoveGeneration
     {
@@ -56,145 +55,106 @@ namespace KCE.BoardRepresentation.PieceRules
 
         private List<int> BlackMoveGeneration(int square)
         {
-            Helper helper = new Helper();
+            var helper = new Helper();
 
             var validMoves = new List<int>();
 
             if (_board[square + 1] == Definitions.EmptySquare || _board[square + 1] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square + 1);
-            }
 
             if (_board[square - 1] == Definitions.EmptySquare || _board[square - 1] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square - 1);
-            }
 
             if (_board[square + 9] == Definitions.EmptySquare || _board[square + 9] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square + 9);
-            }
 
             if (_board[square - 9] == Definitions.EmptySquare || _board[square - 9] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square - 9);
-            }
 
             if (_board[square + 10] == Definitions.EmptySquare || _board[square + 10] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square + 10);
-            }
 
             if (_board[square - 10] == Definitions.EmptySquare || _board[square - 10] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square - 10);
-            }
 
             if (_board[square - 11] == Definitions.EmptySquare || _board[square - 11] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square - 11);
-            }
 
             if (_board[square + 11] == Definitions.EmptySquare || _board[square + 11] <= Definitions.WhiteKing)
-            {
                 validMoves.Add(square + 11);
-            }
 
-            
+
             if (_BCCKS
                 && _board[92] == Definitions.EmptySquare // G8
                 && _board[93] == Definitions.EmptySquare // F8
-                && !helper.IsSquareAttacked(Definitions.Black, _board, 92) && !helper.IsSquareAttacked(Definitions.Black, _board, 93))
-            {
+                && !helper.IsSquareAttacked(Definitions.Black, _board, 92) &&
+                !helper.IsSquareAttacked(Definitions.Black, _board, 93))
                 validMoves.Add(92); // E8G8, 92 = G8.
-            }
 
             if (_BCCQS
                 && _board[97] == Definitions.EmptySquare // B8
                 && _board[96] == Definitions.EmptySquare // C8
                 && _board[95] == Definitions.EmptySquare // D8
-                && !helper.IsSquareAttacked(Definitions.Black, _board, 96) && !helper.IsSquareAttacked(Definitions.Black, _board, 95))
-            {
-                // add black queenside castling. (e8c8)
+                && !helper.IsSquareAttacked(Definitions.Black, _board, 96) &&
+                !helper.IsSquareAttacked(Definitions.Black, _board, 95))
                 validMoves.Add(96); // 96 = C8.
-            }
-            
+
 
             return validMoves;
         }
 
         private List<int> WhiteMoveGeneration(int square)
         {
-            Helper helper = new Helper();
+            var helper = new Helper();
 
             var validMoves = new List<int>();
 
             if (_board[square + 1] == Definitions.EmptySquare ||
                 _board[square + 1] > Definitions.WhiteKing && _board[square + 1] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square + 1);
-            }
 
             if (_board[square - 1] == Definitions.EmptySquare ||
                 _board[square - 1] > Definitions.WhiteKing && _board[square - 1] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square - 1);
-            }
 
             if (_board[square + 9] == Definitions.EmptySquare ||
                 _board[square + 9] > Definitions.WhiteKing && _board[square + 9] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square + 9);
-            }
 
             if (_board[square - 9] == Definitions.EmptySquare ||
                 _board[square - 9] > Definitions.WhiteKing && _board[square - 9] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square - 9);
-            }
 
             if (_board[square - 10] == Definitions.EmptySquare ||
                 _board[square - 10] > Definitions.WhiteKing && _board[square - 10] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square - 10);
-            }
 
             if (_board[square + 10] == Definitions.EmptySquare ||
                 _board[square + 10] > Definitions.WhiteKing && _board[square + 10] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square + 10);
-            }
 
             if (_board[square + 11] == Definitions.EmptySquare ||
                 _board[square + 11] > Definitions.WhiteKing && _board[square + 11] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square + 11);
-            }
 
             if (_board[square - 11] == Definitions.EmptySquare ||
                 _board[square - 11] > Definitions.WhiteKing && _board[square - 11] <= Definitions.BlackKing)
-            {
                 validMoves.Add(square - 11);
-            }
 
             if (_WCCKS
                 && _board[22] == Definitions.EmptySquare // G1
                 && _board[23] == Definitions.EmptySquare // F1
-                && !helper.IsSquareAttacked(Definitions.White, _board, 23) && !helper.IsSquareAttacked(Definitions.White, _board, 22))
-            {
-                // add white kingside castling. (e1g1)
+                && !helper.IsSquareAttacked(Definitions.White, _board, 23) &&
+                !helper.IsSquareAttacked(Definitions.White, _board, 22))
                 validMoves.Add(22); // G1 = 22
-            }
 
             if (_WCCQS
                 && _board[27] == Definitions.EmptySquare // B1
                 && _board[26] == Definitions.EmptySquare // C1
                 && _board[25] == Definitions.EmptySquare // D1
-                && !helper.IsSquareAttacked(Definitions.White, _board, 26) && !helper.IsSquareAttacked(Definitions.White, _board, 25))
-            {
-                // add white queenside castling. (e1c1)
+                && !helper.IsSquareAttacked(Definitions.White, _board, 26) &&
+                !helper.IsSquareAttacked(Definitions.White, _board, 25))
                 validMoves.Add(26); // C1 = 26
-            }
 
             return validMoves;
         }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace KCE.BoardRepresentation
+﻿namespace KCE.Engine
 {
     public class BoardState
     {

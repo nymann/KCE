@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KCE.BoardRepresentation
+﻿namespace KCE.Engine
 {
     public class Ply
     {

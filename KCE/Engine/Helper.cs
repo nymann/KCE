@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
-using KCE.BoardRepresentation;
-using KCE.BoardRepresentation.PieceRules;
+using KCE.Engine.PieceRules;
 
 namespace KCE.Engine
 {
@@ -30,74 +29,54 @@ namespace KCE.Engine
 
         public bool IsSquareAttacked(bool attackingSide, int[] board, int squareInQuestion)
         {
-            Knight imaginaryKnight = new Knight(board, squareInQuestion, attackingSide);
+            var imaginaryKnight = new Knight(board, squareInQuestion, attackingSide);
             var listOfAttackingSquares = imaginaryKnight.MoveGeneration();
-            foreach (int square in listOfAttackingSquares)
-            {
+            foreach (var square in listOfAttackingSquares)
                 if (board[square] == Definitions.WhiteKnight || board[square] == Definitions.BlackKnight)
-                {
                     return true;
-                }
-            }
 
-            Bishop imaginaryBishop = new Bishop(board, squareInQuestion, attackingSide);
+            var imaginaryBishop = new Bishop(board, squareInQuestion, attackingSide);
             var listOfBishopMoves = imaginaryBishop.MoveGeneration();
 
-            foreach (int possibleAttackedFromSquare in listOfBishopMoves)
-            {
+            foreach (var possibleAttackedFromSquare in listOfBishopMoves)
                 if (board[possibleAttackedFromSquare] == Definitions.WhiteQueen ||
                     board[possibleAttackedFromSquare] == Definitions.BlackQueen ||
                     board[possibleAttackedFromSquare] == Definitions.WhiteBishop ||
                     board[possibleAttackedFromSquare] == Definitions.BlackBishop)
-                {
                     return true;
-                }
-            }
 
-            King imaginaryKing = new King(board, squareInQuestion, attackingSide);
+            var imaginaryKing = new King(board, squareInQuestion, attackingSide);
             var listOfKingMoves = imaginaryKing.MoveGeneration();
 
-            foreach (int possibleAttackedFromSquare in listOfKingMoves)
-            {
+            foreach (var possibleAttackedFromSquare in listOfKingMoves)
                 if (board[possibleAttackedFromSquare] == Definitions.WhiteKing ||
                     board[possibleAttackedFromSquare] == Definitions.BlackKing)
-                {
                     return true;
-                }
-            }
 
             if (attackingSide == Definitions.WhiteToMove)
             {
                 // Check if black has pawns that can attack us.
                 if (board[squareInQuestion + 11] == Definitions.BlackPawn ||
                     board[squareInQuestion + 9] == Definitions.BlackPawn)
-                {
                     return true;
-                }
             }
             else
             {
                 // Check if white has pawns that can attack us.
                 if (board[squareInQuestion - 11] == Definitions.WhitePawn ||
                     board[squareInQuestion - 9] == Definitions.WhitePawn)
-                {
                     return true;
-                }
             }
 
-            Rook imaginaryRook = new Rook(board, squareInQuestion, attackingSide);
+            var imaginaryRook = new Rook(board, squareInQuestion, attackingSide);
             var listOfRookMoves = imaginaryRook.MoveGeneration();
 
-            foreach (int possibleAttackedFromSquares in listOfRookMoves)
-            {
+            foreach (var possibleAttackedFromSquares in listOfRookMoves)
                 if (board[possibleAttackedFromSquares] == Definitions.WhiteQueen ||
                     board[possibleAttackedFromSquares] == Definitions.BlackQueen ||
                     board[possibleAttackedFromSquares] == Definitions.WhiteRook ||
                     board[possibleAttackedFromSquares] == Definitions.BlackRook)
-                {
                     return true;
-                }
-            }
 
             return false;
         }
@@ -109,19 +88,18 @@ namespace KCE.Engine
             bool sideToMove,
             int performCastling = -1)
         {
-            int enPas = Definitions.NoEnPassantSquare;
-            int[] board = (int[]) hisBoard.Clone(); // 7 hour bug.
+            var enPas = Definitions.NoEnPassantSquare;
+            var board = (int[]) hisBoard.Clone(); // 7 hour bug.
 
-            int pieceOnFromSquare = board[fromSquare];
+            var pieceOnFromSquare = board[fromSquare];
             board[fromSquare] = Definitions.EmptySquare;
             board[toSquare] = pieceOnFromSquare;
 
 
-            string algebraicPly = Definitions.IndexToAlgebraic[fromSquare] + Definitions.IndexToAlgebraic[toSquare];
+            var algebraicPly = Definitions.IndexToAlgebraic[fromSquare] + Definitions.IndexToAlgebraic[toSquare];
 
             // are we castling?
             if (performCastling != -1)
-            {
                 if (performCastling == 0)
                 {
                     // Black kingside castling
@@ -149,7 +127,6 @@ namespace KCE.Engine
                     board[28] = Definitions.EmptySquare;
                     board[25] = Definitions.WhiteRook;
                 }
-            }
 
             #region En Passsant
 
@@ -159,45 +136,33 @@ namespace KCE.Engine
             {
                 // example, toSquare = enpassquare = e6 (74), fromSquare = d5 (65), black pawn on e5 (64) 
                 if (fromSquare - toSquare == -9)
-                {
                     board[fromSquare - 1] = Definitions.EmptySquare;
-                }
 
                 // example, toSquare = enpassquare = c6 (76), fromSquare = d5 (65), black pawn on c5 (66) 
                 else if (fromSquare - toSquare == -11)
-                {
                     board[fromSquare + 1] = Definitions.EmptySquare;
-                }
             }
             else if (sideToMove == Definitions.Black && hisBoard[fromSquare] == Definitions.BlackPawn &&
                      hisEnPas == toSquare)
             {
                 // example, fromsquare = enpassquare = d3 (45), fromSquare = e4 (54), white pawn on d4 (55) 
                 if (fromSquare - toSquare == 9)
-                {
                     board[fromSquare + 1] = Definitions.EmptySquare;
-                }
 
                 else if (fromSquare - toSquare == 11)
-                {
                     board[fromSquare - 1] = Definitions.EmptySquare;
-                }
             }
 
             // Set En passant square.
-            if (hisBoard[fromSquare] == Definitions.WhitePawn && (toSquare - fromSquare) == 20)
-            {
+            if (hisBoard[fromSquare] == Definitions.WhitePawn && toSquare - fromSquare == 20)
                 enPas = toSquare - 10;
-            }
 
-            if (hisBoard[fromSquare] == Definitions.BlackPawn && (fromSquare - toSquare) == 20)
-            {
+            if (hisBoard[fromSquare] == Definitions.BlackPawn && fromSquare - toSquare == 20)
                 enPas = fromSquare - 10;
-            }
 
             #endregion
 
-            bool[] castle = UpdateCastlePermissions(fromSquare, toSquare, hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS,
+            var castle = UpdateCastlePermissions(fromSquare, toSquare, hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS,
                 sideToMove);
 
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
@@ -208,49 +173,37 @@ namespace KCE.Engine
 
         public bool DoubleCheckedFen(int[] board, bool sideToMove, int[] kingSquare)
         {
-            bool possibleDoubleCheck = false;
+            var possibleDoubleCheck = false;
 
             #region white side
 
             if (sideToMove == Definitions.White)
             {
-                Knight whiteKnight = new Knight(board, kingSquare[1], Definitions.White);
+                var whiteKnight = new Knight(board, kingSquare[1], Definitions.White);
                 var listOfWhiteMoves = whiteKnight.MoveGeneration();
 
                 foreach (var square in listOfWhiteMoves)
-                {
                     if (board[square] == Definitions.BlackKnight)
                     {
                         possibleDoubleCheck = true;
                         break;
                     }
-                }
 
                 if (!possibleDoubleCheck)
-                {
                     return false;
-                }
 
-                Bishop whiteBishop = new Bishop(board, kingSquare[1], Definitions.White);
+                var whiteBishop = new Bishop(board, kingSquare[1], Definitions.White);
                 listOfWhiteMoves = whiteBishop.MoveGeneration();
                 foreach (var square in listOfWhiteMoves)
-                {
                     if (board[square] == Definitions.BlackBishop)
-                    {
                         return true;
-                    }
-                }
 
 
-                Rook whiteRook = new Rook(board, kingSquare[1], Definitions.White);
+                var whiteRook = new Rook(board, kingSquare[1], Definitions.White);
                 listOfWhiteMoves = whiteRook.MoveGeneration();
                 foreach (var square in listOfWhiteMoves)
-                {
                     if (board[square] == Definitions.BlackRook)
-                    {
                         return true;
-                    }
-                }
             }
             #endregion
 
@@ -258,42 +211,30 @@ namespace KCE.Engine
 
             else
             {
-                Knight blackKnight = new Knight(board, kingSquare[0], Definitions.Black);
+                var blackKnight = new Knight(board, kingSquare[0], Definitions.Black);
                 var listOfBlackMoves = blackKnight.MoveGeneration();
 
                 foreach (var square in listOfBlackMoves)
-                {
                     if (board[square] == Definitions.WhiteKnight)
                     {
                         possibleDoubleCheck = true;
                         break;
                     }
-                }
 
                 if (!possibleDoubleCheck)
-                {
                     return false;
-                }
 
-                Bishop blackBishop = new Bishop(board, kingSquare[0], Definitions.Black);
+                var blackBishop = new Bishop(board, kingSquare[0], Definitions.Black);
                 listOfBlackMoves = blackBishop.MoveGeneration();
                 foreach (var square in listOfBlackMoves)
-                {
                     if (board[square] == Definitions.WhiteBishop)
-                    {
                         return true;
-                    }
-                }
 
-                Rook blackRook = new Rook(board, kingSquare[0], Definitions.Black);
+                var blackRook = new Rook(board, kingSquare[0], Definitions.Black);
                 listOfBlackMoves = blackRook.MoveGeneration();
                 foreach (var square in listOfBlackMoves)
-                {
                     if (board[square] == Definitions.WhiteRook)
-                    {
                         return true;
-                    }
-                }
             }
 
             #endregion
@@ -307,7 +248,7 @@ namespace KCE.Engine
             Console.OutputEncoding = Encoding.Unicode;
             Console.WriteLine("   a   b   c   d   e   f   g   h");
             Console.WriteLine(" +---+---+---+---+---+---+---+---+");
-            for (int i = 63; i >= 0; i--)
+            for (var i = 63; i >= 0; i--)
             {
                 Console.Write(" | ");
                 switch (board[_board64[i]])
@@ -493,22 +434,21 @@ namespace KCE.Engine
                 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
             };
             bool sideToMove;
-            bool WCCKS = false;
-            bool WCCQS = false;
-            bool BCCKS = false;
-            bool BCCQS = false;
+            var WCCKS = false;
+            var WCCQS = false;
+            var BCCKS = false;
+            var BCCQS = false;
             int enPasSquare;
             int fiftyMoveRule;
 
             int[] kingSquares = {99, 99};
 
-            int index = 63;
-            string[] pieces = fen.Split(' ');
+            var index = 63;
+            var pieces = fen.Split(' ');
 
             #region pieceSetup
 
-            foreach (char c in pieces[0])
-            {
+            foreach (var c in pieces[0])
                 if (c > 'a' && c < 'z')
                 {
                     switch (c)
@@ -587,10 +527,9 @@ namespace KCE.Engine
                 else if (c > '0' && c < '9')
                 {
                     // the next 'c' squares are Empty.
-                    int n = Convert.ToInt16(c) - '0';
+                    var n = Convert.ToInt16(c) - '0';
                     index -= n;
                 }
-            }
 
             #endregion
 
@@ -616,8 +555,7 @@ namespace KCE.Engine
 
             #region castling rights
 
-            foreach (char c in pieces[2])
-            {
+            foreach (var c in pieces[2])
                 switch (c)
                 {
                     case 'K':
@@ -644,7 +582,6 @@ namespace KCE.Engine
                         // '-' no side can castle.
                         break;
                 }
-            }
 
             #endregion
 
@@ -669,7 +606,6 @@ namespace KCE.Engine
             #region fifty move rule
 
             fiftyMoveRule = pieces.Length > 5 ? Convert.ToInt16(pieces[4]) : 0;
-            
 
             #endregion
 
@@ -690,55 +626,39 @@ namespace KCE.Engine
         public bool[] UpdateCastlePermissions(int squareFrom, int squareTo, bool wccks, bool wccqs, bool bccks,
             bool bccqs, bool sideToMove)
         {
-            bool WCCKS = false;
-            bool WCCQS = false;
-            bool BCCKS = false;
-            bool BCCQS = false;
+            var WCCKS = false;
+            var WCCQS = false;
+            var BCCKS = false;
+            var BCCQS = false;
 
             if (sideToMove == Definitions.White)
             {
                 if (wccks && squareFrom != 24 && squareFrom != 21)
-                {
                     WCCKS = true;
-                }
 
                 if (wccqs && squareFrom != 24 && squareFrom != 28)
-                {
                     WCCQS = true;
-                }
 
                 if (bccks && squareTo != 91)
-                {
                     BCCKS = true;
-                }
 
                 if (bccqs && squareTo != 98)
-                {
                     BCCQS = true;
-                }
 
                 return new[] {BCCKS, BCCQS, WCCKS, WCCQS};
             }
 
             if (bccks && squareFrom != 94 && squareFrom != 91)
-            {
                 BCCKS = true;
-            }
 
             if (bccqs && squareFrom != 94 && squareFrom != 98)
-            {
                 BCCQS = true;
-            }
 
             if (wccks && squareTo != 21)
-            {
                 WCCKS = true;
-            }
 
             if (wccqs && squareTo != 28)
-            {
                 WCCQS = true;
-            }
 
             return new[] {BCCKS, BCCQS, WCCKS, WCCQS};
         }
@@ -746,14 +666,68 @@ namespace KCE.Engine
         public bool IsKingInCheck(bool sideToMove, int[] board, int[] kingSquares)
         {
             if (sideToMove == Definitions.White)
-            {
                 return IsSquareAttacked(Definitions.White, board, kingSquares[1]);
-            }
 
             else
-            {
                 return IsSquareAttacked(Definitions.Black, board, kingSquares[0]);
+        }
+
+        public int AttackedBySquare(bool sideToMove, int[] board, int squareInQuestion)
+        {
+            var imaginaryKnight = new Knight(board, squareInQuestion, sideToMove);
+            var listOfAttackingSquares = imaginaryKnight.MoveGeneration();
+            foreach (var square in listOfAttackingSquares)
+                if (board[square] == Definitions.WhiteKnight || board[square] == Definitions.BlackKnight)
+                    return square;
+
+            var imaginaryBishop = new Bishop(board, squareInQuestion, sideToMove);
+            var listOfBishopMoves = imaginaryBishop.MoveGeneration();
+
+            foreach (var possibleAttackedFromSquare in listOfBishopMoves)
+                if (board[possibleAttackedFromSquare] == Definitions.WhiteQueen ||
+                    board[possibleAttackedFromSquare] == Definitions.BlackQueen ||
+                    board[possibleAttackedFromSquare] == Definitions.WhiteBishop ||
+                    board[possibleAttackedFromSquare] == Definitions.BlackBishop)
+                    return possibleAttackedFromSquare;
+
+            var imaginaryKing = new King(board, squareInQuestion, sideToMove);
+            var listOfKingMoves = imaginaryKing.MoveGeneration();
+
+            foreach (var possibleAttackedFromSquare in listOfKingMoves)
+                if (board[possibleAttackedFromSquare] == Definitions.WhiteKing ||
+                    board[possibleAttackedFromSquare] == Definitions.BlackKing)
+                    return possibleAttackedFromSquare;
+
+            if (sideToMove == Definitions.WhiteToMove)
+            {
+                // Check if black has pawns that can attack us.
+                if (board[squareInQuestion + 11] == Definitions.BlackPawn)
+                    return squareInQuestion + 11;
+
+                if (board[squareInQuestion + 9] == Definitions.BlackPawn)
+                    return squareInQuestion + 9;
             }
+            else
+            {
+                // Check if white has pawns that can attack us.
+                if (board[squareInQuestion - 11] == Definitions.WhitePawn)
+                    return squareInQuestion - 11;
+
+                if (board[squareInQuestion - 9] == Definitions.WhitePawn)
+                    return squareInQuestion - 9;
+            }
+
+            var imaginaryRook = new Rook(board, squareInQuestion, sideToMove);
+            var listOfRookMoves = imaginaryRook.MoveGeneration();
+
+            foreach (var possibleAttackedFromSquares in listOfRookMoves)
+                if (board[possibleAttackedFromSquares] == Definitions.WhiteQueen ||
+                    board[possibleAttackedFromSquares] == Definitions.BlackQueen ||
+                    board[possibleAttackedFromSquares] == Definitions.WhiteRook ||
+                    board[possibleAttackedFromSquares] == Definitions.BlackRook)
+                    return possibleAttackedFromSquares;
+
+            return 99;
         }
     }
 }

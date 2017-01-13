@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KCE.BoardRepresentation.PieceRules
+namespace KCE.Engine.PieceRules
 {
     public class Queen
     {
@@ -24,7 +24,7 @@ namespace KCE.BoardRepresentation.PieceRules
 
             var bishopMoves = bishop.MoveGeneration();
             var rookMoves = rook.MoveGeneration();
-            
+
             validMoves.AddRange(bishopMoves);
             validMoves.AddRange(rookMoves);
 

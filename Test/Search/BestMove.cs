@@ -1,4 +1,4 @@
-﻿using KCE.BoardRepresentation;
+﻿using KCE.Engine;
 using KCE.Engine.Search;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,10 +15,10 @@ namespace Test.Search
 
         private string PerformBestMove(string fen)
         {
-            KCE.Engine.Helper helper = new KCE.Engine.Helper();
-            BoardState bs =
+            var helper = new Helper();
+            var bs =
                 helper.BoardsetupFromFen(fen);
-            KCE.Engine.Search.Search search = new KCE.Engine.Search.Search();
+            var search = new KCE.Engine.Search.Search();
             var sInfo = new SearchInfo();
             search.SearchPosition(bs, sInfo);
             sInfo.TimeLeft = 30000;
