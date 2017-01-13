@@ -466,7 +466,7 @@ namespace KCE.BoardRepresentation
                 nodes += Perft(depth - 1);
                 UndoMove(legalMoves[i]);
 
-                Console.WriteLine("Perft: {0}: {1}", legalMoves[i].GetAlgebraicPly(), nodes);
+                //Console.WriteLine("Perft: {0}: {1}", legalMoves[i].GetAlgebraicPly(), nodes);
             }
 
             return nodes;

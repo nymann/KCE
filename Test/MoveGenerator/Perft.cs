@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using KCE.BoardRepresentation;
 using KCE.BoardRepresentation.PieceRules;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +11,7 @@ namespace Test.MoveGenerator
     public class Perft
     {
         private BoardState _boardState;
-        public const int MaxDepth = 3;
+        public const int MaxDepth = 5;
 
         [TestMethod]
         public void PerftStartPositionTest()
@@ -46,12 +47,18 @@ namespace Test.MoveGenerator
 
         private void PerftTestHelper(string FEN, ulong[] expectedValues, int depthMax)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            
             for (int depth = 1; depth <= depthMax; depth++)
             {
+                stopwatch.Start();
                 var actual = SetupPerftTest(FEN, depth);
+                stopwatch.Stop();
                 var expected = expectedValues[depth - 1];
-                Console.WriteLine("{0}, D{1}, expected: {2}, actual: {3}.", FEN, depth, expected, actual);
+                
+                Console.WriteLine("{0}, D{1}, expected: {2}, actual: {3}, Time: {4} ms.", FEN, depth, expected, actual, stopwatch.ElapsedMilliseconds);
                 Assert.AreEqual(expected, actual);
+                stopwatch.Restart();
             }
         }
 

@@ -6,8 +6,9 @@ namespace Test
     public class PosKey
     {
         [TestMethod]
-        public void Generate64BitRand()
+        public void Generate64BitRand(int seed)
         {
+
             
         }
     }

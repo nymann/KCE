@@ -71,6 +71,7 @@
     <Compile Include="MoveGenerator\BoardStateTest.cs" />
     <Compile Include="MoveGenerator\Perft.cs" />
     <Compile Include="MoveGenerator\UpdateCastlePermissionTest.cs" />
+    <Compile Include="PosKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\BestMove.cs" />
     <Compile Include="Search\Mates.cs" />

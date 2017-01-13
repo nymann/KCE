@@ -85,11 +85,19 @@ namespace KCE.BoardRepresentation
 
         public int EvalPosition(BoardState bs)
         {
-            int whitePieces;
-            int blackPieces;
+            /*int wP = 0;
+            int wN = 0;
+            int bB = 0;
+            int wR = 0;
+            int wQ = 0;
+            int bP = 0;
+            int bN = 0;
+            int bB = 0;
+            int bR = 0;
+            int bQ = 0;*/
 
-            int whiteBishopPair = 0;
-            int blackBishopPair = 0;
+            int wB = 0;
+            int bB = 0;
 
             int score = 0;
 
@@ -102,22 +110,26 @@ namespace KCE.BoardRepresentation
                     case Definitions.WhitePawn:
                         score += 100;
                         score += pawnTable[square];
+                        //wP++;
                         break;
                     case Definitions.WhiteKnight:
                         score += 300;
                         score += knightTable[square];
+                        //wN++;
                         break;
                     case Definitions.WhiteBishop:
                         score += 300;
                         score += bishopTable[square];
-                        whiteBishopPair++;
+                        wB++;
                         break;
                     case Definitions.WhiteRook:
                         score += 500;
                         score += rookTable[square];
+                        //wR++;
                         break;
                     case Definitions.WhiteQueen:
                         score += 900;
+                        //wQ++;
                         break;
                     case Definitions.WhiteKing:
 
@@ -129,22 +141,26 @@ namespace KCE.BoardRepresentation
                     case Definitions.BlackPawn:
                         score -= 100;
                         score -= pawnTable[mirror64[square]];
+                        //bP++;
                         break;
                     case Definitions.BlackKnight:
                         score -= 300;
                         score -= knightTable[mirror64[square]];
+                        //bN++;
                         break;
                     case Definitions.BlackBishop:
                         score -= 300;
                         score -= bishopTable[mirror64[square]];
-                        blackBishopPair++;
+                        bB++;
                         break;
                     case Definitions.BlackRook:
                         score -= 500;
                         score -= rookTable[mirror64[square]];
+                        //bR++;
                         break;
                     case Definitions.BlackQueen:
                         score -= 900;
+                        //bQ++;
                         break;
                     case Definitions.BlackKing:
                         break;
@@ -156,13 +172,13 @@ namespace KCE.BoardRepresentation
                 }
             }
 
-            if (blackBishopPair == 2)
+            if (bB == 2)
             {
                 // technically he could've promoted a pawn to a bishop and now have 2 same color bishops, but we'll not handle that.
                 score -= 5;
             }
 
-            if (whiteBishopPair == 2)
+            if (wB == 2)
             {
                 score += 5;
             }
@@ -172,13 +188,43 @@ namespace KCE.BoardRepresentation
             //int mobility = bs.LegalMovesCount / 10;
             //new Helper().PrintBoardWhitePerspective(bs.BoardRepresentation);
             if (bs.SideToMove == Definitions.White)
-            {
-                
+            {         
                 /*Console.WriteLine("Side: White, Score: {0}, Mobility: {1}, Total: {2}.", score, mobility, score + mobility);*/
                 return score /*+ mobility*/;
             }
             /*Console.WriteLine("Side: Black, Score: {0}, Mobility: {1}, Total {2}.", -score, mobility, -score - mobility);*/
             return -score /*- mobility*/;
+        }
+
+
+        // https://chessprogramming.wikispaces.com/Tapered+Eval
+        private int TaperedEval(int wP, int wN, int wB, int wR, int wQ, int bP, int bN, int bB, int bR, int bQ)
+        {
+            int pawnPhase = 0;
+            int knightPhase = 1;
+            int bishopPhase = 1;
+            int rookPhase = 2;
+            int queenPhase = 4;
+            int totalPhase = pawnPhase * 16 + knightPhase * 4 + bishopPhase * 4 + rookPhase * 4 + queenPhase * 2;
+            int phase = totalPhase;
+
+            phase -= wP * pawnPhase;
+            phase -= wN * knightPhase;
+            phase -= wB * bishopPhase;
+            phase -= wR * rookPhase;
+            phase -= wQ * queenPhase;
+
+            phase -= bP * pawnPhase;
+            phase -= bN * knightPhase;
+            phase -= bB * bishopPhase;
+            phase -= bR * rookPhase;
+            phase -= bQ * queenPhase;
+
+            phase = (phase * 256 + (totalPhase / 2)) / totalPhase;
+
+            int eval = ((100 * (256 - phase)) + (300 * phase)) / 256;
+
+            return eval;
         }
     }
 }
