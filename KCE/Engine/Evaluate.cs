@@ -159,19 +159,26 @@ namespace KCE.BoardRepresentation
             if (blackBishopPair == 2)
             {
                 // technically he could've promoted a pawn to a bishop and now have 2 same color bishops, but we'll not handle that.
-                score -= 10;
+                score -= 5;
             }
 
             if (whiteBishopPair == 2)
             {
-                score += 10;
+                score += 5;
             }
 
+
+            // Mobility, disabled for now.
+            //int mobility = bs.LegalMovesCount / 10;
+            //new Helper().PrintBoardWhitePerspective(bs.BoardRepresentation);
             if (bs.SideToMove == Definitions.White)
             {
-                return score;
+                
+                /*Console.WriteLine("Side: White, Score: {0}, Mobility: {1}, Total: {2}.", score, mobility, score + mobility);*/
+                return score /*+ mobility*/;
             }
-            return -score;
+            /*Console.WriteLine("Side: Black, Score: {0}, Mobility: {1}, Total {2}.", -score, mobility, -score - mobility);*/
+            return -score /*- mobility*/;
         }
     }
 }

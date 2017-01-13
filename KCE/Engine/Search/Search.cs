@@ -41,6 +41,7 @@ namespace KCE.Engine.Search
 
             Ply bestMove = null;
             int nMoves = legalMoves.Count;
+            //bs.LegalMovesCount = nMoves;
             int oldAlpha = alpha;
             int moveNum = 0;
 
