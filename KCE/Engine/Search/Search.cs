@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace KCE.Engine.Search
 {
+
     public class Search
     {
         private readonly Evaluate _eval = new Evaluate();
@@ -81,8 +84,9 @@ namespace KCE.Engine.Search
         {
             if (depth == 0)
             {
-                //return _eval.EvalPosition(bs);
-                return Quiescene(alpha, beta, bs, sInfo);
+                //bs.CurrentLine = new List<Ply>();
+                return _eval.EvalPosition(bs);
+                //return Quiescene(alpha, beta, bs, sInfo);
             }
 
             // Check if time is up or interrupted by the GUI.
@@ -124,8 +128,6 @@ namespace KCE.Engine.Search
                 if (sInfo.Stopped)
                     return Definitions.Stopped;
 
-                if (legalMoves[moveNum].Score <= alpha) continue;
-
                 if (legalMoves[moveNum].Score >= beta)
                 {
                     if (nMoves == 1)
@@ -134,9 +136,11 @@ namespace KCE.Engine.Search
 
                     return beta; // Fail hard beta-cutoff.
                 }
-
-                alpha = legalMoves[moveNum].Score; // alpha acts like max in minimax.
-                bestMove = legalMoves[moveNum];
+                if (legalMoves[moveNum].Score > alpha)
+                {
+                    alpha = legalMoves[moveNum].Score; // alpha acts like max in minimax.
+                    bestMove = legalMoves[moveNum];
+                }
             }
 
             if (nMoves == 0)
@@ -149,8 +153,9 @@ namespace KCE.Engine.Search
             }
 
             if (alpha != oldAlpha)
+            {
                 bs.BestPly = bestMove;
-
+            }
             return alpha;
         }
 

@@ -1,4 +1,7 @@
-﻿namespace KCE.Engine
+﻿using System.Collections.Generic;
+using KCE.Engine.Search;
+
+namespace KCE.Engine
 {
     public class BoardState
     {
