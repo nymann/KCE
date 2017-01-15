@@ -17,8 +17,11 @@ namespace KCE.Engine.Search
 
             sInfo.Nodes++;
 
-            if (bs.FiftyMoveRule >= 100)
+            if ((bs.BestPly != null && _helper.IsRepetition(bs)) || bs.FiftyMoveRule >= 100)
+            {
                 return 0;
+            }
+
 
             var score = _eval.EvalPosition(bs);
 
@@ -96,7 +99,6 @@ namespace KCE.Engine.Search
 
             sInfo.Nodes++;
 
-            // TODO: Check if repetition aswell.
             if ((bs.BestPly != null && _helper.IsRepetition(bs)) || bs.FiftyMoveRule >= 100 )
             {
                 return 0;
