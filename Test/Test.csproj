@@ -73,6 +73,7 @@
     <Compile Include="MoveGenerator\CapMoves.cs" />
     <Compile Include="MoveGenerator\Perft.cs" />
     <Compile Include="MoveGenerator\UpdateCastlePermissionTest.cs" />
+    <Compile Include="Moves.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\BestMove.cs" />
     <Compile Include="Search\Mates.cs" />

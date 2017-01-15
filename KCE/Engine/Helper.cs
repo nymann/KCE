@@ -168,7 +168,7 @@ namespace KCE.Engine
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
                 castle[Definitions.BCCKS], castle[Definitions.BCCQS],
-                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS);
+                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS, fromSquare, toSquare);
         }
 
         public bool DoubleCheckedFen(int[] board, bool sideToMove, int[] kingSquare)
@@ -728,6 +728,20 @@ namespace KCE.Engine
                     return possibleAttackedFromSquares;
 
             return 99;
+        }
+
+        public bool IsRepetition(BoardState bs)
+        {
+            var lengthOfList = bs.Moves.Count;
+
+            if (lengthOfList < 4) return false;
+
+            var lastMove = bs.Moves[lengthOfList - 1];
+            var index = lengthOfList - 3; // - 2 - 1 (zero indexed).
+
+            if (bs.Moves[index].Item1 != lastMove.Item2 || bs.Moves[index].Item2 != lastMove.Item1) return false;
+            index -= 1;
+            return bs.Moves[index].Item1 == lastMove.Item2 && bs.Moves[index].Item2 == lastMove.Item1;
         }
     }
 }

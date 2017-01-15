@@ -8,6 +8,7 @@ namespace KCE.Engine.Search
     public class Search
     {
         private readonly Evaluate _eval = new Evaluate();
+        private readonly Helper _helper = new Helper();
 
         public int Quiescene(int alpha, int beta, BoardState bs, SearchInfo sInfo)
         {
@@ -96,8 +97,11 @@ namespace KCE.Engine.Search
             sInfo.Nodes++;
 
             // TODO: Check if repetition aswell.
-            if (bs.FiftyMoveRule >= 100)
+            if ((bs.BestPly != null && _helper.IsRepetition(bs)) || bs.FiftyMoveRule >= 100 )
+            {
                 return 0;
+            }
+                
 
             var mg = new MoveGenerator(bs);
 

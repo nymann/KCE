@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using KCE.Engine.Search;
 
 namespace KCE.Engine
 {
     public class BoardState
     {
+        public List<Tuple<int, int>> Moves { get; set; }
         public int[] BoardRepresentation { get; set; }
         public bool SideToMove { get; set; }
         public bool WCKS { get; set; }
@@ -32,6 +34,7 @@ namespace KCE.Engine
             this.WCQS = WCQS;
             this.BCKS = BCKS;
             this.BCQS = BCQS;
+            Moves = new List<Tuple<int, int>>();
         }
 
         public BoardState()

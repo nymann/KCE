@@ -109,7 +109,7 @@ namespace KCE
                 }
             }
 
-            //helper.PrintBoardWhitePerspective(bs.BoardRepresentation);
+            //_helper.PrintBoardWhitePerspective(_bs.BoardRepresentation);
         }
 
         private void Go(string command)
