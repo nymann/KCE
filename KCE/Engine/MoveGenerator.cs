@@ -108,7 +108,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     legalMoves.Add(queen);
 
                                     var boardRook = (int[]) boardQueen.Clone();
@@ -120,7 +120,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     legalMoves.Add(rook);
 
                                     var boardbishop = (int[]) boardQueen.Clone();
@@ -132,7 +132,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     legalMoves.Add(bishop);
 
                                     var boardknight = (int[]) boardQueen.Clone();
@@ -144,7 +144,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     legalMoves.Add(knight);
                                 }
                             }
@@ -317,7 +317,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     legalMoves.Add(queen);
 
                                     var boardRook = (int[]) boardQueen.Clone();
@@ -329,7 +329,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     ;
                                     legalMoves.Add(rook);
 
@@ -342,7 +342,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     ;
                                     legalMoves.Add(bishop);
 
@@ -355,7 +355,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, psuedoLegalMove);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
                                     ;
                                     legalMoves.Add(knight);
                                 }
@@ -707,7 +707,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                     capMoves.Add(queen);
 
                                     var boardRook = (int[]) boardQueen.Clone();
@@ -719,7 +719,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                     ;
                                     capMoves.Add(rook);
 
@@ -732,7 +732,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                     ;
                                     capMoves.Add(bishop);
 
@@ -745,7 +745,7 @@ namespace KCE.Engine
                                         _bs.WCKS, _bs.WCQS,
                                         _bs.BCKS, _bs.BCQS,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                     ;
                                     capMoves.Add(knight);
                                 }
@@ -885,7 +885,7 @@ namespace KCE.Engine
                                     _bs.WCKS, _bs.WCQS,
                                     _bs.BCKS, _bs.BCQS,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                 capMoves.Add(queen);
 
                                 var boardRook = (int[]) boardQueen.Clone();
@@ -897,7 +897,7 @@ namespace KCE.Engine
                                     _bs.WCKS, _bs.WCQS,
                                     _bs.BCKS, _bs.BCQS,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                 ;
                                 capMoves.Add(rook);
 
@@ -910,7 +910,7 @@ namespace KCE.Engine
                                     _bs.WCKS, _bs.WCQS,
                                     _bs.BCKS, _bs.BCQS,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                 ;
                                 capMoves.Add(bishop);
 
@@ -923,7 +923,7 @@ namespace KCE.Engine
                                     _bs.WCKS, _bs.WCQS,
                                     _bs.BCKS, _bs.BCQS,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS], square, toSquare);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
                                 ;
                                 capMoves.Add(knight);
                             }
@@ -1077,7 +1077,7 @@ namespace KCE.Engine
             _bs.BCQS = makePly.GetBCCQS();
             _bs.Ply++;
             UpdateKingSquares();
-            _bs.Moves.Add(makePly.GetMove());
+            //_bs.Moves.Add(makePly.GetMove());
         }
 
         public void UndoMove(Ply undoPly)
@@ -1092,7 +1092,7 @@ namespace KCE.Engine
             _bs.BCQS = undoPly.GetHisBCCQS();
             _bs.Ply--;
             UpdateKingSquares();
-            _bs.Moves.Remove(_bs.Moves.Last());
+            //_bs.Moves.Remove(_bs.Moves.Last());
         }
 
         private void UpdateKingSquares()

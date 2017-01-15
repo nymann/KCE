@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using KCE.Engine.Search;
-
-namespace KCE.Engine
+﻿namespace KCE.Engine
 {
     public class BoardState
     {
-        public List<Tuple<int, int>> Moves { get; set; }
+        //public List<Tuple<int, int>> Moves { get; set; }
         public int[] BoardRepresentation { get; set; }
         public bool SideToMove { get; set; }
         public bool WCKS { get; set; }
         public bool WCQS { get; set; }
         public bool BCKS { get; set; }
         public bool BCQS { get; set; }
+        /*public bool hisWCKS { get; set; }
+        public bool hisWCQS { get; set; }
+        public bool hisBCKS { get; set; }
+        public bool hisBQKS { get; set; }*/
         public int[] KingSquares { get; set; }
         public int EnPasSquare { get; set; }
         public int FiftyMoveRule { get; set; }
@@ -34,7 +34,7 @@ namespace KCE.Engine
             this.WCQS = WCQS;
             this.BCKS = BCKS;
             this.BCQS = BCQS;
-            Moves = new List<Tuple<int, int>>();
+            //Moves = new List<Tuple<int, int>>();
         }
 
         public BoardState()

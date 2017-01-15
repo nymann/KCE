@@ -17,8 +17,9 @@ namespace KCE.Engine.Search
 
             sInfo.Nodes++;
 
-            if ((bs.BestPly != null && _helper.IsRepetition(bs)) || bs.FiftyMoveRule >= 100)
+            if (bs.BestPly != null && /*_helper.IsRepetition(bs) ||*/ bs.FiftyMoveRule >= 100)
             {
+                //if (bs.BestPly != null) bs.BestPly.Score = 0;
                 return 0;
             }
 
@@ -99,8 +100,9 @@ namespace KCE.Engine.Search
 
             sInfo.Nodes++;
 
-            if ((bs.BestPly != null && _helper.IsRepetition(bs)) || bs.FiftyMoveRule >= 100 )
+            if (bs.BestPly != null && /*_helper.IsRepetition(bs)) ||*/ bs.FiftyMoveRule >= 100 )
             {
+                if (bs.BestPly != null) bs.BestPly.Score = 0;
                 return 0;
             }
                 
@@ -181,14 +183,14 @@ namespace KCE.Engine.Search
 
                 if (bestScore > Definitions.MATE - 20)
                 {
-                    Console.WriteLine("info depth {1} nodes {2} time {3} score mate {0}", Definitions.MATE - bestScore,
+                    Console.WriteLine("info depth {1} nodes {2} time {3} score mate {0}", Definitions.MATE - (bestScore / 2 + 1),
                         depth, sInfo.Nodes, sInfo.ElapsedTime());
                     break;
                 }
 
                 if (bestScore < -Definitions.MATE + 20)
                 {
-                    Console.WriteLine("info depth {1} nodes {2} time {3} score mate -{0}", Definitions.MATE - bestScore,
+                    Console.WriteLine("info depth {1} nodes {2} time {3} score mate -{0}", Definitions.MATE - (bestScore/2 +1),
                         depth, sInfo.Nodes, sInfo.ElapsedTime());
                 }
                 else

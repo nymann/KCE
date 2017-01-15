@@ -18,12 +18,12 @@ namespace KCE.Engine
         private bool _hisWCCQS;
         private bool _hisBCCKS;
         private bool _hisBCCQS;
-        private Tuple<int, int> _move;
+        //private Tuple<int, int> _move;
 
         private string _algebraicPly;
 
         public Ply(int[] board, int[] hisBoard, int hisEnPas, int enPas, string algebraicPly, 
-            bool wccks, bool wccqs, bool bccks, bool bccqs, bool hisWccks, bool hisWccqs, bool hisBccks, bool hisBccqs, int fromSquare, int toSquare)
+            bool wccks, bool wccqs, bool bccks, bool bccqs, bool hisWccks, bool hisWccqs, bool hisBccks, bool hisBccqs/*, int fromSquare, int toSquare*/)
         {
             _board = (int[]) board.Clone();
             _hisBoard = (int[]) hisBoard.Clone();
@@ -38,13 +38,13 @@ namespace KCE.Engine
             _hisWCCQS = hisWccqs;
             _hisBCCKS = hisBccks;
             _hisBCCQS = hisBccqs;
-            _move = new Tuple<int, int>(fromSquare, toSquare);
+            //_move = new Tuple<int, int>(fromSquare, toSquare);
         }
 
-        public Tuple<int, int> GetMove()
+        /*public Tuple<int, int> GetMove()
         {
             return _move;
-        }
+        }*/
 
         public int[] GetBoard()
         {
