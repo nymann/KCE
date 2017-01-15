@@ -56,8 +56,8 @@ namespace KCE.Engine
                 foreach (var psuedoLegalMove in psuedolegalMoves)
                 {
                     var ply = _helper.MakePly(_bs.BoardRepresentation, _bs.KingSquares[square], psuedoLegalMove,
-                        _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                        _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                        _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                        _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                     if (!_helper.IsSquareAttacked(_bs.SideToMove, ply.GetBoard(), psuedoLegalMove))
                         legalMoves.Add(ply);
@@ -81,8 +81,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalPawnMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
                                     continue;
@@ -93,8 +93,8 @@ namespace KCE.Engine
                                 else
                                 {
                                     var castlePerms = _helper.UpdateCastlePermissions(square, psuedoLegalMove,
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs,
                                         _bs.SideToMove);
                                     var boardQueen = (int[]) _bs.BoardRepresentation.Clone();
                                     boardQueen[square] = Definitions.EmptySquare;
@@ -105,10 +105,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "q",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     legalMoves.Add(queen);
 
                                     var boardRook = (int[]) boardQueen.Clone();
@@ -117,10 +117,10 @@ namespace KCE.Engine
                                         Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "r",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     legalMoves.Add(rook);
 
                                     var boardbishop = (int[]) boardQueen.Clone();
@@ -129,10 +129,10 @@ namespace KCE.Engine
                                         Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "b",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     legalMoves.Add(bishop);
 
                                     var boardknight = (int[]) boardQueen.Clone();
@@ -141,10 +141,10 @@ namespace KCE.Engine
                                         Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     legalMoves.Add(knight);
                                 }
                             }
@@ -160,8 +160,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalKnightMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
                                     legalMoves.Add(ply);
@@ -178,8 +178,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalBishopMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
                                     legalMoves.Add(ply);
@@ -196,8 +196,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalRookMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
                                     legalMoves.Add(ply);
@@ -214,8 +214,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalQueenMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
                                     legalMoves.Add(ply);
@@ -235,32 +235,32 @@ namespace KCE.Engine
                                     false, false);
                             else
                                 blackKing = new King(_bs.BoardRepresentation, square, Definitions.Black,
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS);
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs);
                             var psuedoLegalKingMoves = blackKing.MoveGeneration();
 
                             foreach (var psuedoLegalMove in psuedoLegalKingMoves)
                             {
                                 Ply ply;
-                                if (_bs.BCKS && psuedoLegalMove == 92)
+                                if (_bs.Bcks && psuedoLegalMove == 92)
                                     ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
                                         _bs.EnPasSquare,
-                                        _bs.BCKS, _bs.BCQS,
-                                        _bs.WCKS, _bs.WCQS,
+                                        _bs.Bcks, _bs.Bcqs,
+                                        _bs.Wcks, _bs.Wcqs,
                                         _bs.SideToMove, 0);
 
-                                else if (_bs.BCQS && psuedoLegalMove == 96)
+                                else if (_bs.Bcqs && psuedoLegalMove == 96)
                                     ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
                                         _bs.EnPasSquare,
-                                        _bs.BCKS, _bs.BCQS,
-                                        _bs.WCKS, _bs.WCQS,
+                                        _bs.Bcks, _bs.Bcqs,
+                                        _bs.Wcks, _bs.Wcqs,
                                         _bs.SideToMove, 1);
 
                                 else
                                     ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
                                         _bs.EnPasSquare,
-                                        _bs.BCKS, _bs.BCQS,
-                                        _bs.WCKS, _bs.WCQS,
+                                        _bs.Bcks, _bs.Bcqs,
+                                        _bs.Wcks, _bs.Wcqs,
                                         _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), psuedoLegalMove))
@@ -291,12 +291,12 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalPawnMoves)
                             {
                                 var castlePerms = _helper.UpdateCastlePermissions(square, psuedoLegalMove,
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS,
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs,
                                     _bs.SideToMove);
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(),
                                     _bs.KingSquares[1])) continue;
@@ -314,10 +314,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "q",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     legalMoves.Add(queen);
 
                                     var boardRook = (int[]) boardQueen.Clone();
@@ -326,10 +326,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "r",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     ;
                                     legalMoves.Add(rook);
 
@@ -339,10 +339,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "b",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     ;
                                     legalMoves.Add(bishop);
 
@@ -352,10 +352,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, psuedoLegalMove*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, psuedoLegalMove*/);
                                     ;
                                     legalMoves.Add(knight);
                                 }
@@ -372,8 +372,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalKnightMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                     legalMoves.Add(ply);
@@ -390,8 +390,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalBishopMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                     legalMoves.Add(ply);
@@ -408,8 +408,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalRookMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                     legalMoves.Add(ply);
@@ -426,8 +426,8 @@ namespace KCE.Engine
                             foreach (var psuedoLegalMove in psuedoLegalQueenMoves)
                             {
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                     legalMoves.Add(ply);
@@ -447,30 +447,30 @@ namespace KCE.Engine
                                     false, false);
                             else
                                 whiteKing = new King(_bs.BoardRepresentation, square, Definitions.White,
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS);
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs);
                             var psuedoLegalKingMoves = whiteKing.MoveGeneration();
                             foreach (var psuedoLegalMove in psuedoLegalKingMoves)
                             {
                                 Ply ply;
-                                if (_bs.WCKS && psuedoLegalMove == 22)
+                                if (_bs.Wcks && psuedoLegalMove == 22)
                                     ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
                                         _bs.EnPasSquare,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Bcks, _bs.Bcqs,
                                         false, false,
                                         _bs.SideToMove, 2);
 
-                                else if (_bs.WCQS && psuedoLegalMove == 26)
+                                else if (_bs.Wcqs && psuedoLegalMove == 26)
                                     ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                        _bs.EnPasSquare, _bs.BCKS,
-                                        _bs.BCQS,
+                                        _bs.EnPasSquare, _bs.Bcks,
+                                        _bs.Bcqs,
                                         false, false,
                                         _bs.SideToMove, 3);
 
                                 else
                                     ply = _helper.MakePly(_bs.BoardRepresentation, square, psuedoLegalMove,
-                                        _bs.EnPasSquare, _bs.BCKS,
-                                        _bs.BCQS,
+                                        _bs.EnPasSquare, _bs.Bcks,
+                                        _bs.Bcqs,
                                         false, false,
                                         _bs.SideToMove);
 
@@ -527,7 +527,7 @@ namespace KCE.Engine
                             if (psuedoLegalPawnMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
 
                             break;
 
@@ -537,7 +537,7 @@ namespace KCE.Engine
                             if (psuedoLegalKnightMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.WhiteBishop:
@@ -546,7 +546,7 @@ namespace KCE.Engine
                             if (psuedoLegalBishopMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.WhiteRook:
@@ -555,7 +555,7 @@ namespace KCE.Engine
                             if (psuedoLegalRookMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.WhiteQueen:
@@ -564,7 +564,7 @@ namespace KCE.Engine
                             if (psuedoLegalQueenMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.WhiteKing:
@@ -573,7 +573,7 @@ namespace KCE.Engine
                             if (psuedoLegalKingMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         default:
@@ -603,7 +603,7 @@ namespace KCE.Engine
                             if (psuedoLegalPawnMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
 
                             break;
 
@@ -613,7 +613,7 @@ namespace KCE.Engine
                             if (psuedoLegalKnightMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.BlackBishop:
@@ -622,7 +622,7 @@ namespace KCE.Engine
                             if (psuedoLegalBishopMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.BlackRook:
@@ -631,7 +631,7 @@ namespace KCE.Engine
                             if (psuedoLegalRookMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.BlackQueen:
@@ -640,7 +640,7 @@ namespace KCE.Engine
                             if (psuedoLegalQueenMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         case Definitions.BlackKing:
@@ -649,7 +649,7 @@ namespace KCE.Engine
                             if (psuedoLegalKingMoves.Contains(attackedBySquare))
                                 capMoves.Add(_helper.MakePly(_bs.BoardRepresentation, square, attackedBySquare,
                                     _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove));
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove));
                             break;
 
                         default:
@@ -679,12 +679,12 @@ namespace KCE.Engine
                                     toSquare != _bs.EnPasSquare) continue;
 
                                 var castlePerms = _helper.UpdateCastlePermissions(square, toSquare,
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS,
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs,
                                     _bs.SideToMove);
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare,
-                                    _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                    _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                    _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                    _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                                 // If in check after move, continue to the next psuedo cap move.
                                 if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(),
@@ -704,10 +704,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "q",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                     capMoves.Add(queen);
 
                                     var boardRook = (int[]) boardQueen.Clone();
@@ -716,10 +716,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "r",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                     ;
                                     capMoves.Add(rook);
 
@@ -729,10 +729,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "b",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                     ;
                                     capMoves.Add(bishop);
 
@@ -742,10 +742,10 @@ namespace KCE.Engine
                                         _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "n",
-                                        _bs.WCKS, _bs.WCQS,
-                                        _bs.BCKS, _bs.BCQS,
+                                        _bs.Wcks, _bs.Wcqs,
+                                        _bs.Bcks, _bs.Bcqs/*,
                                         castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                     ;
                                     capMoves.Add(knight);
                                 }
@@ -762,7 +762,7 @@ namespace KCE.Engine
                             capMoves.AddRange(from toSquare in psuedoLegalKnightMoves
                                 where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                                 select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                                 into ply
                                 where !_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1])
                                 select ply);
@@ -778,7 +778,7 @@ namespace KCE.Engine
                             capMoves.AddRange(from toSquare in psuedoLegalBishopMoves
                                 where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                                 select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                                 into ply
                                 where !_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1])
                                 select ply);
@@ -794,7 +794,7 @@ namespace KCE.Engine
                             capMoves.AddRange(from toSquare in psuedoLegalRookMoves
                                 where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                                 select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                                 into ply
                                 where !_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1])
                                 select ply);
@@ -810,7 +810,7 @@ namespace KCE.Engine
                             capMoves.AddRange(from toSquare in psuedoLegalQueenMoves
                                 where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                                 select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                                 into ply
                                 where !_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1])
                                 select ply);
@@ -826,7 +826,7 @@ namespace KCE.Engine
                             capMoves.AddRange(from toSquare in psuedoLegalKingMoves
                                 where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                                 select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                                 into ply
                                 where !_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1])
                                 select ply);
@@ -857,12 +857,12 @@ namespace KCE.Engine
                                 toSquare != _bs.EnPasSquare) continue;
 
                             var castlePerms = _helper.UpdateCastlePermissions(square, toSquare,
-                                _bs.WCKS, _bs.WCQS,
-                                _bs.BCKS, _bs.BCQS,
+                                _bs.Wcks, _bs.Wcqs,
+                                _bs.Bcks, _bs.Bcqs,
                                 _bs.SideToMove);
                             var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare,
-                                _bs.EnPasSquare, _bs.BCKS, _bs.BCQS,
-                                _bs.WCKS, _bs.WCQS, _bs.SideToMove);
+                                _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
+                                _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
                             // If in check after move, continue to the next psuedo cap move.
                             if (_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(),
@@ -882,10 +882,10 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "q",
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS,
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs/*,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                 capMoves.Add(queen);
 
                                 var boardRook = (int[]) boardQueen.Clone();
@@ -894,10 +894,10 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "r",
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS,
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs/*,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                 ;
                                 capMoves.Add(rook);
 
@@ -907,10 +907,10 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "b",
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS,
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs/*,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                 ;
                                 capMoves.Add(bishop);
 
@@ -920,10 +920,10 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "n",
-                                    _bs.WCKS, _bs.WCQS,
-                                    _bs.BCKS, _bs.BCQS,
+                                    _bs.Wcks, _bs.Wcqs,
+                                    _bs.Bcks, _bs.Bcqs/*,
                                     castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]/*, square, toSquare*/);
+                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*//*, square, toSquare*/);
                                 ;
                                 capMoves.Add(knight);
                             }
@@ -940,7 +940,7 @@ namespace KCE.Engine
                         capMoves.AddRange(from toSquare in psuedoLegalKnightMoves
                             where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                             select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                             into ply
                             where !_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0])
                             select ply);
@@ -956,7 +956,7 @@ namespace KCE.Engine
                         capMoves.AddRange(from toSquare in psuedoLegalBishopMoves
                             where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                             select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                             into ply
                             where !_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0])
                             select ply);
@@ -972,7 +972,7 @@ namespace KCE.Engine
                         capMoves.AddRange(from toSquare in psuedoLegalRookMoves
                             where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                             select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                             into ply
                             where !_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0])
                             select ply);
@@ -988,7 +988,7 @@ namespace KCE.Engine
                         capMoves.AddRange(from toSquare in psuedoLegalQueenMoves
                             where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                             select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                             into ply
                             where !_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0])
                             select ply);
@@ -1004,7 +1004,7 @@ namespace KCE.Engine
                         capMoves.AddRange(from toSquare in psuedoLegalKingMoves
                             where _bs.BoardRepresentation[toSquare] != Definitions.EmptySquare
                             select _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                _bs.BCKS, _bs.BCQS, _bs.WCKS, _bs.WCQS, _bs.SideToMove)
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove)
                             into ply
                             where !_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0])
                             select ply);
@@ -1071,10 +1071,16 @@ namespace KCE.Engine
             _bs.BoardRepresentation = (int[]) makePly.GetBoard().Clone();
             _bs.SideToMove = !_bs.SideToMove;
 
-            _bs.WCKS = makePly.GetWCCKS();
-            _bs.WCQS = makePly.GetWCCQS();
-            _bs.BCKS = makePly.GetBCCKS();
-            _bs.BCQS = makePly.GetBCCQS();
+            _bs.HisWcks = _bs.Wcks;
+            _bs.HisWcqs = _bs.Wcqs;
+            _bs.HisBcks = _bs.Bcks;
+            _bs.HisBcqs = _bs.Bcqs;
+
+            _bs.Wcks = makePly.GetWCCKS();
+            _bs.Wcqs = makePly.GetWCCQS();
+            _bs.Bcks = makePly.GetBCCKS();
+            _bs.Bcqs = makePly.GetBCCQS();
+            
             _bs.Ply++;
             UpdateKingSquares();
             //_bs.Moves.Add(makePly.GetMove());
@@ -1086,10 +1092,16 @@ namespace KCE.Engine
             _bs.BoardRepresentation = (int[]) undoPly.GetHisBoard().Clone();
             _bs.SideToMove = !_bs.SideToMove;
 
-            _bs.WCKS = undoPly.GetHisWCCKS();
+            /*_bs.WCKS = undoPly.GetHisWCCKS();
             _bs.WCQS = undoPly.GetHisWCCQS();
             _bs.BCKS = undoPly.GetHisBCCKS();
-            _bs.BCQS = undoPly.GetHisBCCQS();
+            _bs.BCQS = undoPly.GetHisBCCQS();*/
+
+            _bs.Wcks = _bs.HisWcks;
+            _bs.Wcqs = _bs.HisWcqs;
+            _bs.Bcks = _bs.HisWcks;
+            _bs.Bcqs = _bs.HisWcqs;
+
             _bs.Ply--;
             UpdateKingSquares();
             //_bs.Moves.Remove(_bs.Moves.Last());

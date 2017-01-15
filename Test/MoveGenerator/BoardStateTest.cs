@@ -13,10 +13,10 @@ namespace Test.MoveGenerator
             var helper = new Helper();
             var bs = helper.BoardsetupFromFen("r3k3/1K6/8/8/8/8/8/8 w q - 0 1");
 
-            Assert.AreEqual(false, bs.BCKS);
-            Assert.AreEqual(true, bs.BCQS);
-            Assert.AreEqual(false, bs.WCKS);
-            Assert.AreEqual(false, bs.WCQS);
+            Assert.AreEqual(false, bs.Bcks);
+            Assert.AreEqual(true, bs.Bcqs);
+            Assert.AreEqual(false, bs.Wcks);
+            Assert.AreEqual(false, bs.Wcqs);
         }
 
         [TestMethod]

@@ -5,14 +5,15 @@
         //public List<Tuple<int, int>> Moves { get; set; }
         public int[] BoardRepresentation { get; set; }
         public bool SideToMove { get; set; }
-        public bool WCKS { get; set; }
-        public bool WCQS { get; set; }
-        public bool BCKS { get; set; }
-        public bool BCQS { get; set; }
-        /*public bool hisWCKS { get; set; }
-        public bool hisWCQS { get; set; }
-        public bool hisBCKS { get; set; }
-        public bool hisBQKS { get; set; }*/
+        public bool Wcks { get; set; }
+        public bool Wcqs { get; set; }
+        public bool Bcks { get; set; }
+        public bool Bcqs { get; set; }
+        public bool HisWcks { get; set; }
+        public bool HisWcqs { get; set; }
+        public bool HisBcks { get; set; }
+        public bool HisBcqs { get; set; }
+
         public int[] KingSquares { get; set; }
         public int EnPasSquare { get; set; }
         public int FiftyMoveRule { get; set; }
@@ -30,10 +31,10 @@
             KingSquares = kingSquares;
             EnPasSquare = enPasSquare;
             FiftyMoveRule = fiftyMoveRule;
-            this.WCKS = WCKS;
-            this.WCQS = WCQS;
-            this.BCKS = BCKS;
-            this.BCQS = BCQS;
+            this.Wcks = WCKS;
+            this.Wcqs = WCQS;
+            this.Bcks = BCKS;
+            this.Bcqs = BCQS;
             //Moves = new List<Tuple<int, int>>();
         }
 

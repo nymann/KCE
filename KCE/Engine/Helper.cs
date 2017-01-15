@@ -167,8 +167,8 @@ namespace KCE.Engine
 
             return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
-                castle[Definitions.BCCKS], castle[Definitions.BCCQS],
-                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS/*, fromSquare, toSquare*/);
+                castle[Definitions.BCCKS], castle[Definitions.BCCQS]/*,
+                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS*//*, fromSquare, toSquare*/);
         }
 
         public bool DoubleCheckedFen(int[] board, bool sideToMove, int[] kingSquare)

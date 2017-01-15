@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using KCE;
@@ -37,7 +37,7 @@ namespace Test
             /*foreach (var move in _bs.Moves)
             {
                 //Console.WriteLine("\n{1}{2}", Definitions.IndexToAlgebraic[move.Item1], Definitions.IndexToAlgebraic[move.Item2]);
-            }*/
+            }#1#
         }
 
 
@@ -107,4 +107,4 @@ namespace Test
             return false;
         }
     }
-}
+}*/
