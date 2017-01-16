@@ -117,14 +117,6 @@ info depth 2 nodes 17 time 24 score mate 1
 
 bestmove g6g8
 
-info depth 1 nodes 1 time 20 score cp 570
-
-info currmove g6g7
-
-info depth 2 nodes 17 time 24 score mate 14500
-
-bestmove g6g8
-
 ###Mate in 2
 
 position fen 2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2 w - - 0 1
