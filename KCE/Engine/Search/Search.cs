@@ -35,7 +35,7 @@ namespace KCE.Engine.Search
             var capMoves = mg.AllCapMoves();
 
             Ply bestMove = null;
-            var nMoves = capMoves.Count;
+            var nMoves = capMoves.Length;
             var oldAlpha = alpha;
             var moveNum = 0;
 
@@ -50,7 +50,7 @@ namespace KCE.Engine.Search
                 //Console.WriteLine("This never happens.");
             }
 
-            for (moveNum = 0; moveNum < capMoves.Count; moveNum++)
+            for (moveNum = 0; moveNum < capMoves.Length; moveNum++)
             {
                 mg.MakeMove(capMoves[moveNum]);
                 capMoves[moveNum].Score = -Quiescene(-beta, -alpha, bs, sInfo);
@@ -110,7 +110,7 @@ namespace KCE.Engine.Search
             var legalMoves = mg.AllLegalMoves();
 
             Ply bestMove = null;
-            var nMoves = legalMoves.Count;
+            var nMoves = legalMoves.Length;
 
             var oldAlpha = alpha;
             var moveNum = 0;
@@ -125,7 +125,7 @@ namespace KCE.Engine.Search
                 alpha = bestMove.Score;
             }
 
-            for (moveNum = 0; moveNum < legalMoves.Count; moveNum++)
+            for (moveNum = 0; moveNum < legalMoves.Length; moveNum++)
             {
                 mg.MakeMove(legalMoves[moveNum]);
                 legalMoves[moveNum].Score = -AlphaBeta(-beta, -alpha, depth - 1, bs, sInfo);

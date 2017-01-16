@@ -23,7 +23,7 @@ namespace Test.MoveGenerator
             var bs = helper.BoardsetupFromFen(fen);
             var mg = new KCE.Engine.MoveGenerator(bs);
             var list = mg.AllLegalMoves();
-            return list.Count;
+            return list.Length;
         }
 
     }

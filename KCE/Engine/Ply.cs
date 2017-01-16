@@ -41,6 +41,11 @@ namespace KCE.Engine
             //_move = new Tuple<int, int>(fromSquare, toSquare);
         }
 
+        public Ply()
+        {
+            
+        }
+
         /*public Tuple<int, int> GetMove()
         {
             return _move;

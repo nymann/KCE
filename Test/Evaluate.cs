@@ -1,4 +1,5 @@
-﻿using KCE.Engine;
+﻿using System;
+using KCE.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test
@@ -71,6 +72,17 @@ namespace Test
             }
 
             return "Endgame";
+        }
+
+        [TestMethod]
+        public void ArrayTest()
+        {
+            var queenMoves = new int[Definitions.MaxQueenMoves];
+
+            foreach (var queenMove in queenMoves)
+            {
+                Console.WriteLine(queenMove);
+            }
         }
     }
 }

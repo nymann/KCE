@@ -15,113 +15,152 @@ namespace KCE.Engine.PieceRules
             _sideToMove = sideToMove;
         }
 
-        public List<int> MoveGeneration()
+        public int[] MoveGeneration()
         {
             return _sideToMove
                 ? WhiteMoveGeneration()
                 : BlackMoveGeneration();
         }
 
-        private List<int> WhiteMoveGeneration()
+        private int[] WhiteMoveGeneration()
         {
-            var validMoves = new List<int>();
-
+            var validMoves = new int[Definitions.MaxBishopMoves];
+            var index = 0;
             var i = 1;
 
             while (_board[_square - 9 * i] == 0)
             {
-                validMoves.Add(_square - 9 * i);
+                validMoves[index] = _square - 9 * i;
                 i++;
+                index++;
             }
 
             if (_board[_square - 9 * i] > 6 && _board[_square - 9 * i] < 13)
-                validMoves.Add(_square - 9 * i);
-
+            {
+                validMoves[index] = _square - 9 * i;
+                index++;
+            }
             i = 1;
 
-            while (_board[_square + 9 * i] == 0)
+            while (_board[_square + 9 * i] == Definitions.EmptySquare)
             {
-                validMoves.Add(_square + 9 * i);
+                validMoves[index] = _square + 9 * i;
+                index++;
                 i++;
             }
 
             if (_board[_square + 9 * i] > 6 && _board[_square + 9 * i] < 13)
-                validMoves.Add(_square + 9 * i);
-
+            {
+                validMoves[index] = (_square + 9 * i);
+                index++;
+            }
             i = 1;
 
-            while (_board[_square - 11 * i] == 0)
+            while (_board[_square - 11 * i] == Definitions.EmptySquare)
             {
-                validMoves.Add(_square - 11 * i);
+                validMoves[index] = (_square - 11 * i);
+                index++;
                 i++;
             }
 
             if (_board[_square - 11 * i] > 6 && _board[_square - 11 * i] < 13)
-                validMoves.Add(_square - 11 * i);
-
+            {
+                validMoves[index] = (_square - 11 * i);
+                index++;
+            }
             i = 1;
 
             while (_board[_square + 11 * i] == 0)
             {
-                validMoves.Add(_square + 11 * i);
+                validMoves[index] = (_square + 11 * i);
+                index++;
                 i++;
             }
 
             if (_board[_square + 11 * i] > 6 && _board[_square + 11 * i] < 13)
-                validMoves.Add(_square + 11 * i);
+            {
+                validMoves[index] = (_square + 11 * i);
+                index++;
+            }
 
-            return validMoves;
+            var finalArray = new int[index];
+            for (var p = 0; p < index; p++)
+            {
+                finalArray[p] = validMoves[p];
+            }
+
+            return finalArray;
         }
 
-        private List<int> BlackMoveGeneration()
+        private int[] BlackMoveGeneration()
         {
-            var validMoves = new List<int>();
+            var validMoves = new int[Definitions.MaxBishopMoves];
 
             var i = 1;
+            var index = 0;
 
             while (_board[_square - 9 * i] == 0)
             {
-                validMoves.Add(_square - 9 * i);
+                validMoves[index] = (_square - 9 * i);
+                index++;
                 i++;
             }
 
             if (_board[_square - 9 * i] < 6)
-                validMoves.Add(_square - 9 * i);
-
+            {
+                validMoves[index] = (_square - 9 * i);
+                index++;
+            }
             i = 1;
 
             while (_board[_square + 9 * i] == 0)
             {
-                validMoves.Add(_square + 9 * i);
+                validMoves[index] = (_square + 9 * i);
+                index++;
                 i++;
             }
 
             if (_board[_square + 9 * i] < 6)
-                validMoves.Add(_square + 9 * i);
-
+            {
+                validMoves[index] = (_square + 9 * i);
+                index++;
+            }
             i = 1;
 
             while (_board[_square - 11 * i] == 0)
             {
-                validMoves.Add(_square - 11 * i);
+                validMoves[index] = (_square - 11 * i);
+                index++;
                 i++;
             }
 
             if (_board[_square - 11 * i] < 6)
-                validMoves.Add(_square - 11 * i);
+            {
+                validMoves[index] = (_square - 11 * i);
+                index++;
+            }
 
             i = 1;
 
             while (_board[_square + 11 * i] == 0)
             {
-                validMoves.Add(_square + 11 * i);
+                validMoves[index] = (_square + 11 * i);
+                index++;
                 i++;
             }
 
             if (_board[_square + 11 * i] < 6)
-                validMoves.Add(_square + 11 * i);
+            {
+                validMoves[index] = (_square + 11 * i);
+                index++;
+            }
+            var finalArray = new int[index];
+            for (var p = 0; p < index; p++)
+            {
+                finalArray[p] = validMoves[p];
+            }
 
-            return validMoves;
+            return finalArray;
         }
     }
 }

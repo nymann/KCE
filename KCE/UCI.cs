@@ -24,10 +24,37 @@ namespace KCE
                 var input = Console.ReadLine();
 
                 if (input.Contains("position"))
+                {
                     Position(input);
+                }
 
-                if (input.Contains("go"))
+                else if (input.Contains("go"))
+                {
                     Go(input);
+                }
+
+                else if (input.Contains("divide"))
+                {
+                    var command = input.Split(' ');
+                    int depth = Convert.ToInt32(command[1]);
+
+                    MoveGenerator mg = new MoveGenerator(_bs);
+                    mg.Divide(depth);
+                }
+
+                else if (input.Contains("perft"))
+                {
+                    var command = input.Split(' ');
+                    int depth = Convert.ToInt32(command[1]);
+
+                    MoveGenerator mg = new MoveGenerator(_bs);
+                    Console.WriteLine("Nodes: {0}.", mg.Perft(depth));
+                }
+
+                else if (input.Equals("d"))
+                {
+                    _helper.PrintBoardWhitePerspective(_bs.BoardRepresentation);
+                }
 
                 switch (input)
                 {
@@ -40,6 +67,9 @@ namespace KCE
                         break;
 
                     case "stop":
+                        break;
+
+                    default:
                         break;
                 }
             }
@@ -71,7 +101,9 @@ namespace KCE
         private void Position(string command)
         {
             if (command.Contains("startpos"))
+            {
                 command = command.Replace("startpos", "fen " + Definitions.STDSETUP);
+            }
 
             var fen = command;
             int index;

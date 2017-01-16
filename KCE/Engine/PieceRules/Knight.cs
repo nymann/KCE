@@ -15,81 +15,143 @@ namespace KCE.Engine.PieceRules
             _sideToMove = sideToMove;
         }
 
-        public List<int> MoveGeneration()
+        public int[] MoveGeneration()
         {
             return _sideToMove
                 ? WhiteMoveGeneration()
                 : BlackMoveGeneration();
         }
 
-        private List<int> BlackMoveGeneration()
+        private int[] BlackMoveGeneration()
         {
-            var validMoves = new List<int>();
+            var validMoves = new int[Definitions.MaxKnightMoves];
+            var index = 0;
 
             if (_board[_square - 21] == Definitions.EmptySquare || _board[_square - 21] < 6)
-                validMoves.Add(_square - 21);
+            {
+                validMoves[index] = _square - 21;
+                index++;
+            }
 
             if (_board[_square - 19] == Definitions.EmptySquare || _board[_square - 19] < 6)
-                validMoves.Add(_square - 19);
+            {
+                validMoves[index] = _square - 19;
+                index++;
+            }
 
             if (_board[_square - 12] == Definitions.EmptySquare || _board[_square - 12] < 6)
-                validMoves.Add(_square - 12);
+            {
+                validMoves[index] = _square - 12;
+                index++;
+            }
 
             if (_board[_square - 8] == Definitions.EmptySquare || _board[_square - 8] < 6)
-                validMoves.Add(_square - 8);
+            {
+                validMoves[index] = _square - 8;
+                index++;
+            }
 
             if (_board[_square + 8] == Definitions.EmptySquare || _board[_square + 8] < 6)
-                validMoves.Add(_square + 8);
+            {
+                validMoves[index] = _square + 8;
+                index++;
+            }
 
             if (_board[_square + 12] == Definitions.EmptySquare || _board[_square + 12] < 6)
-                validMoves.Add(_square + 12);
+            {
+                validMoves[index] = _square + 12;
+                index++;
+            }
 
             if (_board[_square + 19] == Definitions.EmptySquare || _board[_square + 19] < 6)
-                validMoves.Add(_square + 19);
+            {
+                validMoves[index] = _square + 19;
+                index++;
+            }
 
             if (_board[_square + 21] == Definitions.EmptySquare || _board[_square + 21] < 6)
-                validMoves.Add(_square + 21);
+            {
+                validMoves[index] = _square + 21;
+                index++;
+            }
 
-            return validMoves;
+            var finalArray = new int[index];
+            for (var p = 0; p < index; p++)
+            {
+                finalArray[p] = validMoves[p];
+            }
+
+            return finalArray;
         }
 
-        private List<int> WhiteMoveGeneration()
+        private int[] WhiteMoveGeneration()
         {
-            var validMoves = new List<int>();
+            var validMoves = new int[Definitions.MaxKnightMoves];
+            var index = 0;
 
             if (_board[_square - 21] == 0 ||
                 _board[_square - 21] > 6 && _board[_square - 21] < 13)
-                validMoves.Add(_square - 21);
+            {
+                validMoves[index] = _square - 21;
+                index++;
+            }
 
             if (_board[_square - 19] == 0 ||
                 _board[_square - 19] > 6 && _board[_square - 19] < 13)
-                validMoves.Add(_square - 19);
+            {
+                validMoves[index] = _square - 19;
+                index++;
+            }
 
             if (_board[_square - 12] == 0 ||
                 _board[_square - 12] > 6 && _board[_square - 12] < 13)
-                validMoves.Add(_square - 12);
+            {
+                validMoves[index] = _square - 12;
+                index++;
+            }
 
             if (_board[_square - 8] == 0 ||
                 _board[_square - 8] > 6 && _board[_square - 8] < 13)
-                validMoves.Add(_square - 8);
+            {
+                validMoves[index] = _square - 8;
+                index++;
+            }
 
             if (_board[_square + 21] == 0 ||
                 _board[_square + 21] > 6 && _board[_square + 21] < 13)
-                validMoves.Add(_square + 21);
+            {
+                validMoves[index] = _square + 21;
+                index++;
+            }
 
             if (_board[_square + 19] == 0 ||
                 _board[_square + 19] > 6 && _board[_square + 19] < 13)
-                validMoves.Add(_square + 19);
+            {
+                validMoves[index] = _square + 19;
+                index++;
+            }
 
             if (_board[_square + 12] == 0 ||
                 _board[_square + 12] > 6 && _board[_square + 12] < 13)
-                validMoves.Add(_square + 12);
+            {
+                validMoves[index] = _square + 12;
+                index++;
+            }
 
             if (_board[_square + 8] == 0 ||
                 _board[_square + 8] > 6 && _board[_square + 8] < 13)
-                validMoves.Add(_square + 8);
+            {
+                validMoves[index] = _square + 8;
+                index++;
+            }
 
-            return validMoves;
+            var finalArray = new int[index];
+            for (var p = 0; p < index; p++)
+            {
+                finalArray[p] = validMoves[p];
+            }
+
+            return finalArray;
         }
     }
 }

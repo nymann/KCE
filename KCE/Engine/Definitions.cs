@@ -58,6 +58,13 @@ namespace KCE.Engine
         public const long InfiniteTime = long.MaxValue;
         public const int Stopped = 28000;
 
+        public const int MaxQueenMoves = 27;
+        public const int MaxRookMoves = 14;
+        public const int MaxBishopMoves = 13;
+        public const int MaxPawnMoves = 4;
+        public const int MaxKnightMoves = 8;
+        public const int MaxKingMoves = 8;
+
         public const int QuitCode = 2;
     }
 }

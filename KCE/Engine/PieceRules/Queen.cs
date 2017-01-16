@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace KCE.Engine.PieceRules
 {
@@ -15,18 +17,15 @@ namespace KCE.Engine.PieceRules
             _sideToMove = sideToMove;
         }
 
-        public List<int> MoveGeneration()
+        public int[] MoveGeneration()
         {
-            var validMoves = new List<int>();
-
             var bishop = new Bishop(_board, _square, _sideToMove);
             var rook = new Rook(_board, _square, _sideToMove);
 
             var bishopMoves = bishop.MoveGeneration();
             var rookMoves = rook.MoveGeneration();
 
-            validMoves.AddRange(bishopMoves);
-            validMoves.AddRange(rookMoves);
+            var validMoves = bishopMoves.Concat(rookMoves).ToArray();
 
             return validMoves;
         }

@@ -17,71 +17,121 @@ namespace KCE.Engine.PieceRules
             _enPasSquare = enPasSquare;
         }
 
-        public List<int> MoveGeneration()
+        public int[] MoveGeneration()
         {
             return _sideToMove
                 ? WhiteMoveGeneration()
                 : BlackMoveGeneration();
         }
 
-        private List<int> BlackMoveGeneration()
+        private int[] BlackMoveGeneration()
         {
-            var validMoves = new List<int>();
+            var validMoves = new int[Definitions.MaxPawnMoves];
+            var index = 0;
 
             if (PawnIsOnSeventhRank() && _board[_square - 10] == Definitions.EmptySquare &&
                 _board[_square - 20] == Definitions.EmptySquare)
-                validMoves.Add(_square - 20);
+            {
+                validMoves[index] = _square - 20;
+                index++;
+            }
 
             if (_board[_square - 10] == Definitions.EmptySquare)
-                validMoves.Add(_square - 10);
+            {
+                validMoves[index] = _square - 10;
+                index++;
+            }
 
             #region attacking moves.
 
-            if (_board[_square - 11] != 0 && _board[_square - 11] < 7)
-                validMoves.Add(_square - 11);
+            if (_board[_square - 11] != Definitions.EmptySquare && _board[_square - 11] < 7)
+            {
+                validMoves[index] = _square - 11;
+                index++;
+            }
 
-            if (_board[_square - 9] != 0 && _board[_square - 9] < 7)
-                validMoves.Add(_square - 9);
+            if (_board[_square - 9] != Definitions.EmptySquare && _board[_square - 9] < 7)
+            {
+                validMoves[index] = _square - 9;
+                index++;
+            }
 
             if (_enPasSquare == _square - 11)
-                validMoves.Add(_square - 11);
+            {
+                validMoves[index] = _square - 11;
+                index++;
+            }
 
             if (_enPasSquare == _square - 9)
-                validMoves.Add(_square - 9);
+            {
+                validMoves[index] = _square - 9;
+                index++;
+            }
 
             #endregion
 
-            return validMoves;
+            var finalArray = new int[index];
+            for (var p = 0; p < index; p++)
+            {
+                finalArray[p] = validMoves[p];
+            }
+
+            return finalArray;
         }
 
-        private List<int> WhiteMoveGeneration()
+        private int[] WhiteMoveGeneration()
         {
-            var validMoves = new List<int>();
+            var validMoves = new int[Definitions.MaxPawnMoves];
+            var index = 0;
 
             if (PawnIsOnSecondRank() && _board[_square + 10] == Definitions.EmptySquare &&
                 _board[_square + 20] == Definitions.EmptySquare)
-                validMoves.Add(_square + 20);
+            {
+                validMoves[index] = _square + 20;
+                index++;
+            }
 
             if (_board[_square + 10] == 0)
-                validMoves.Add(_square + 10);
+            {
+                validMoves[index] = _square + 10;
+                index++;
+            }
 
             #region attacking moves.
 
             if (_board[_square + 11] > 6 && _board[_square + 11] < 13)
-                validMoves.Add(_square + 11);
+            {
+                validMoves[index] = _square + 11;
+                index++;
+            }
 
             if (_board[_square + 9] > 6 && _board[_square + 9] < 13)
-                validMoves.Add(_square + 9);
+            {
+                validMoves[index] = _square + 9;
+                index++;
+            }
 
             if (_enPasSquare == _square + 11)
-                validMoves.Add(_square + 11);
+            {
+                validMoves[index] = _square + 11;
+                index++;
+            }
 
             if (_enPasSquare == _square + 9)
-                validMoves.Add(_square + 9);
+            {
+                validMoves[index] = _square + 9;
+                index++;
+            }
 
             #endregion
 
-            return validMoves;
+            var finalArray = new int[index];
+            for (var p = 0; p < index; p++)
+            {
+                finalArray[p] = validMoves[p];
+            }
+
+            return finalArray;
         }
 
         private bool PawnIsOnSeventhRank()

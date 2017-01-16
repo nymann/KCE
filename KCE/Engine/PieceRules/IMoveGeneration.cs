@@ -4,6 +4,6 @@ namespace KCE.Engine.PieceRules
 {
     public interface IMoveGeneration
     {
-        List<int> MoveGeneration();
+        int[] MoveGeneration();
     }
 }
