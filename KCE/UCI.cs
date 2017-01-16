@@ -7,14 +7,14 @@ namespace KCE
     public class UCI
     {
         private static BoardState _bs;
-        private readonly Helper _helper;
-        private readonly Search _search;
+        private readonly Helper _helper = new Helper();
+        private readonly Search _search = new Search();
         private SearchInfo _sInfo;
+        //private readonly Zobrist _zobrist = new Zobrist();
 
         public UCI()
         {
-            _helper = new Helper();
-            _search = new Search();
+            
         }
 
         private void MainLoop()
@@ -36,18 +36,18 @@ namespace KCE
                 else if (input.Contains("divide"))
                 {
                     var command = input.Split(' ');
-                    int depth = Convert.ToInt32(command[1]);
+                    var depth = Convert.ToInt32(command[1]);
 
-                    MoveGenerator mg = new MoveGenerator(_bs);
+                    var mg = new MoveGenerator(_bs);
                     mg.Divide(depth);
                 }
 
                 else if (input.Contains("perft"))
                 {
                     var command = input.Split(' ');
-                    int depth = Convert.ToInt32(command[1]);
+                    var depth = Convert.ToInt32(command[1]);
 
-                    MoveGenerator mg = new MoveGenerator(_bs);
+                    var mg = new MoveGenerator(_bs);
                     Console.WriteLine("Nodes: {0}.", mg.Perft(depth));
                 }
 
@@ -69,6 +69,9 @@ namespace KCE
                     case "stop":
                         break;
 
+                    case "z":
+                        //Console.WriteLine("Pos key: {0:X}.", _bs.PosKey);
+                        break;
                     default:
                         break;
                 }
@@ -124,20 +127,27 @@ namespace KCE
 
             // Setup new BoardState.
             _bs = _helper.BoardsetupFromFen(fen);
-
-            if (moves != null)
+            /*_bs.PieceKeys = _zobrist.InitZobrist(_bs);
+            _bs.PosKey = _zobrist.Hash(_bs);*/
+            if (moves == null)
             {
-                var mg = new MoveGenerator(_bs);
-                foreach (var move in moves)
+                return;
+            }
+
+            var mg = new MoveGenerator(_bs);
+            foreach (var move in moves)
+            {
+                // perform those moves                 
+                var validMoves = mg.AllLegalMoves();
+                foreach (var validMove in validMoves)
                 {
-                    // perform those moves                 
-                    var validMoves = mg.AllLegalMoves();
-                    foreach (var validMove in validMoves)
-                        if (validMove.GetAlgebraicPly() == move)
-                        {
-                            mg.MakeMove(validMove);
-                            break;
-                        }
+                    var algebraic = Definitions.IndexToAlgebraic[validMove.GetFromToSquare()[0]] +
+                                    Definitions.IndexToAlgebraic[validMove.GetFromToSquare()[1]];
+                    if (algebraic == move)
+                    {
+                        mg.MakeMove(validMove);
+                        break;
+                    }
                 }
             }
 

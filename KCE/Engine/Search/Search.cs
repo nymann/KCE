@@ -6,18 +6,21 @@ namespace KCE.Engine.Search
     public class Search
     {
         private readonly Evaluate _eval = new Evaluate();
-        //private readonly Helper _helper = new Helper();
+        private readonly Helper _helper = new Helper();
 
         public int Quiescene(int alpha, int beta, BoardState bs, SearchInfo sInfo)
         {
             if (sInfo.IsTimeUp())
+            {
                 sInfo.Stopped = true;
+            }
 
             sInfo.Nodes++;
 
-            if (bs.BestPly != null && /*_helper.IsRepetition(bs) ||*/ bs.FiftyMoveRule >= 100)
+            if (_helper.IsRepetition(bs) || bs.FiftyMoveRule >= 100)
             {
                 //if (bs.BestPly != null) bs.BestPly.Score = 0;
+                Console.WriteLine("Repetetion.");
                 return 0;
             }
 
@@ -25,10 +28,14 @@ namespace KCE.Engine.Search
             var score = _eval.EvalPosition(bs);
 
             if (score >= beta)
+            {
                 return beta;
+            }
 
             if (score > alpha)
+            {
                 alpha = score;
+            }
 
             var mg = new MoveGenerator(bs);
 
@@ -57,14 +64,21 @@ namespace KCE.Engine.Search
                 mg.UndoMove(capMoves[moveNum]);
 
                 if (sInfo.Stopped)
+                {
                     return Definitions.Stopped;
+                }
 
-                if (capMoves[moveNum].Score <= alpha) continue;
+                if (capMoves[moveNum].Score <= alpha)
+                {
+                    continue;
+                }
 
                 if (capMoves[moveNum].Score >= beta)
                 {
                     if (nMoves == 1)
+                    {
                         sInfo.Fhf++;
+                    }
                     sInfo.Fh++;
 
                     return beta; // Fail hard beta-cutoff.
@@ -94,16 +108,16 @@ namespace KCE.Engine.Search
 
             // Check if time is up or interrupted by the GUI.
             if (sInfo.IsTimeUp())
+            {
                 sInfo.Stopped = true;
+            }
 
             sInfo.Nodes++;
 
-            if (bs.BestPly != null && /*_helper.IsRepetition(bs)) ||*/ bs.FiftyMoveRule >= 100 )
+            if (bs.FiftyMoveRule >= 100 || _helper.IsRepetition(bs))
             {
-                if (bs.BestPly != null) bs.BestPly.Score = 0;
                 return 0;
             }
-                
 
             var mg = new MoveGenerator(bs);
 
@@ -132,12 +146,16 @@ namespace KCE.Engine.Search
                 mg.UndoMove(legalMoves[moveNum]);
 
                 if (sInfo.Stopped)
+                {
                     return Definitions.Stopped;
+                }
 
                 if (legalMoves[moveNum].Score >= beta)
                 {
                     if (nMoves == 1)
+                    {
                         sInfo.Fhf++;
+                    }
                     sInfo.Fh++;
 
                     return beta; // Fail hard beta-cutoff.
@@ -152,7 +170,9 @@ namespace KCE.Engine.Search
             if (nMoves == 0)
             {
                 if (new Helper().IsKingInCheck(bs.SideToMove, bs.BoardRepresentation, bs.KingSquares))
+                {
                     return -Definitions.MATE + bs.Ply;
+                }
 
                 // Stalemate.
                 return 0;
@@ -167,6 +187,7 @@ namespace KCE.Engine.Search
 
         public void SearchPosition(BoardState bs, SearchInfo sInfo)
         {
+            var move = "";
             var depth = 1;
             var bestScore = - Definitions.INFINITE;
             while (!sInfo.IsTimeUp() || bestScore < Definitions.MATE - 10)
@@ -202,11 +223,13 @@ namespace KCE.Engine.Search
                     bestScore, depth, sInfo.ElapsedTime(), bs.BestPly.GetAlgebraicPly(),
                     sInfo.Nodes, sInfo.Fhf, sInfo.Fh);*/
 
-                Console.WriteLine("info currmove {0}", bs.BestPly.GetAlgebraicPly());
+                move = Definitions.IndexToAlgebraic[bs.BestPly.GetFromToSquare()[0]] +
+                              Definitions.IndexToAlgebraic[bs.BestPly.GetFromToSquare()[1]];
+                Console.WriteLine("info currmove {0}{1}", move, bs.BestPly.Promotion);
                 depth++;
                 bs.HaveSearched = false;
             }
-            Console.WriteLine("bestmove {0}", bs.BestPly.GetAlgebraicPly());
+            Console.WriteLine("bestmove {0}{1}", move, bs.BestPly.Promotion);
         }
     }
 }

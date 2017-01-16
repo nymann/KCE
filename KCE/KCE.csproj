@@ -79,6 +79,7 @@
     <Compile Include="Engine\Ply.cs" />
     <Compile Include="Engine\Search\Search.cs" />
     <Compile Include="Engine\Search\SearchInfo.cs" />
+    <Compile Include="Engine\Zobrist.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UCI.cs" />

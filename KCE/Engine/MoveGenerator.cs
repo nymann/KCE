@@ -7,8 +7,9 @@ namespace KCE.Engine
     public class MoveGenerator
     {
         #region variables
-        private readonly Helper _helper;
+        private readonly Helper _helper = new Helper();
         private readonly BoardState _bs;
+        //private readonly Zobrist _zobrist = new Zobrist();
 
         private readonly int[] _board64 =
         {
@@ -26,7 +27,6 @@ namespace KCE.Engine
 
         public MoveGenerator(BoardState bs)
         {
-            _helper = new Helper();
             _bs = bs;
         }
 
@@ -109,56 +109,40 @@ namespace KCE.Engine
 
 
                                     var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "q",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs, new int[] {square, psuedoLegalMove}) {Promotion = "q"};
                                     legalMoves[index] = queen;
                                     index++;
 
                                     var boardRook = (int[]) boardQueen.Clone();
                                     boardRook[psuedoLegalMove] = Definitions.BlackRook;
-                                    var rook = new Ply(boardRook, _bs.BoardRepresentation, /*_bs.EnPasSquare,*/
+                                    var rook = new Ply(boardRook, _bs.BoardRepresentation,
                                         Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "r",
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new int[] {square, psuedoLegalMove}) {Promotion = "r"};
                                     legalMoves[index] = rook;
                                     index++;
 
                                     var boardbishop = (int[]) boardQueen.Clone();
                                     boardbishop[psuedoLegalMove] = Definitions.BlackBishop;
-                                    var bishop = new Ply(boardbishop, _bs.BoardRepresentation, /*_bs.EnPasSquare,*/
+                                    var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
                                         Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "b",
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new int[] {square, psuedoLegalMove}) {Promotion = "b"};
                                     legalMoves[index] = bishop;
+                                    
                                     index++;
 
                                     var boardknight = (int[]) boardQueen.Clone();
                                     boardknight[psuedoLegalMove] = Definitions.BlackKnight;
-                                    var knight = new Ply(boardknight, _bs.BoardRepresentation, /*_bs.EnPasSquare,*/
+                                    var knight = new Ply(boardknight, _bs.BoardRepresentation,
                                         Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new int[] {square, psuedoLegalMove}) {Promotion = "n"};
                                     legalMoves[index] = knight;
                                     index++;
                                 }
@@ -354,29 +338,20 @@ namespace KCE.Engine
                                     var boardQueen = (int[]) _bs.BoardRepresentation.Clone();
                                     boardQueen[square] = Definitions.EmptySquare;
                                     boardQueen[psuedoLegalMove] = Definitions.WhiteQueen;
-                                    var queen = new Ply(boardQueen, _bs.BoardRepresentation /*,
-                                        _bs.EnPasSquare*/, Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "q",
+                                    var queen = new Ply(boardQueen, _bs.BoardRepresentation,
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs, new int[] {square, psuedoLegalMove}) {Promotion = "q"};
                                     legalMoves[index] = queen;
                                     index++;
 
                                     var boardRook = (int[]) boardQueen.Clone();
                                     boardRook[psuedoLegalMove] = Definitions.WhiteRook;
                                     var rook = new Ply(boardRook, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "r",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new int[] {square, psuedoLegalMove}) {Promotion = "r"};
                                     ;
                                     legalMoves[index] = rook;
                                     index++;
@@ -384,14 +359,10 @@ namespace KCE.Engine
                                     var boardbishop = (int[]) boardQueen.Clone();
                                     boardbishop[psuedoLegalMove] = Definitions.WhiteBishop;
                                     var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "b",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new[] {square, psuedoLegalMove}) {Promotion = "b"};
                                     ;
                                     legalMoves[index] = bishop;
                                     index++;
@@ -399,14 +370,10 @@ namespace KCE.Engine
                                     var boardknight = (int[]) boardQueen.Clone();
                                     boardknight[psuedoLegalMove] = Definitions.WhiteKnight;
                                     var knight = new Ply(boardknight, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, psuedoLegalMove*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new[] {square, psuedoLegalMove}) {Promotion = "n"};
                                     ;
                                     legalMoves[index] = knight;
                                     index++;
@@ -427,11 +394,12 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
                                     _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                 {
-                                    legalMoves[index] = ply;
-                                    index++;
+                                    continue;
                                 }
+                                legalMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -448,11 +416,12 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
                                     _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                 {
-                                    legalMoves[index] = ply;
-                                    index++;
+                                    continue;
                                 }
+                                legalMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -469,11 +438,12 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
                                     _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                 {
-                                    legalMoves[index] = ply;
-                                    index++;
+                                    continue;
                                 }
+                                legalMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -490,11 +460,12 @@ namespace KCE.Engine
                                     _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
                                     _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
                                 {
-                                    legalMoves[index] = ply;
-                                    index++;
+                                    continue;
                                 }
+                                legalMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -807,11 +778,6 @@ namespace KCE.Engine
                                 {
                                     continue;
                                 }
-
-                                var castlePerms = _helper.UpdateCastlePermissions(square, toSquare,
-                                    _bs.Wcks, _bs.Wcqs,
-                                    _bs.Bcks, _bs.Bcqs,
-                                    _bs.SideToMove);
                                 var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare,
                                     _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
                                     _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
@@ -835,43 +801,30 @@ namespace KCE.Engine
                                     boardQueen[square] = Definitions.EmptySquare;
                                     boardQueen[toSquare] = Definitions.WhiteQueen;
                                     var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[toSquare] + "q",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, toSquare*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new[] {square, toSquare}) {Promotion = "q"};
                                     capMoves[index] = queen;
                                     index++;
 
                                     var boardRook = (int[]) boardQueen.Clone();
                                     boardRook[toSquare] = Definitions.WhiteRook;
                                     var rook = new Ply(boardRook, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[toSquare] + "r",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, toSquare*/);
-                                    ;
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new[] {square, toSquare}) {Promotion = "r"};
                                     capMoves[index] = rook;
                                     index++;
 
                                     var boardbishop = (int[]) boardQueen.Clone();
                                     boardbishop[toSquare] = Definitions.WhiteBishop;
                                     var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[toSquare] + "b",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, toSquare*/);
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new[] {square, toSquare}) {Promotion = "b"};
                                     ;
                                     capMoves[index] = bishop;
                                     index++;
@@ -879,15 +832,11 @@ namespace KCE.Engine
                                     var boardknight = (int[]) boardQueen.Clone();
                                     boardknight[toSquare] = Definitions.WhiteKnight;
                                     var knight = new Ply(boardknight, _bs.BoardRepresentation,
-                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                        Definitions.IndexToAlgebraic[square] +
-                                        Definitions.IndexToAlgebraic[toSquare] + "n",
+                                        Definitions.NoEnPassantSquare,
                                         _bs.Wcks, _bs.Wcqs,
-                                        _bs.Bcks, _bs.Bcqs /*,
-                                        castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                        castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                        /*, square, toSquare*/);
-                                    ;
+                                        _bs.Bcks, _bs.Bcqs,
+                                        new[] {square, toSquare}) {Promotion = "n"};
+
                                     capMoves[index] = knight;
                                     index++;
                                 }
@@ -904,17 +853,19 @@ namespace KCE.Engine
                             for (var i = 0; i < Definitions.MaxKnightMoves; i++)
                             {
                                 var toSquare = psuedoLegalKnightMoves[i];
-                                if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                                if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
-                                    var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                        _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
-
-                                    if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
-                                    {
-                                        capMoves[index] = ply;
-                                        index++;
-                                    }
+                                    continue;
                                 }
+                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                {
+                                    continue;
+                                }
+                                capMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -928,17 +879,19 @@ namespace KCE.Engine
                             for (var i = 0; i < Definitions.MaxBishopMoves; i++)
                             {
                                 var toSquare = psuedoLegalBishopMoves[i];
-                                if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                                if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
-                                    var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                        _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
-
-                                    if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
-                                    {
-                                        capMoves[index] = ply;
-                                        index++;
-                                    }
+                                    continue;
                                 }
+                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                {
+                                    continue;
+                                }
+                                capMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -952,17 +905,19 @@ namespace KCE.Engine
                             for (var i = 0; i < Definitions.MaxRookMoves; i++)
                             {
                                 var toSquare = psuedoLegalRookMoves[i];
-                                if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                                if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
-                                    var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                        _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
-
-                                    if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
-                                    {
-                                        capMoves[index] = ply;
-                                        index++;
-                                    }
+                                    continue;
                                 }
+                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                {
+                                    continue;
+                                }
+                                capMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -976,17 +931,19 @@ namespace KCE.Engine
                             for (var i = 0; i < Definitions.MaxQueenMoves; i++)
                             {
                                 var toSquare = psuedoLegalQueenMoves[i];
-                                if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                                if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
-                                    var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                        _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
-
-                                    if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
-                                    {
-                                        capMoves[index] = ply;
-                                        index++;
-                                    }
+                                    continue;
                                 }
+                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                {
+                                    continue;
+                                }
+                                capMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -1000,17 +957,19 @@ namespace KCE.Engine
                             for (var i = 0; i < Definitions.MaxKingMoves; i++)
                             {
                                 var toSquare = psuedoLegalKingMoves[i];
-                                if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                                if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
-                                    var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                        _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
-
-                                    if (!_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
-                                    {
-                                        capMoves[index] = ply;
-                                        index++;
-                                    }
+                                    continue;
                                 }
+                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+
+                                if (_helper.IsSquareAttacked(Definitions.White, ply.GetBoard(), _bs.KingSquares[1]))
+                                {
+                                    continue;
+                                }
+                                capMoves[index] = ply;
+                                index++;
                             }
                             break;
 
@@ -1042,10 +1001,6 @@ namespace KCE.Engine
                                 continue;
                             }
 
-                            var castlePerms = _helper.UpdateCastlePermissions(square, toSquare,
-                                _bs.Wcks, _bs.Wcqs,
-                                _bs.Bcks, _bs.Bcqs,
-                                _bs.SideToMove);
                             var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare,
                                 _bs.EnPasSquare, _bs.Bcks, _bs.Bcqs,
                                 _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
@@ -1069,59 +1024,41 @@ namespace KCE.Engine
                                 boardQueen[square] = Definitions.EmptySquare;
                                 boardQueen[toSquare] = Definitions.BlackQueen;
                                 var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                    Definitions.IndexToAlgebraic[square] +
-                                    Definitions.IndexToAlgebraic[toSquare] + "q",
+                                    Definitions.NoEnPassantSquare,
                                     _bs.Wcks, _bs.Wcqs,
-                                    _bs.Bcks, _bs.Bcqs /*,
-                                    castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                    /*, square, toSquare*/);
+                                    _bs.Bcks, _bs.Bcqs,
+                                    new[] {square, toSquare}) {Promotion = "q"};
                                 capMoves[index] = queen;
                                 index++;
 
                                 var boardRook = (int[]) boardQueen.Clone();
                                 boardRook[toSquare] = Definitions.BlackRook;
                                 var rook = new Ply(boardRook, _bs.BoardRepresentation,
-                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                    Definitions.IndexToAlgebraic[square] +
-                                    Definitions.IndexToAlgebraic[toSquare] + "r",
+                                    Definitions.NoEnPassantSquare,
                                     _bs.Wcks, _bs.Wcqs,
-                                    _bs.Bcks, _bs.Bcqs /*,
-                                    castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                    /*, square, toSquare*/);
-                                ;
+                                    _bs.Bcks, _bs.Bcqs,
+                                    new[] {square, toSquare}) {Promotion = "r"};
                                 capMoves[index] = rook;
                                 index++;
 
                                 var boardbishop = (int[]) boardQueen.Clone();
                                 boardbishop[toSquare] = Definitions.BlackBishop;
                                 var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
-                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                    Definitions.IndexToAlgebraic[square] +
-                                    Definitions.IndexToAlgebraic[toSquare] + "b",
+                                    Definitions.NoEnPassantSquare,
                                     _bs.Wcks, _bs.Wcqs,
-                                    _bs.Bcks, _bs.Bcqs /*,
-                                    castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                    /*, square, toSquare*/);
-                                ;
+                                    _bs.Bcks, _bs.Bcqs,
+                                    new[] {square, toSquare}
+                                ) {Promotion = "b"};
                                 capMoves[index] = bishop;
                                 index++;
 
                                 var boardknight = (int[]) boardQueen.Clone();
                                 boardknight[toSquare] = Definitions.BlackKnight;
                                 var knight = new Ply(boardknight, _bs.BoardRepresentation,
-                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
-                                    Definitions.IndexToAlgebraic[square] +
-                                    Definitions.IndexToAlgebraic[toSquare] + "n",
+                                    Definitions.NoEnPassantSquare,
                                     _bs.Wcks, _bs.Wcqs,
-                                    _bs.Bcks, _bs.Bcqs /*,
-                                    castlePerms[Definitions.BCCKS], castlePerms[Definitions.BCCQS],
-                                    castlePerms[Definitions.WCCKS], castlePerms[Definitions.WCCQS]*/
-                                    /*, square, toSquare*/);
-                                ;
+                                    _bs.Bcks, _bs.Bcqs,
+                                    new[] {square, toSquare}) {Promotion = "n"};
                                 capMoves[index] = knight;
                                 index++;
                             }
@@ -1138,16 +1075,17 @@ namespace KCE.Engine
                         for (var i = 0; i < Definitions.MaxKnightMoves; i++)
                         {
                             var toSquare = psuedoLegalKnightMoves[i];
-                            if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                            if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
-                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+                                continue;
+                            }
+                            var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
-                                {
-                                    capMoves[index] = ply;
-                                    index++;
-                                }
+                            if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
+                            {
+                                capMoves[index] = ply;
+                                index++;
                             }
                         }
                         break;
@@ -1162,16 +1100,17 @@ namespace KCE.Engine
                         for (var i = 0; i < Definitions.MaxBishopMoves; i++)
                         {
                             var toSquare = psuedoLegalBishopMoves[i];
-                            if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                            if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
-                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+                                continue;
+                            }
+                            var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
-                                {
-                                    capMoves[index] = ply;
-                                    index++;
-                                }
+                            if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
+                            {
+                                capMoves[index] = ply;
+                                index++;
                             }
                         }
                         break;
@@ -1186,16 +1125,17 @@ namespace KCE.Engine
                         for (var i = 0; i < Definitions.MaxRookMoves; i++)
                         {
                             var toSquare = psuedoLegalRookMoves[i];
-                            if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                            if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
-                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+                                continue;
+                            }
+                            var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
-                                {
-                                    capMoves[index] = ply;
-                                    index++;
-                                }
+                            if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
+                            {
+                                capMoves[index] = ply;
+                                index++;
                             }
                         }
                         break;
@@ -1210,16 +1150,17 @@ namespace KCE.Engine
                         for (var i = 0; i < Definitions.MaxQueenMoves; i++)
                         {
                             var toSquare = psuedoLegalQueenMoves[i];
-                            if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                            if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
-                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+                                continue;
+                            }
+                            var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
-                                {
-                                    capMoves[index] = ply;
-                                    index++;
-                                }
+                            if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
+                            {
+                                capMoves[index] = ply;
+                                index++;
                             }
                         }
                         break;
@@ -1234,16 +1175,17 @@ namespace KCE.Engine
                         for (var i = 0; i < Definitions.MaxKingMoves; i++)
                         {
                             var toSquare = psuedoLegalKingMoves[i];
-                            if (_bs.BoardRepresentation[toSquare] != Definitions.EmptySquare)
+                            if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
-                                var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
-                                    _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
+                                continue;
+                            }
+                            var ply = _helper.MakePly(_bs.BoardRepresentation, square, toSquare, _bs.EnPasSquare,
+                                _bs.Bcks, _bs.Bcqs, _bs.Wcks, _bs.Wcqs, _bs.SideToMove);
 
-                                if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
-                                {
-                                    capMoves[index] = ply;
-                                    index++;
-                                }
+                            if (!_helper.IsSquareAttacked(Definitions.Black, ply.GetBoard(), _bs.KingSquares[0]))
+                            {
+                                capMoves[index] = ply;
+                                index++;
                             }
                         }
                         break;
@@ -1257,7 +1199,7 @@ namespace KCE.Engine
             #endregion
 
             var finalArray = new Ply[index];
-            for (int i = 0; i < index; i++)
+            for (var i = 0; i < index; i++)
             {
                 finalArray[i] = capMoves[i];
             }
@@ -1301,7 +1243,7 @@ namespace KCE.Engine
                 var childNotes = depth == 1 ? 1 : Perft(depth - 1);
                 totalNodes += childNotes;
                 UndoMove(legalMove);
-                Console.WriteLine("{0}: {1}", legalMove.GetAlgebraicPly(), childNotes);
+                Console.WriteLine("{0}{1}: {2}", legalMove.GetFromToSquare()[0], legalMove.GetFromToSquare()[2], childNotes);
             }
 
             Console.WriteLine("\nTotal moves: {0}, Total nodes: {1}", nMoves, totalNodes);
@@ -1325,10 +1267,10 @@ namespace KCE.Engine
             _bs.Wcqs = makePly.GetWCCQS();
             _bs.Bcks = makePly.GetBCCKS();
             _bs.Bcqs = makePly.GetBCCQS();
-
+            _bs.Moves[0, _bs.Ply] = makePly.GetFromToSquare()[0];
+            _bs.Moves[1, _bs.Ply] = makePly.GetFromToSquare()[1];
             _bs.Ply++;
             UpdateKingSquares();
-            //_bs.Moves.Add(makePly.GetMove());
         }
 
         public void UndoMove(Ply undoPly)
@@ -1336,20 +1278,14 @@ namespace KCE.Engine
             _bs.EnPasSquare = _bs.HisEnPas;
             _bs.BoardRepresentation = (int[]) undoPly.GetHisBoard().Clone();
             _bs.SideToMove = !_bs.SideToMove;
-
-            /*_bs.WCKS = undoPly.GetHisWCCKS();
-            _bs.WCQS = undoPly.GetHisWCCQS();
-            _bs.BCKS = undoPly.GetHisBCCKS();
-            _bs.BCQS = undoPly.GetHisBCCQS();*/
-
             _bs.Wcks = _bs.HisWcks;
             _bs.Wcqs = _bs.HisWcqs;
             _bs.Bcks = _bs.HisWcks;
             _bs.Bcqs = _bs.HisWcqs;
-
+            _bs.Moves[0, _bs.Ply] = 0;
+            _bs.Moves[1, _bs.Ply] = 0;
             _bs.Ply--;
             UpdateKingSquares();
-            //_bs.Moves.Remove(_bs.Moves.Last());
         }
 
         private void UpdateKingSquares()
@@ -1368,5 +1304,38 @@ namespace KCE.Engine
                     }
             }
         }
+
+        /*private void UpdatePosKey(Ply ply)
+        {
+            //_bs.PieceKeys[piece,square]
+            /* position startpos
+             * e2e4
+             * XOR out the pawn at e2.
+             * XOR in the pawn at e4.
+             #1#
+
+            /* position startpos moves e2e4 d7d5
+             * e4d5
+             * XOR out the black pawn at d5.
+             * XOR in the white pawn at d5.
+             * XOR out the white pawn from e4.
+             * XOR in nothing at the source square.
+             #1#
+            var toSquare = ply.GetFromToSquare()[1];
+            var fromSquare = ply.GetFromToSquare()[0];
+
+            var opponentPieceOnToSquare = _bs.BoardRepresentation[toSquare];
+            var pieceOnFromSquare = _bs.BoardRepresentation[fromSquare];
+            /*_bs.PosKey ^= _bs.PieceKeys[opponentPieceOnToSquare, toSquare];
+            Console.WriteLine("XOR'ed out oppoentPieceOnToSquare: {0:X}.", _bs.PosKey);#1#
+            _bs.PosKey ^= _bs.PieceKeys[pieceOnFromSquare, toSquare];
+            Console.WriteLine("XOR'ed in piece on from square: {0:X}.", _bs.PosKey);
+            _bs.PosKey ^= _bs.PieceKeys[pieceOnFromSquare, fromSquare];
+            Console.WriteLine("XOR'ed out the piece on from square: {0:X}.", _bs.PosKey);
+            /*_bs.PosKey ^= _bs.PieceKeys[Definitions.EmptySquare, fromSquare];
+            Console.WriteLine("XOR'ed in nothing at the from square: {0:X}.", _bs.PosKey);#1#
+        }*/
     }
+
+    
 }

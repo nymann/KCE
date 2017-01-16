@@ -9,47 +9,33 @@ namespace KCE.Engine
         private readonly int[] _hisBoard;
 
         private readonly int _enPas;
-        /*private int _hisEnPas;*/
         private readonly bool _wccks;
         private readonly bool _wccqs;
         private readonly bool _bccks;
         private readonly bool _bccqs;
-        /*private bool _hisWCCKS;
-        private bool _hisWCCQS;
-        private bool _hisBCCKS;
-        private bool _hisBCCQS;*/
-        //private Tuple<int, int> _move;
+        private readonly int[] _fromToSquare;
+        public string Promotion { get; set; } = "";
 
-        private readonly string _algebraicPly;
+        //private readonly string _algebraicPly;
 
-        public Ply(int[] board, int[] hisBoard, /*int hisEnPas,*/ int enPas, string algebraicPly, 
-            bool wccks, bool wccqs, bool bccks, bool bccqs/*, bool hisWccks, bool hisWccqs, bool hisBccks, bool hisBccqs*//*, int fromSquare, int toSquare*/)
+        public Ply(int[] board, int[] hisBoard, int enPas, /*string algebraicPly,*/ 
+            bool wccks, bool wccqs, bool bccks, bool bccqs, int[] fromToSquare)
         {
             _board = (int[]) board.Clone();
             _hisBoard = (int[]) hisBoard.Clone();
-            /*_hisEnPas = hisEnPas;*/
             _enPas = enPas;
-            _algebraicPly = algebraicPly;
+            //_algebraicPly = algebraicPly;
             _wccks = wccks;
             _wccqs = wccqs;
             _bccks = bccks;
             _bccqs = bccqs;
-            /*_hisWCCKS = hisWccks;
-            _hisWCCQS = hisWccqs;
-            _hisBCCKS = hisBccks;
-            _hisBCCQS = hisBccqs;*/
-            //_move = new Tuple<int, int>(fromSquare, toSquare);
+            _fromToSquare = fromToSquare;
         }
 
         public Ply()
         {
-            
-        }
 
-        /*public Tuple<int, int> GetMove()
-        {
-            return _move;
-        }*/
+        }
 
         public int[] GetBoard()
         {
@@ -61,20 +47,15 @@ namespace KCE.Engine
             return _hisBoard;
         }
 
-        public string GetAlgebraicPly()
+        public int[] GetFromToSquare()
         {
-            return _algebraicPly;
+            return _fromToSquare;
         }
 
         public int GetEnPas()
         {
             return _enPas;
         }
-
-        /*public int GetHisEnPas()
-        {
-            return _hisEnPas;
-        }*/
 
         public bool GetWCCKS()
         {
@@ -95,30 +76,5 @@ namespace KCE.Engine
         {
             return _bccqs;
         }
-
-        /*public bool GetHisWCCKS()
-        {
-            return _hisWCCKS;
-        }
-
-        public bool GetHisWCCQS()
-        {
-            return _hisWCCQS;
-        }
-
-        public bool GetHisBCCKS()
-        {
-            return _hisBCCKS;
-        }
-
-        public bool GetHisBCCQS()
-        {
-            return _hisBCCQS;
-        }
-
-        public bool UpdateCastlePerms()
-        {
-            return _hisBCCKS != _BCCKS || _hisBCCQS != _BCCQS || _hisWCCKS != _WCCKS || _hisWCCQS != _WCCQS;
-        }*/
     }
 }
