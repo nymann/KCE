@@ -10,73 +10,73 @@ See how many moves are possible at a certain depth, example at depth 3:
 position fen 8/P5R1/r3k3/5N1P/r7/p7/7K/8 w - - 2 2
 
 
-perft 3
+####perft 3
 
 > 13997.
 
 Or by:
 
-divide 3
+####divide 3
 
-h2g2: 519
+> h2g2: 519
 
-h2g1: 485
+> h2g1: 485
 
-h2h1: 464
+> h2h1: 464
 
-h2h3: 468
+> h2h3: 468
 
-h2g3: 440
+> h2g3: 440
 
-h5h6: 482
+> h5h6: 482
 
-f5g3: 407
+> f5g3: 407
 
-f5e3: 490
+> f5e3: 490
 
-f5h4: 453
+> f5h4: 453
 
-f5d4: 147
+> f5d4: 147
 
-f5e7: 418
+> f5e7: 418
 
-f5d6: 505
+> f5d6: 505
 
-f5h6: 436
+> f5h6: 436
 
-g7g6: 152
+> g7g6: 152
 
-g7g5: 444
+> g7g5: 444
 
-g7g4: 564
+> g7g4: 564
 
-g7g3: 559
+> g7g3: 559
 
-g7g2: 556
+> g7g2: 556
 
-g7g1: 574
+> g7g1: 574
 
-g7g8: 594
+> g7g8: 594
 
-g7f7: 406
+> g7f7: 406
 
-g7e7: 83
+> g7e7: 83
 
-g7d7: 496
+> g7d7: 496
 
-g7c7: 509
+> g7c7: 509
 
-g7b7: 509
+> g7b7: 509
 
-g7h7: 432
+> g7h7: 432
 
-a7a8q: 704
+> a7a8q: 704
 
-a7a8r: 636
+> a7a8r: 636
 
-a7a8b: 554
+> a7a8b: 554
 
-a7a8n: 511
+> a7a8n: 511
 
 
 Total moves: 30, Total nodes: 13997
@@ -89,9 +89,9 @@ NegaMax with Alpha Beta pruning.
 Quiscence search.
 
 
-Move ordering:
+####Move ordering
 
-Currently the only move ordering used is looking at the best move at last depth.
+Currently the only move ordering used is looking at the best move at last depth first.
 
 
 ##Evaluation
