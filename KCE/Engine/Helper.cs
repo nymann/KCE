@@ -165,7 +165,7 @@ namespace KCE.Engine
             var castle = UpdateCastlePermissions(fromSquare, toSquare, hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS,
                 sideToMove);
 
-            return new Ply(board, hisBoard, hisEnPas, enPas, algebraicPly,
+            return new Ply(board, hisBoard, /*hisEnPas,*/ enPas, algebraicPly,
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
                 castle[Definitions.BCCKS], castle[Definitions.BCCQS]/*,
                 hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS*//*, fromSquare, toSquare*/);

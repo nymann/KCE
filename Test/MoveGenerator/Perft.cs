@@ -10,7 +10,7 @@ namespace Test.MoveGenerator
     public class Perft
     {
         private BoardState _boardState;
-        public const int MaxDepth = 5;
+        public const int MaxDepth = 4;
 
         [TestMethod]
         public void PerftStartPositionTest()

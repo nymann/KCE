@@ -10,7 +10,7 @@ namespace KCE.Engine
         #region variables
 
         private readonly Helper _helper;
-        private BoardState _bs;
+        private readonly BoardState _bs;
 
         private readonly int[] _board64 =
         {
@@ -102,7 +102,7 @@ namespace KCE.Engine
 
 
                                     var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "q",
                                         _bs.Wcks, _bs.Wcqs,
@@ -113,7 +113,7 @@ namespace KCE.Engine
 
                                     var boardRook = (int[]) boardQueen.Clone();
                                     boardRook[psuedoLegalMove] = Definitions.BlackRook;
-                                    var rook = new Ply(boardRook, _bs.BoardRepresentation, _bs.EnPasSquare,
+                                    var rook = new Ply(boardRook, _bs.BoardRepresentation, /*_bs.EnPasSquare,*/
                                         Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "r",
@@ -125,7 +125,7 @@ namespace KCE.Engine
 
                                     var boardbishop = (int[]) boardQueen.Clone();
                                     boardbishop[psuedoLegalMove] = Definitions.BlackBishop;
-                                    var bishop = new Ply(boardbishop, _bs.BoardRepresentation, _bs.EnPasSquare,
+                                    var bishop = new Ply(boardbishop, _bs.BoardRepresentation, /*_bs.EnPasSquare,*/
                                         Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "b",
@@ -137,7 +137,7 @@ namespace KCE.Engine
 
                                     var boardknight = (int[]) boardQueen.Clone();
                                     boardknight[psuedoLegalMove] = Definitions.BlackKnight;
-                                    var knight = new Ply(boardknight, _bs.BoardRepresentation, _bs.EnPasSquare,
+                                    var knight = new Ply(boardknight, _bs.BoardRepresentation, /*_bs.EnPasSquare,*/
                                         Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
@@ -310,8 +310,8 @@ namespace KCE.Engine
                                     var boardQueen = (int[]) _bs.BoardRepresentation.Clone();
                                     boardQueen[square] = Definitions.EmptySquare;
                                     boardQueen[psuedoLegalMove] = Definitions.WhiteQueen;
-                                    var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                    var queen = new Ply(boardQueen, _bs.BoardRepresentation/*,
+                                        _bs.EnPasSquare*/, Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "q",
                                         _bs.Wcks, _bs.Wcqs,
@@ -323,7 +323,7 @@ namespace KCE.Engine
                                     var boardRook = (int[]) boardQueen.Clone();
                                     boardRook[psuedoLegalMove] = Definitions.WhiteRook;
                                     var rook = new Ply(boardRook, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "r",
                                         _bs.Wcks, _bs.Wcqs,
@@ -336,7 +336,7 @@ namespace KCE.Engine
                                     var boardbishop = (int[]) boardQueen.Clone();
                                     boardbishop[psuedoLegalMove] = Definitions.WhiteBishop;
                                     var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "b",
                                         _bs.Wcks, _bs.Wcqs,
@@ -349,7 +349,7 @@ namespace KCE.Engine
                                     var boardknight = (int[]) boardQueen.Clone();
                                     boardknight[psuedoLegalMove] = Definitions.WhiteKnight;
                                     var knight = new Ply(boardknight, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[psuedoLegalMove] + "n",
                                         _bs.Wcks, _bs.Wcqs,
@@ -701,7 +701,7 @@ namespace KCE.Engine
                                     boardQueen[square] = Definitions.EmptySquare;
                                     boardQueen[toSquare] = Definitions.WhiteQueen;
                                     var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "q",
                                         _bs.Wcks, _bs.Wcqs,
@@ -713,7 +713,7 @@ namespace KCE.Engine
                                     var boardRook = (int[]) boardQueen.Clone();
                                     boardRook[toSquare] = Definitions.WhiteRook;
                                     var rook = new Ply(boardRook, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "r",
                                         _bs.Wcks, _bs.Wcqs,
@@ -726,7 +726,7 @@ namespace KCE.Engine
                                     var boardbishop = (int[]) boardQueen.Clone();
                                     boardbishop[toSquare] = Definitions.WhiteBishop;
                                     var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "b",
                                         _bs.Wcks, _bs.Wcqs,
@@ -739,7 +739,7 @@ namespace KCE.Engine
                                     var boardknight = (int[]) boardQueen.Clone();
                                     boardknight[toSquare] = Definitions.WhiteKnight;
                                     var knight = new Ply(boardknight, _bs.BoardRepresentation,
-                                        _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                        /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                         Definitions.IndexToAlgebraic[square] +
                                         Definitions.IndexToAlgebraic[toSquare] + "n",
                                         _bs.Wcks, _bs.Wcqs,
@@ -879,7 +879,7 @@ namespace KCE.Engine
                                 boardQueen[square] = Definitions.EmptySquare;
                                 boardQueen[toSquare] = Definitions.BlackQueen;
                                 var queen = new Ply(boardQueen, _bs.BoardRepresentation,
-                                    _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "q",
                                     _bs.Wcks, _bs.Wcqs,
@@ -891,7 +891,7 @@ namespace KCE.Engine
                                 var boardRook = (int[]) boardQueen.Clone();
                                 boardRook[toSquare] = Definitions.BlackRook;
                                 var rook = new Ply(boardRook, _bs.BoardRepresentation,
-                                    _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "r",
                                     _bs.Wcks, _bs.Wcqs,
@@ -904,7 +904,7 @@ namespace KCE.Engine
                                 var boardbishop = (int[]) boardQueen.Clone();
                                 boardbishop[toSquare] = Definitions.BlackBishop;
                                 var bishop = new Ply(boardbishop, _bs.BoardRepresentation,
-                                    _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "b",
                                     _bs.Wcks, _bs.Wcqs,
@@ -917,7 +917,7 @@ namespace KCE.Engine
                                 var boardknight = (int[]) boardQueen.Clone();
                                 boardknight[toSquare] = Definitions.BlackKnight;
                                 var knight = new Ply(boardknight, _bs.BoardRepresentation,
-                                    _bs.EnPasSquare, Definitions.NoEnPassantSquare,
+                                    /*_bs.EnPasSquare,*/ Definitions.NoEnPassantSquare,
                                     Definitions.IndexToAlgebraic[square] +
                                     Definitions.IndexToAlgebraic[toSquare] + "n",
                                     _bs.Wcks, _bs.Wcqs,
@@ -1067,6 +1067,7 @@ namespace KCE.Engine
 
         public void MakeMove(Ply makePly)
         {
+            _bs.HisEnPas = _bs.EnPasSquare;
             _bs.EnPasSquare = makePly.GetEnPas();
             _bs.BoardRepresentation = (int[]) makePly.GetBoard().Clone();
             _bs.SideToMove = !_bs.SideToMove;
@@ -1088,7 +1089,7 @@ namespace KCE.Engine
 
         public void UndoMove(Ply undoPly)
         {
-            _bs.EnPasSquare = undoPly.GetHisEnPas();
+            _bs.EnPasSquare = _bs.HisEnPas;
             _bs.BoardRepresentation = (int[]) undoPly.GetHisBoard().Clone();
             _bs.SideToMove = !_bs.SideToMove;
 

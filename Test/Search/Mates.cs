@@ -36,7 +36,7 @@ namespace Test.Search
             var helper = new Helper();
             var bs = helper.BoardsetupFromFen(fen);
             var search = new KCE.Engine.Search.Search();
-            var sInfo = new SearchInfo {TimeLeft = 5000};
+            var sInfo = new SearchInfo {TimeLeft = 120000};
             search.SearchPosition(bs, sInfo);
             return bs.BestPly.GetAlgebraicPly();
         }

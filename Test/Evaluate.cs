@@ -10,7 +10,7 @@ namespace Test
         public void EvaluateTest()
         {
             Assert.AreEqual(0, PerformEvaluate(Definitions.STDSETUP));
-            Assert.AreEqual(-30, PerformEvaluate("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"));
+            Assert.AreEqual(-40, PerformEvaluate("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"));
         }
 
         private int PerformEvaluate(string fen)

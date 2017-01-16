@@ -5,35 +5,35 @@ namespace KCE.Engine
     public class Ply
     {
         public int Score { get; set; } = - Definitions.INFINITE;
-        private int[] _board;
-        private int[] _hisBoard;
+        private readonly int[] _board;
+        private readonly int[] _hisBoard;
 
-        private int _enPas;
-        private int _hisEnPas;
-        private bool _WCCKS;
-        private bool _WCCQS;
-        private bool _BCCKS;
-        private bool _BCCQS;
+        private readonly int _enPas;
+        /*private int _hisEnPas;*/
+        private readonly bool _wccks;
+        private readonly bool _wccqs;
+        private readonly bool _bccks;
+        private readonly bool _bccqs;
         /*private bool _hisWCCKS;
         private bool _hisWCCQS;
         private bool _hisBCCKS;
         private bool _hisBCCQS;*/
         //private Tuple<int, int> _move;
 
-        private string _algebraicPly;
+        private readonly string _algebraicPly;
 
-        public Ply(int[] board, int[] hisBoard, int hisEnPas, int enPas, string algebraicPly, 
+        public Ply(int[] board, int[] hisBoard, /*int hisEnPas,*/ int enPas, string algebraicPly, 
             bool wccks, bool wccqs, bool bccks, bool bccqs/*, bool hisWccks, bool hisWccqs, bool hisBccks, bool hisBccqs*//*, int fromSquare, int toSquare*/)
         {
             _board = (int[]) board.Clone();
             _hisBoard = (int[]) hisBoard.Clone();
-            _hisEnPas = hisEnPas;
+            /*_hisEnPas = hisEnPas;*/
             _enPas = enPas;
             _algebraicPly = algebraicPly;
-            _WCCKS = wccks;
-            _WCCQS = wccqs;
-            _BCCKS = bccks;
-            _BCCQS = bccqs;
+            _wccks = wccks;
+            _wccqs = wccqs;
+            _bccks = bccks;
+            _bccqs = bccqs;
             /*_hisWCCKS = hisWccks;
             _hisWCCQS = hisWccqs;
             _hisBCCKS = hisBccks;
@@ -66,29 +66,29 @@ namespace KCE.Engine
             return _enPas;
         }
 
-        public int GetHisEnPas()
+        /*public int GetHisEnPas()
         {
             return _hisEnPas;
-        }
+        }*/
 
         public bool GetWCCKS()
         {
-            return _WCCKS;
+            return _wccks;
         }
 
         public bool GetWCCQS()
         {
-            return _WCCQS;
+            return _wccqs;
         }
 
         public bool GetBCCKS()
         {
-            return _BCCKS;
+            return _bccks;
         }
 
         public bool GetBCCQS()
         {
-            return _BCCQS;
+            return _bccqs;
         }
 
         /*public bool GetHisWCCKS()

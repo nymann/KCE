@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Diagnostics;
 
 namespace KCE.Engine
@@ -21,4 +21,4 @@ namespace KCE.Engine
                 stopwatch.ElapsedMilliseconds, Math.Round(nodesSec));
         }
     }
-}
+}*/

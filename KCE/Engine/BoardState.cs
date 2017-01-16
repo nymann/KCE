@@ -13,6 +13,7 @@
         public bool HisWcqs { get; set; }
         public bool HisBcks { get; set; }
         public bool HisBcqs { get; set; }
+        public int HisEnPas { get; set; }
 
         public int[] KingSquares { get; set; }
         public int EnPasSquare { get; set; }
@@ -24,17 +25,17 @@
         public bool EndGame { get; set; } = false;
         //public int LegalMovesCount { get; set; } = 0;
 
-        public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool WCKS, bool WCQS, bool BCKS, bool BCQS)
+        public BoardState(int[] boardRepresentation, bool sideToMove, int[] kingSquares, int enPasSquare, int fiftyMoveRule, bool wcks, bool wcqs, bool bcks, bool bcqs)
         {
             BoardRepresentation = boardRepresentation;
             SideToMove = sideToMove;
             KingSquares = kingSquares;
             EnPasSquare = enPasSquare;
             FiftyMoveRule = fiftyMoveRule;
-            this.Wcks = WCKS;
-            this.Wcqs = WCQS;
-            this.Bcks = BCKS;
-            this.Bcqs = BCQS;
+            this.Wcks = wcks;
+            this.Wcqs = wcqs;
+            this.Bcks = bcks;
+            this.Bcqs = bcqs;
             //Moves = new List<Tuple<int, int>>();
         }
 

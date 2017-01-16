@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace KCE.Engine.Search
 {
@@ -8,7 +6,7 @@ namespace KCE.Engine.Search
     public class Search
     {
         private readonly Evaluate _eval = new Evaluate();
-        private readonly Helper _helper = new Helper();
+        //private readonly Helper _helper = new Helper();
 
         public int Quiescene(int alpha, int beta, BoardState bs, SearchInfo sInfo)
         {
