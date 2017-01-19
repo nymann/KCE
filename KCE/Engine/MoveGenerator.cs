@@ -1238,7 +1238,7 @@ namespace KCE.Engine
                 var childNotes = depth == 1 ? 1 : Perft(depth - 1);
                 totalNodes += childNotes;
                 UndoMove(legalMove);
-                Console.WriteLine("{0}{1}: {2}", legalMove.GetFromToSquare()[0], legalMove.GetFromToSquare()[2], childNotes);
+                Console.WriteLine("{0}{1}: {2}", Definitions.IndexToAlgebraic[legalMove.GetFromToSquare()[0]], Definitions.IndexToAlgebraic[legalMove.GetFromToSquare()[1]], childNotes);
             }
 
             Console.WriteLine("\nTotal moves: {0}, Total nodes: {1}", nMoves, totalNodes);
@@ -1331,6 +1331,4 @@ namespace KCE.Engine
             Console.WriteLine("XOR'ed in nothing at the from square: {0:X}.", _bs.PosKey);#1#
         }*/
     }
-
-    
 }

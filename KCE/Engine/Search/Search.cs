@@ -235,7 +235,7 @@ namespace KCE.Engine.Search
                 depth++;
                 bs.HaveSearched = false;
             }
-            Console.WriteLine("bestmove: {0}{1}, score: {2}", move, bs.BestPly.Promotion, bs.BestPly.Score);
+            Console.WriteLine("bestmove {0}{1}", move, bs.BestPly.Promotion);
         }
     }
 }

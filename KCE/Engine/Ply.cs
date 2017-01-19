@@ -16,15 +16,12 @@ namespace KCE.Engine
         private readonly int[] _fromToSquare;
         public string Promotion { get; set; } = "";
 
-        //private readonly string _algebraicPly;
-
-        public Ply(int[] board, int[] hisBoard, int enPas, /*string algebraicPly,*/ 
+        public Ply(int[] board, int[] hisBoard, int enPas,
             bool wccks, bool wccqs, bool bccks, bool bccqs, int[] fromToSquare)
         {
             _board = (int[]) board.Clone();
             _hisBoard = (int[]) hisBoard.Clone();
             _enPas = enPas;
-            //_algebraicPly = algebraicPly;
             _wccks = wccks;
             _wccqs = wccqs;
             _bccks = bccks;
