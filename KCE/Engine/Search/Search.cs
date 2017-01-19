@@ -17,13 +17,11 @@ namespace KCE.Engine.Search
 
             sInfo.Nodes++;
 
-            if (_helper.IsRepetition(bs) || bs.FiftyMoveRule >= 100)
+            /*if (_helper.IsRepetition(bs) || bs.FiftyMoveRule >= 100)
             {
                 //if (bs.BestPly != null) bs.BestPly.Score = 0;
-                Console.WriteLine("Repetetion.");
                 return 0;
-            }
-
+            }*/
 
             var score = _eval.EvalPosition(bs);
 
@@ -42,7 +40,11 @@ namespace KCE.Engine.Search
             var capMoves = mg.AllCapMoves();
 
             Ply bestMove = null;
-            var nMoves = capMoves.Length;
+            var nMoves = 0;
+            if (capMoves != null)
+            {
+                nMoves = capMoves.Length;
+            }
             var oldAlpha = alpha;
             var moveNum = 0;
 
@@ -57,7 +59,7 @@ namespace KCE.Engine.Search
                 //Console.WriteLine("This never happens.");
             }
 
-            for (moveNum = 0; moveNum < capMoves.Length; moveNum++)
+            for (moveNum = 0; moveNum < nMoves; moveNum++)
             {
                 mg.MakeMove(capMoves[moveNum]);
                 capMoves[moveNum].Score = -Quiescene(-beta, -alpha, bs, sInfo);
@@ -101,9 +103,8 @@ namespace KCE.Engine.Search
         {
             if (depth == 0)
             {
-                //bs.CurrentLine = new List<Ply>();
-                return _eval.EvalPosition(bs);
-                //return Quiescene(alpha, beta, bs, sInfo);
+                //return _eval.EvalPosition(bs);
+                return Quiescene(alpha, beta, bs, sInfo);
             }
 
             // Check if time is up or interrupted by the GUI.
@@ -114,10 +115,14 @@ namespace KCE.Engine.Search
 
             sInfo.Nodes++;
 
-            if (bs.FiftyMoveRule >= 100 || _helper.IsRepetition(bs))
+            /*if (bs.BestPly != null)
             {
-                return 0;
-            }
+                if (bs.FiftyMoveRule >= 100 || _helper.IsRepetition(bs))
+                {
+                    return 0;
+                    //Console.WriteLine("bestmove: {0}{1}, score {2}", Definitions.IndexToAlgebraic[bs.BestPly.GetFromToSquare()[0]], Definitions.IndexToAlgebraic[bs.BestPly.GetFromToSquare()[1]], bs.BestPly.Score);
+                }
+            }*/
 
             var mg = new MoveGenerator(bs);
 
@@ -169,7 +174,7 @@ namespace KCE.Engine.Search
 
             if (nMoves == 0)
             {
-                if (new Helper().IsKingInCheck(bs.SideToMove, bs.BoardRepresentation, bs.KingSquares))
+                if (_helper.IsKingInCheck(bs.SideToMove, bs.BoardRepresentation, bs.KingSquares))
                 {
                     return -Definitions.MATE + bs.Ply;
                 }
@@ -182,6 +187,7 @@ namespace KCE.Engine.Search
             {
                 bs.BestPly = bestMove;
             }
+
             return alpha;
         }
 
@@ -229,7 +235,7 @@ namespace KCE.Engine.Search
                 depth++;
                 bs.HaveSearched = false;
             }
-            Console.WriteLine("bestmove {0}{1}", move, bs.BestPly.Promotion);
+            Console.WriteLine("bestmove: {0}{1}, score: {2}", move, bs.BestPly.Promotion, bs.BestPly.Score);
         }
     }
 }

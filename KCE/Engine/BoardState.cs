@@ -23,7 +23,7 @@
         public Ply BestPlyAtLowerDepth { get; set; } = null;
         public bool HaveSearched { get; set; } = false;
         public bool EndGame { get; set; } = false;
-        public int[,] Moves { get; set; } = new int[2,1024];
+        //public int[,] Moves { get; set; } = new int[2,1024];
 
         //public ulong PosKey { get; set; }
         //public ulong[,] PieceKeys { get; set; } = new ulong[13,120];

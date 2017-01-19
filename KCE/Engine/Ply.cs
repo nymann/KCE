@@ -8,7 +8,7 @@ namespace KCE.Engine
         private readonly int[] _board;
         private readonly int[] _hisBoard;
 
-        private readonly int _enPas;
+        private readonly int _enPas = 99;
         private readonly bool _wccks;
         private readonly bool _wccqs;
         private readonly bool _bccks;

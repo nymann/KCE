@@ -193,8 +193,8 @@ namespace KCE.Engine
 
             return new Ply(board, hisBoard, /*hisEnPas,*/ enPas, /*algebraicPly,*/
                 castle[Definitions.WCCKS], castle[Definitions.WCCQS],
-                castle[Definitions.BCCKS], castle[Definitions.BCCQS], new []{fromSquare, toSquare}/*,
-                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS*//*, fromSquare, toSquare*/);
+                castle[Definitions.BCCKS], castle[Definitions.BCCQS], new[] {fromSquare, toSquare} /*,
+                hisWCCKS, hisWCCQS, hisBCCKS, hisBCCQS*/ /*, fromSquare, toSquare*/);
         }
 
         public bool DoubleCheckedFen(int[] board, bool sideToMove, int[] kingSquare)
@@ -810,26 +810,56 @@ namespace KCE.Engine
             return 99;
         }
 
-        public bool IsRepetition(BoardState bs)
+        /*public bool IsRepetition(BoardState bs)
         {
+            /*
+             * eg. white to move
+             * position startpos moves g1f3, b8c6, f3g1, c6b8, g1f3, b8c6.
+             * G1F3 should now return draw!
+             #1#
             var lengthOfArray = bs.Ply;
-            //Console.WriteLine(lengthOfArray);
-            if (lengthOfArray < 4)
-            {
-                //Console.WriteLine(lengthOfArray);
-                return false;
-            }
-
-            var lastMove = new int[] {bs.Moves[0,lengthOfArray - 1], bs.Moves[1, lengthOfArray - 1]};
-            var index = lengthOfArray - 3; // - 2 - 1 (zero indexed).
-            //Console.WriteLine(Definitions.IndexToAlgebraic[bs.Moves[0, index]] + Definitions.IndexToAlgebraic[bs.Moves[1, index]]);
-
-            if (bs.Moves[0,index] != lastMove[1] || bs.Moves[1, index] != lastMove[0])
+            if (lengthOfArray < 4 || bs.BestPly == null)
             {
                 return false;
             }
-            index -= 1;
-            return bs.Moves[0, index] == lastMove[1] && bs.Moves[1, index] == lastMove[0];
-        }
+
+            var aCurrentMoveFromSquare = bs.BestPly.GetFromToSquare()[0];
+            var aCurrentMoveToSquare = bs.BestPly.GetFromToSquare()[1];
+            var aLastMoveToSquare = bs.Moves[1, lengthOfArray - 2];
+            var aLastMoveFromSquare = bs.Moves[0, lengthOfArray - 2];
+
+            // Now let's check if the current players move's toSquare is equal to his last moves fromSquare and vice versa.
+            if (aCurrentMoveFromSquare != aLastMoveToSquare)
+            {
+                // He's not moving the same piece twice in a row, so return false.
+                return false;
+            }
+
+            if (aCurrentMoveToSquare != aLastMoveFromSquare)
+            {
+                // He did indeed move the same piece twice, but it's not a repeating move.
+                return false;
+            }
+
+            // Now let's look at the other players moves, are they repeating too?
+            var bLastMoveFromSquare = bs.Moves[0, lengthOfArray - 1];
+            var bLastMoveToSquare = bs.Moves[1, lengthOfArray - 1];
+            var bMoveBeforeThatFromSquare = bs.Moves[0, lengthOfArray - 3];
+            var bMoveBeforeThatToSquare = bs.Moves[1, lengthOfArray - 3];
+
+            if (bLastMoveFromSquare != bMoveBeforeThatToSquare)
+            {
+                // The other player didn't move the same piece twice.
+                return false;
+            }
+
+            if (bLastMoveToSquare != bMoveBeforeThatFromSquare)
+            {
+                // He did move the same piece twice, but not between the same squares.
+                return false;
+            }
+
+            return true;
+        }*/
     }
 }

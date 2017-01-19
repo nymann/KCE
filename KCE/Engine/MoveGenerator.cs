@@ -555,7 +555,7 @@ namespace KCE.Engine
             if (_helper.DoubleCheckedFen(_bs.BoardRepresentation, _bs.SideToMove,
                 _bs.KingSquares))
             {
-                return capMoves;
+                return null;
             }
 
             #endregion
@@ -574,7 +574,7 @@ namespace KCE.Engine
 
                 if (attackedBySquare == 99)
                 {
-                    return capMoves;
+                    return null;
                 }
 
                 foreach (var square in _board64)
@@ -670,7 +670,7 @@ namespace KCE.Engine
 
                 if (attackedBySquare == 99)
                 {
-                    return capMoves;
+                    return null;
                 }
 
                 foreach (var square in _board64)
@@ -850,9 +850,8 @@ namespace KCE.Engine
                         case Definitions.WhiteKnight:
                             var whiteKnight = new Knight(_bs.BoardRepresentation, square, Definitions.White);
                             var psuedoLegalKnightMoves = whiteKnight.MoveGeneration();
-                            for (var i = 0; i < Definitions.MaxKnightMoves; i++)
+                            foreach (var toSquare in psuedoLegalKnightMoves)
                             {
-                                var toSquare = psuedoLegalKnightMoves[i];
                                 if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
                                     continue;
@@ -876,9 +875,8 @@ namespace KCE.Engine
                         case Definitions.WhiteBishop:
                             var whiteBishop = new Bishop(_bs.BoardRepresentation, square, Definitions.White);
                             var psuedoLegalBishopMoves = whiteBishop.MoveGeneration();
-                            for (var i = 0; i < Definitions.MaxBishopMoves; i++)
+                            foreach (var toSquare in psuedoLegalBishopMoves)
                             {
-                                var toSquare = psuedoLegalBishopMoves[i];
                                 if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
                                     continue;
@@ -902,9 +900,8 @@ namespace KCE.Engine
                         case Definitions.WhiteRook:
                             var whiteRook = new Rook(_bs.BoardRepresentation, square, Definitions.White);
                             var psuedoLegalRookMoves = whiteRook.MoveGeneration();
-                            for (var i = 0; i < Definitions.MaxRookMoves; i++)
+                            foreach (var toSquare in psuedoLegalRookMoves)
                             {
-                                var toSquare = psuedoLegalRookMoves[i];
                                 if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
                                     continue;
@@ -928,9 +925,8 @@ namespace KCE.Engine
                         case Definitions.WhiteQueen:
                             var whiteQueen = new Queen(_bs.BoardRepresentation, square, Definitions.White);
                             var psuedoLegalQueenMoves = whiteQueen.MoveGeneration();
-                            for (var i = 0; i < Definitions.MaxQueenMoves; i++)
+                            foreach (var toSquare in psuedoLegalQueenMoves)
                             {
-                                var toSquare = psuedoLegalQueenMoves[i];
                                 if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
                                     continue;
@@ -954,9 +950,8 @@ namespace KCE.Engine
                         case Definitions.WhiteKing:
                             var whiteKing = new King(_bs.BoardRepresentation, square, Definitions.White);
                             var psuedoLegalKingMoves = whiteKing.MoveGeneration();
-                            for (var i = 0; i < Definitions.MaxKingMoves; i++)
+                            foreach (var toSquare in psuedoLegalKingMoves)
                             {
-                                var toSquare = psuedoLegalKingMoves[i];
                                 if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                                 {
                                     continue;
@@ -1072,7 +1067,7 @@ namespace KCE.Engine
                     case Definitions.BlackKnight:
                         var blackKnight = new Knight(_bs.BoardRepresentation, square, Definitions.Black);
                         var psuedoLegalKnightMoves = blackKnight.MoveGeneration();
-                        for (var i = 0; i < Definitions.MaxKnightMoves; i++)
+                        for (var i = 0; i < psuedoLegalKnightMoves.Length; i++)
                         {
                             var toSquare = psuedoLegalKnightMoves[i];
                             if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
@@ -1097,9 +1092,8 @@ namespace KCE.Engine
                     case Definitions.BlackBishop:
                         var blackBishop = new Bishop(_bs.BoardRepresentation, square, Definitions.Black);
                         var psuedoLegalBishopMoves = blackBishop.MoveGeneration();
-                        for (var i = 0; i < Definitions.MaxBishopMoves; i++)
+                        foreach (var toSquare in psuedoLegalBishopMoves)
                         {
-                            var toSquare = psuedoLegalBishopMoves[i];
                             if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
                                 continue;
@@ -1122,7 +1116,7 @@ namespace KCE.Engine
                     case Definitions.BlackRook:
                         var blackRook = new Rook(_bs.BoardRepresentation, square, Definitions.Black);
                         var psuedoLegalRookMoves = blackRook.MoveGeneration();
-                        for (var i = 0; i < Definitions.MaxRookMoves; i++)
+                        for (var i = 0; i < psuedoLegalRookMoves.Length; i++)
                         {
                             var toSquare = psuedoLegalRookMoves[i];
                             if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
@@ -1147,9 +1141,8 @@ namespace KCE.Engine
                     case Definitions.BlackQueen:
                         var blackQueen = new Queen(_bs.BoardRepresentation, square, Definitions.Black);
                         var psuedoLegalQueenMoves = blackQueen.MoveGeneration();
-                        for (var i = 0; i < Definitions.MaxQueenMoves; i++)
+                        foreach (var toSquare in psuedoLegalQueenMoves)
                         {
-                            var toSquare = psuedoLegalQueenMoves[i];
                             if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
                                 continue;
@@ -1172,9 +1165,8 @@ namespace KCE.Engine
                     case Definitions.BlackKing:
                         var blackKing = new King(_bs.BoardRepresentation, square, Definitions.Black);
                         var psuedoLegalKingMoves = blackKing.MoveGeneration();
-                        for (var i = 0; i < Definitions.MaxKingMoves; i++)
+                        foreach (var toSquare in psuedoLegalKingMoves)
                         {
-                            var toSquare = psuedoLegalKingMoves[i];
                             if (_bs.BoardRepresentation[toSquare] == Definitions.EmptySquare)
                             {
                                 continue;
@@ -1199,10 +1191,13 @@ namespace KCE.Engine
             #endregion
 
             var finalArray = new Ply[index];
+            //Console.Write("Cap moves:");
             for (var i = 0; i < index; i++)
             {
                 finalArray[i] = capMoves[i];
+                //Console.Write(" {0}{1}", Definitions.IndexToAlgebraic[finalArray[i].GetFromToSquare()[0]], Definitions.IndexToAlgebraic[finalArray[i].GetFromToSquare()[1]]);
             }
+            //Console.Write(".\n");
 
             return finalArray;
         }
@@ -1267,8 +1262,8 @@ namespace KCE.Engine
             _bs.Wcqs = makePly.GetWCCQS();
             _bs.Bcks = makePly.GetBCCKS();
             _bs.Bcqs = makePly.GetBCCQS();
-            _bs.Moves[0, _bs.Ply] = makePly.GetFromToSquare()[0];
-            _bs.Moves[1, _bs.Ply] = makePly.GetFromToSquare()[1];
+            //_bs.Moves[0, _bs.Ply] = makePly.GetFromToSquare()[0];
+            //_bs.Moves[1, _bs.Ply] = makePly.GetFromToSquare()[1];
             _bs.Ply++;
             UpdateKingSquares();
         }
@@ -1282,8 +1277,8 @@ namespace KCE.Engine
             _bs.Wcqs = _bs.HisWcqs;
             _bs.Bcks = _bs.HisWcks;
             _bs.Bcqs = _bs.HisWcqs;
-            _bs.Moves[0, _bs.Ply] = 0;
-            _bs.Moves[1, _bs.Ply] = 0;
+            //_bs.Moves[0, _bs.Ply] = 0;
+            //_bs.Moves[1, _bs.Ply] = 0;
             _bs.Ply--;
             UpdateKingSquares();
         }
