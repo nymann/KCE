@@ -31,16 +31,16 @@ namespace Test.MoveGenerator
         [TestMethod]
         public void PerformTest3()
         {
-            string fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
-            int depth = 4;
+            var fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+            var depth = 4;
             ulong[] expected = { 48, 2039, 97862, 4085603 };
             DivideTestHelper(fen, expected, depth);
         }
 
         public void PerformTest4()
         {
-            string fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
-            int depth = 3;
+            var fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+            var depth = 3;
         }
 
         [TestMethod]
