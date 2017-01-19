@@ -142,7 +142,7 @@ namespace KCE
                 foreach (var validMove in validMoves)
                 {
                     var algebraic = Definitions.IndexToAlgebraic[validMove.GetFromToSquare()[0]] +
-                                    Definitions.IndexToAlgebraic[validMove.GetFromToSquare()[1]];
+                                    Definitions.IndexToAlgebraic[validMove.GetFromToSquare()[1]] + validMove.Promotion;
                     if (algebraic == move)
                     {
                         mg.MakeMove(validMove);

@@ -15,7 +15,7 @@ namespace KCE.Engine.Search
                 sInfo.Stopped = true;
             }
 
-            sInfo.Nodes++;
+            //sInfo.Nodes++;
 
             /*if (_helper.IsRepetition(bs) || bs.FiftyMoveRule >= 100)
             {
