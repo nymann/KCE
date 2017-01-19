@@ -235,6 +235,8 @@
 
             else
             {
+                // king safety
+                score += KingSafety(bs.KingSquares, bs.BoardRepresentation);
                 score += _kingMiddleGameTabe[_mirror64[whiteKingIndex]];
                 score -= _kingMiddleGameTabe[blackKingIndex];
             }
@@ -250,31 +252,31 @@
 
 
         // https://chessprogramming.wikispaces.com/Tapered+Eval
-        private int TaperedEval(/*int wP,*/ int wN, int wB, int wR, int wQ, /*int bP,*/ int bN, int bB, int bR, int bQ)
+        private int TaperedEval( /*int wP,*/ int wN, int wB, int wR, int wQ, /*int bP,*/ int bN, int bB, int bR, int bQ)
         {
             //var pawnPhase = 0;
             var knightPhase = 1;
             var bishopPhase = 1;
             var rookPhase = 2;
             var queenPhase = 4;
-            var totalPhase = /*pawnPhase * 16 +*/ knightPhase * 4 + bishopPhase * 4 + rookPhase * 4 + queenPhase * 2;
+            var totalPhase = /*pawnPhase * 16 +*/ knightPhase*4 + bishopPhase*4 + rookPhase*4 + queenPhase*2;
             var phase = totalPhase;
 
             //phase -= wP * pawnPhase;
-            phase -= wN * knightPhase;
-            phase -= wB * bishopPhase;
-            phase -= wR * rookPhase;
-            phase -= wQ * queenPhase;
+            phase -= wN*knightPhase;
+            phase -= wB*bishopPhase;
+            phase -= wR*rookPhase;
+            phase -= wQ*queenPhase;
 
             //phase -= bP * pawnPhase;
-            phase -= bN * knightPhase;
-            phase -= bB * bishopPhase;
-            phase -= bR * rookPhase;
-            phase -= bQ * queenPhase;
+            phase -= bN*knightPhase;
+            phase -= bB*bishopPhase;
+            phase -= bR*rookPhase;
+            phase -= bQ*queenPhase;
 
-            phase = (phase * 256 + totalPhase / 2) / totalPhase;
+            phase = (phase*256 + totalPhase/2)/totalPhase;
 
-            var eval = (100 * (256 - phase) + 300 * phase) / 256;
+            var eval = (100*(256 - phase) + 300*phase)/256;
 
             return eval;
         }
@@ -282,6 +284,37 @@
         private bool EndGame(int wN, int wB, int wR, int wQ, int bN, int bB, int bR, int bQ)
         {
             return TaperedEval(wN, wB, wR, wQ, bN, bB, bR, bQ) > 230;
+        }
+
+        private int KingSafety(int[] kingSquares, int[] board)
+        {
+            int score = 0;
+            if (board[kingSquares[1] + 9] == Definitions.WhitePawn)
+            {
+                score += 10;
+            }
+            if (board[kingSquares[1] + 10] == Definitions.WhitePawn)
+            {
+                score += 10;
+            }
+            if (board[kingSquares[1] + 11] == Definitions.WhitePawn)
+            {
+                score -= 10;
+            }
+
+            if (board[kingSquares[0] - 9] == Definitions.WhitePawn)
+            {
+                score -= 10;
+            }
+            if (board[kingSquares[0] - 10] == Definitions.WhitePawn)
+            {
+                score -= 10;
+            }
+            if (board[kingSquares[0] - 11] == Definitions.WhitePawn)
+            {
+                score -= 10;
+            }
+            return score;
         }
     }
 }

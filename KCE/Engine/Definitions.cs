@@ -63,7 +63,7 @@ namespace KCE.Engine
         public const int MaxBishopMoves = 13;
         public const int MaxPawnMoves = 4;
         public const int MaxKnightMoves = 8;
-        public const int MaxKingMoves = 8;
+        public const int MaxKingMoves = 9;
 
         public const int QuitCode = 2;
     }
