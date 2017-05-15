@@ -1,6 +1,6 @@
 # KCE
 
-![KCE](http://malerpris.dk/output.gif)
+![](http://malerpris.dk/output.gif)
 
 KCE is a chess engine that supports the Universal Chess Interface (UCI), and can thereby be used by UCI compatible chess GUI's, like Arena as seen above.
 
